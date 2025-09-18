@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>LMing</title>
+        <link>https://valaxy.site/</link>
+        <description>别急 想起来才会更新</description>
+        <lastBuildDate>Thu, 18 Sep 2025 15:58:18 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <image>
+            <title>LMing</title>
+            <url>https://thirdqq.qlogo.cn/g?b=sdk&amp;nk=1489298615&amp;s=640</url>
+            <link>https://valaxy.site/</link>
+        </image>
+        <copyright>CC BY-NC-SA 4.0 2025 © LMing</copyright>
+        <atom:link href="https://valaxy.site/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[Linux记录]]></title>
+            <link>https://valaxy.site/posts/Linux记录</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/Linux记录</guid>
+            <pubDate>Tue, 09 Sep 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h3>桌面操作系统</h3>
+<ol>
+<li>
+<p>Ubuntu</p>
+</li>
+<li>
+<p>Deepin</p>
+</li>
+<li>
+<p>Kali Linux</p>
+</li>
+</ol>
+<pre><code class="language-bash">#kali linux &amp;&amp; wsl
+wsl --update
+wsl --shut</code></pre>
+<br/><p>访问 <a href="https://valaxy.site/posts/Linux记录" target="_blank">https://valaxy.site/posts/Linux记录</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[alist记录]]></title>
+            <link>https://valaxy.site/posts/alist记录</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/alist记录</guid>
+            <pubDate>Mon, 01 Sep 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h3>Alist资源站</h3>
+<ul>
+<li>[x] <a href="https://pan.clun.top/">主页 | 雨呢网盘 - 疯子社网盘 (clun.top)</a> (webdav挂载) **<a href="https://an.c">https://an.c</a></li>
+</ul>
+<br/><p>访问 <a href="https://valaxy.site/posts/alist记录" target="_blank">https://valaxy.site/posts/alist记录</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[ffmpeg常用教程]]></title>
+            <link>https://valaxy.site/posts/ffmpeg常用教程</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/ffmpeg常用教程</guid>
+            <pubDate>Tue, 05 Aug 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>一、安装</h2>
+<p><strong>ffmpeg官网：<a href="https://www.ffmpeg.org/download.html">https://www.ffmpeg.org/download.html</a></strong></p>
+<p>该网站中的FFMPEG分为3个版本：Static，Shared，Dev。</p>
+<p>前</p>
+<br/><p>访问 <a href="https://valaxy.site/posts/ffmpeg常用教程" target="_blank">https://valaxy.site/posts/ffmpeg常用教程</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[英语单词]]></title>
+            <link>https://valaxy.site/posts/英语单词</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/英语单词</guid>
+            <pubDate>Wed, 30 Jul 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<blockquote>
+<p>这个换行根typora不太一样, 懒得打行尾的两个空格了😢</p>
+</blockquote>
+<h3>2024年3月7日</h3>
+<p>liberate	vt.使自由，使解脱;解放(国家等)<br>
+alleviate	vt.减轻，缓解(痛</p>
+<br/><p>访问 <a href="https://valaxy.site/posts/英语单词" target="_blank">https://valaxy.site/posts/英语单词</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[ZYNQ记录]]></title>
+            <link>https://valaxy.site/posts/ZYNQ</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/ZYNQ</guid>
+            <pubDate>Fri, 04 Apr 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>EBAZ4025</h2>
+<ul>
+<li>矿板</li>
+</ul>
+<p><a href="https://whycan.com/t_2297.html">捡了个便宜的高级ZYNQ XC7Z010 开发板玩玩 </a></p>
+<p>[xjtuecho/EBAZ420</p>
+<br/><p>访问 <a href="https://valaxy.site/posts/ZYNQ" target="_blank">https://valaxy.site/posts/ZYNQ</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[Ai-Thinker环境搭建]]></title>
+            <link>https://valaxy.site/posts/Ai-Thinker环境搭建</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/Ai-Thinker环境搭建</guid>
+            <pubDate>Sun, 16 Feb 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>1.VSCode&amp;Git</h2>
+<h3>VSCode</h3>
+<p>![](<a href="https://raw.githubusercontent.com/ZhantaoLi/PicGo/main/imgs/Ai-Thi">https://raw.githubusercontent.com/ZhantaoLi/PicGo/main/imgs/Ai-Thi</a></p>
+<br/><p>访问 <a href="https://valaxy.site/posts/Ai-Thinker环境搭建" target="_blank">https://valaxy.site/posts/Ai-Thinker环境搭建</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[STM32的PID算法]]></title>
+            <link>https://valaxy.site/posts/STM32的PID算法</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/STM32的PID算法</guid>
+            <pubDate>Sat, 03 Aug 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>STM32的PID算法</h2>
+<p>抽象化的模拟 PID 控制系统原理框图，如下图所示。该系统由模拟 PID 控制器和被控对象组成。</p>
+<p>![模拟 PID 控制系统原理图](<a href="https://raw.git">https://raw.git</a></p>
+<br/><p>访问 <a href="https://valaxy.site/posts/STM32的PID算法" target="_blank">https://valaxy.site/posts/STM32的PID算法</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[HDLBits刷题]]></title>
+            <link>https://valaxy.site/posts/HDLBits刷题</link>
+            <guid isPermaLink="false">https://valaxy.site/posts/HDLBits刷题</guid>
+            <pubDate>Thu, 21 Dec 2023 14:08:45 GMT</pubDate>
+            <content:encoded><![CDATA[<h2>复习Verilog</h2>
+<h3>知识点</h3>
+<ul>
+<li>在<code>always</code>里<strong>不能</strong>有<code>assign</code>赋值，报错`Procedural Continuous Assignment to registe</li>
+</ul>
+<br/><p>访问 <a href="https://valaxy.site/posts/HDLBits刷题" target="_blank">https://valaxy.site/posts/HDLBits刷题</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+    </channel>
+</rss>
