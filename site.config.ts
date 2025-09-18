@@ -4,7 +4,7 @@ export default defineSiteConfig({
   url: 'https://valaxy.site/',
   favicon: "/wlop.svg",
   lang: 'zh-CN',
-  title: 'LMing站',
+  title: 'LMing',
   subtitle: 'An infinite universe...',
   author: {
     name: 'LMing',
@@ -27,10 +27,10 @@ export default defineSiteConfig({
       color: '#6e5494',
     },
     {
-      name: 'E-Mail',
-      link: 'lizhantao213@qq.com',
-      icon: 'i-ri-mail-line',
-      color: '#8E71C1',
+      name: 'BiliBili',
+      link: 'https://space.bilibili.com/1078303870',
+      icon: 'i-ri-bilibili-line',
+      color: '#FF8EB3',
     },
   ],
 
