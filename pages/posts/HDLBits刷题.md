@@ -7,11 +7,12 @@ categories:
   - 笔记
 date: 2023-4-12 19:07:32
 updated: 2023-12-21 14:08:45
+codeHeightLimit: 400
 ---
 
-### 复习Verilog
+## 复习Verilog
 
-#### 知识点
+### 知识点
 
 * 在`always`里**不能**有`assign`赋值，报错`Procedural Continuous Assignment to register is not supported`
 * `assign`赋值左侧为`wire`；`always`里赋值左侧为`reg`
@@ -24,9 +25,9 @@ updated: 2023-12-21 14:08:45
 * **SOP标准式**：找出真值表中所有输出为1的表项，按照输入情况，为1用变量表示，为0用反变量表示，得出若干乘积项，然后求和。
 * **POS标准式**：找出真值表中所有输出为0的表项，按照输入情况，为1用反变量表示，为0用变量表示，得出若干求和项，然后求积。
 * 组合电路一般使用`=`，时序电路一般使用`<=`
-* **算数右移与逻辑右移**An *arithmetic* right shift shifts in the sign bit of the number in the shift register (`q[63]` in this case) instead of zero as done by a *logical* right shift. Another way of thinking about an arithmetic right shift is that it assumes the number being shifted is signed and preserves the sign, so that arithmetic right shift divides a signed number by a power of two.
+* **算数右移与逻辑右移** An *arithmetic* right shift shifts in the sign bit of the number in the shift register (`q[63]` in this case) instead of zero as done by a *logical* right shift. Another way of thinking about an arithmetic right shift is that it assumes the number being shifted is signed and preserves the sign, so that arithmetic right shift divides a signed number by a power of two.
 
-	**算数左移和逻辑左移**There is no difference between logical and arithmetic *left* shifts.
+	**算数左移和逻辑左移** There is no difference between logical and arithmetic *left* shifts.
 
 * ``define`、`parameter`、`localparam`三者的区别:
 
@@ -47,11 +48,11 @@ updated: 2023-12-21 14:08:45
 | &    | \|   | ^    | ! (~) | ~^   |
 | ·    | +    | ⊕    | ˉˉ    | ⊙    |
 
-#### 程序记录
+### 程序记录
 
-##### 全加器
+#### 全加器
 
-```verilog
+```verilog [全加器]
 module full_adder(//全加器
 		input a,
 		input b,
@@ -65,9 +66,9 @@ module full_adder(//全加器
 endmodule
 ```
 
-##### 向量逆序
+#### 向量逆序
 
-```verilog
+```verilog [向量逆序]
 module top_module(//向量倒序
     input [99:0] in,
     output [99:0] out
@@ -80,9 +81,9 @@ module top_module(//向量倒序
 endmodule
 ```
 
-##### 优先级编码器
+#### 优先级编码器
 
-```verilog
+```verilog [优先级编码器]
 module top_module(//当给定输入位向量时，它输出向量中第一个1位的位置
     input [3:0] in,
     output reg [1:0] pos
@@ -99,7 +100,7 @@ module top_module(//当给定输入位向量时，它输出向量中第一个1�
 endmodule
 ```
 
-##### [百位加法器](https://hdlbits.01xz.net/wiki/Adder100i)
+#### [百位加法器](https://hdlbits.01xz.net/wiki/Adder100i)
 
 Create a 100-bit binary ripple-carry adder by instantiating 100 [full adders](https://hdlbits.01xz.net/wiki/Fadd). The adder adds two 100-bit numbers and a carry-in to produce a 100-bit sum and carry out. To encourage you to actually instantiate full adders, also output the carry-out from *each* full adder in the ripple-carry adder. `cout[99]` is the final carry-out from the last full adder, and is the carry-out you usually see.
 
@@ -117,7 +118,7 @@ Hint...
 
 There are many full adders to instantiate. An instance array or generate statement would help here.
 
-```verilog
+```verilog [Answer]
 module top_module( 
     input [99:0] a, b,         // 输入 a 和 b
     input cin,                // 输入进位
@@ -137,7 +138,7 @@ module top_module(
 endmodule
 ```
 
-##### [百位BCD加法器](https://hdlbits.01xz.net/wiki/Bcdadd100#)
+#### [百位BCD加法器](https://hdlbits.01xz.net/wiki/Bcdadd100#)
 
 You are provided with a BCD one-digit adder named `bcd_fadd` that adds two BCD digits and carry-in, and produces a sum and carry-out.
 
@@ -165,7 +166,7 @@ module top_module(
 Hint...
 An instance array or generate statement would be useful here.
 
-```verilog
+```verilog  [Answer]
 module top_module( 
     input [399:0] a, b,     // 输入 a 和 b，每个有400位
     input cin,              // 输入进位
@@ -201,7 +202,7 @@ module top_module(
 endmodule
 ```
 
-##### [边沿检测](https://hdlbits.01xz.net/wiki/Edgedetect)
+#### [边沿检测](https://hdlbits.01xz.net/wiki/Edgedetect)
 
 ```verilog
 module top_module (
@@ -220,7 +221,7 @@ endmodule
 */
 ```
 
-##### [算数/逻辑移位](https://hdlbits.01xz.net/wiki/Shift18)
+#### [算数/逻辑移位](https://hdlbits.01xz.net/wiki/Shift18)
 
 ```verilog
 module top_module(
@@ -256,7 +257,7 @@ module top_module(
 endmodule
 ```
 
-##### [Rule110](https://hdlbits.01xz.net/wiki/Rule110)
+#### [Rule110](https://hdlbits.01xz.net/wiki/Rule110)
 
 ```verilog
 module top_module(
@@ -280,9 +281,9 @@ module top_module(
 endmodule
 ```
 
-##### [★Conwaylife](https://hdlbits.01xz.net/wiki/Conwaylife)
+#### [★Conwaylife](https://hdlbits.01xz.net/wiki/Conwaylife)
 
-###### 题目
+##### 题目
 
 [康威的《生命游戏》](https://en.wikipedia.org/wiki/Conway's_Game_of_Life)是一个二维的细胞自动机。
 
@@ -302,11 +303,11 @@ q：游戏的16x16当前状态，每个时钟周期更新一次。
 
 数学家，生命游戏细胞自动机的创造者约翰·康威（John Conway）于2020年4月11日因COVID-19逝世。
 
-###### 题解
+##### 题解
 
 1.if-else判断其位置
 
-```verilog
+```verilog [Answer1]
 module top_module(
     input clk,
     input load,
@@ -383,7 +384,7 @@ endmodule
 
 因为不想代表显得太冗长，这里引入了 4 个整形变量 `idx_i_d,idx_i_u,idx_j_r,idx_j_l` ，在不同的情况下，来确立四条边界。
 
-```verilog
+```verilog [Answer1]
 module top_module(
     input clk,
     input load,
@@ -448,7 +449,7 @@ endmodule
 
 2.扩展至18*18矩阵
 
-```verilog
+```verilog [Answer2]
 module top_module(
     input clk,
     input load,
@@ -490,7 +491,7 @@ endmodule
 
 
 
-###### 思考
+##### 思考
 
 联想到利用Vivado HLS进行卷积操作
 

@@ -5,14 +5,15 @@ export default defineSiteConfig({
   favicon: "/wlop.svg",
   lang: 'zh-CN',
   title: 'LMing',
-  subtitle: 'An infinite universe...',
+  subtitle: 'Think Twice, Code Once',
   author: {
     name: 'LMing',
+    avatar: 'https://thirdqq.qlogo.cn/g?b=sdk&nk=1489298615&s=640',
     status: {
       emoji: '🤔'
     },
   },
-  description: '想要成为一个有趣的人ヾ(^∀^)ﾉ',
+  description: '别急 想起来才会更新',
   social: [
     {
       name: 'RSS',
@@ -35,8 +36,6 @@ export default defineSiteConfig({
   ],
 
   redirects: {
-    // Valaxy 采用文章文件名作为导航，不支持 Hexo 的日期层级和指定 ID
-    // 为了防止访客进入以前网址导致 404，可以添加重定向
     useVueRouter: false,
     rules: [
       {
@@ -67,30 +66,8 @@ export default defineSiteConfig({
   },
   sponsor: {
     enable: false,
-    title: '我很可爱，请给我钱！',
-    methods: [
-      {
-        name: '支付宝',
-        url: '',
-        color: '#00A3EE',
-        icon: 'i-ri-alipay-line',
-      },
-      {
-        name: 'QQ 支付',
-        url: '',
-        color: '#12B7F5',
-        icon: 'i-ri-qq-line',
-      },
-      {
-        name: '微信支付',
-        url: '',
-        color: '#2DC100',
-        icon: 'i-ri-wechat-pay-line',
-      },
-    ],
   },
   encrypt: {
-    // 文章加密：https://valaxy.site/guide/page#%E9%A1%B5%E9%9D%A2%E5%8A%A0%E5%AF%86
     enable: true,
   }
 })

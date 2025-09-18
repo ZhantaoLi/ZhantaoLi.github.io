@@ -17,7 +17,7 @@ export default defineValaxyConfig<UserThemeConfig>({
   themeConfig: {
     banner: {
       enable: true,
-      title: 'LMing站',
+      title: 'LMing',
     },
     nav: [
       {

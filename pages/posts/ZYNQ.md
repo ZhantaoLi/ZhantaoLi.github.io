@@ -38,7 +38,7 @@ https://www.jianshu.com/p/b83c663ecaaa
 
 vivado工程文件目录，如下所示：
 
-![img](https://img2023.cnblogs.com/blog/1514783/202305/1514783-20230504105217666-774158622.png)
+![](./imgs/vivado_folderlist.png)
 
 说明：
 
@@ -55,14 +55,10 @@ vivado工程文件目录，如下所示：
 
 根据后缀名不同，文件内容也不同：
 
-1、dcp文件，dcp文件是Design CheckPoint的缩写，中文翻译为“设计检查点”，它是一种加密的、压缩的二进制文件类型，包含了完整的设计信息，如实例化层次结构、资源使用情况、时序分析数据、约束等重要信息。在Vivado设计中，DCP文件通常用于在不同的Vivado工程或版本之间共享设计，并简化设计修改和迁移，或增量编译。
+1. dcp文件，dcp文件是Design CheckPoint的缩写，中文翻译为“设计检查点”，它是一种加密的、压缩的二进制文件类型，包含了完整的设计信息，如实例化层次结构、资源使用情况、时序分析数据、约束等重要信息。在Vivado设计中，DCP文件通常用于在不同的Vivado工程或版本之间共享设计，并简化设计修改和迁移，或增量编译。
+2. xdc文件，vivado的约束文件，比如时序约束和IO引脚约束。
+3. xci文件，定制ip产生的文件，里面包含了定制的ip核的所有信息。
+4. rpt文件，vivado每个过程结束输出的一个report文件，用来记录各个过程中的一些信息
+5. .Xil文件，是Vivado用来降低运行时内存使用量的临时目录，该文件无法移动到其他位置。
 
-2、xdc文件，vivado的约束文件，比如时序约束和IO引脚约束。
-
-3、xci文件，定制ip产生的文件，里面包含了定制的ip核的所有信息。
-
-4、rpt文件，vivado每个过程结束输出的一个report文件，用来记录各个过程中的一些信息
-
-5、.Xil文件，是Vivado用来降低运行时内存使用量的临时目录，该文件无法移动到其他位置。
-
-![img](https://i-blog.csdnimg.cn/blog_migrate/1647cf49c1ae2b9b3d08d662bb4dc739.png)
+![](./imgs/vivado_tree.png)

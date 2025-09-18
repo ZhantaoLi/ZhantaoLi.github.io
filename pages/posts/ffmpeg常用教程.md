@@ -180,15 +180,13 @@ ffmpeg是一款非常好用处理音视频的工具包。那什么是ffmpeg呢�
 
 首先打开 [ffmpeg官网下载](https://link.segmentfault.com/?enc=Izolw4%2BjJMVj5SDMjqiKrw%3D%3D.Mto17U43p5v3DiIB07eqx9ppbLCst%2B4VFIH20eXjeY4yL6NJcpM5IVgk1EZ5cDb3YbYinyhbsUfXIMAslvKEGQ%3D%3D)
 然后点击 windows 对应的图标，再点击下面的”Windows EXE Files”随便选一个点进去选择一个版本下载。
-![img](https://segmentfault.com/img/bVc12bA)
 
 ## **2.下载后解压，配置环境变量**
 
-下载解压后就能在 bin 文件夹下能看到三个可执行程序：ffmpeg、ffplay、ffprobe，配置好环境变量后即可使用。
-![img](https://segmentfault.com/img/bVc12bC)
+下载解压后就能在 bin 文件夹下能看到三个可执行程序：ffmpeg、ffplay、ffprobe，为bin文件夹配置好环境变量后即可使用。
+
 验证是否成功：
-cmd窗口输入ffmpeg -version 。如下图则安装成功。
-![img](https://segmentfault.com/img/bVc12bU)
+cmd窗口输入 `ffmpeg -version` 验证是否安装成功。
 
 ## **3.关键指令**
 

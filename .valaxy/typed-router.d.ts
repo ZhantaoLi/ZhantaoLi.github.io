@@ -28,8 +28,15 @@ declare module 'vue-router/auto-routes' {
     '/links/': RouteRecordInfo<'/links/', '/links', Record<never, never>, Record<never, never>>,
     '/page/[page]': RouteRecordInfo<'/page/[page]', '/page/:page', { page: ParamValue<true> }, { page: ParamValue<false> }>,
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
+    '/posts/Ai-Thinker环境搭建': RouteRecordInfo<'/posts/Ai-Thinker环境搭建', '/posts/Ai-Thinker环境搭建', Record<never, never>, Record<never, never>>,
+    '/posts/alist记录': RouteRecordInfo<'/posts/alist记录', '/posts/alist记录', Record<never, never>, Record<never, never>>,
+    '/posts/ffmpeg常用教程': RouteRecordInfo<'/posts/ffmpeg常用教程', '/posts/ffmpeg常用教程', Record<never, never>, Record<never, never>>,
+    '/posts/HDLBits刷题': RouteRecordInfo<'/posts/HDLBits刷题', '/posts/HDLBits刷题', Record<never, never>, Record<never, never>>,
     '/posts/hello-valaxy': RouteRecordInfo<'/posts/hello-valaxy', '/posts/hello-valaxy', Record<never, never>, Record<never, never>>,
     '/posts/Linux记录': RouteRecordInfo<'/posts/Linux记录', '/posts/Linux记录', Record<never, never>, Record<never, never>>,
+    '/posts/STM32的PID算法': RouteRecordInfo<'/posts/STM32的PID算法', '/posts/STM32的PID算法', Record<never, never>, Record<never, never>>,
+    '/posts/ZYNQ': RouteRecordInfo<'/posts/ZYNQ', '/posts/ZYNQ', Record<never, never>, Record<never, never>>,
+    '/posts/英语单词': RouteRecordInfo<'/posts/英语单词', '/posts/英语单词', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
   }
 
@@ -84,12 +91,40 @@ declare module 'vue-router/auto-routes' {
       routes: '/posts/'
       views: never
     }
+    'pages/posts/Ai-Thinker环境搭建.md': {
+      routes: '/posts/Ai-Thinker环境搭建'
+      views: never
+    }
+    'pages/posts/alist记录.md': {
+      routes: '/posts/alist记录'
+      views: never
+    }
+    'pages/posts/ffmpeg常用教程.md': {
+      routes: '/posts/ffmpeg常用教程'
+      views: never
+    }
+    'pages/posts/HDLBits刷题.md': {
+      routes: '/posts/HDLBits刷题'
+      views: never
+    }
     'pages/posts/hello-valaxy.md': {
       routes: '/posts/hello-valaxy'
       views: never
     }
     'pages/posts/Linux记录.md': {
       routes: '/posts/Linux记录'
+      views: never
+    }
+    'pages/posts/STM32的PID算法.md': {
+      routes: '/posts/STM32的PID算法'
+      views: never
+    }
+    'pages/posts/ZYNQ.md': {
+      routes: '/posts/ZYNQ'
+      views: never
+    }
+    'pages/posts/英语单词.md': {
+      routes: '/posts/英语单词'
       views: never
     }
     'pages/tags/index.md': {

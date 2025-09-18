@@ -6,6 +6,8 @@ categories: Valaxy
 tags:
   - valaxy
 top: 1
+password: 123456
+password_hint: input password:123456
 ---
 
 ## Valaxy

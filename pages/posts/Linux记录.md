@@ -10,11 +10,11 @@ tags:
 
 ### 桌面操作系统
 
-1.Ubuntu
+1. Ubuntu
 
-2.Deepin
+2. Deepin
 
-3.Kali Linux
+3. Kali Linux
 
 ```bash
 #kali linux && wsl
