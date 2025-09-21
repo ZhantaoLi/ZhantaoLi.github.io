@@ -30,6 +30,7 @@ declare module 'vue-router/auto-routes' {
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
     '/posts/Ai-Thinker环境搭建': RouteRecordInfo<'/posts/Ai-Thinker环境搭建', '/posts/Ai-Thinker环境搭建', Record<never, never>, Record<never, never>>,
     '/posts/alist记录': RouteRecordInfo<'/posts/alist记录', '/posts/alist记录', Record<never, never>, Record<never, never>>,
+    '/posts/E2000D测试': RouteRecordInfo<'/posts/E2000D测试', '/posts/E2000D测试', Record<never, never>, Record<never, never>>,
     '/posts/ffmpeg常用教程': RouteRecordInfo<'/posts/ffmpeg常用教程', '/posts/ffmpeg常用教程', Record<never, never>, Record<never, never>>,
     '/posts/HDLBits刷题': RouteRecordInfo<'/posts/HDLBits刷题', '/posts/HDLBits刷题', Record<never, never>, Record<never, never>>,
     '/posts/hello-valaxy': RouteRecordInfo<'/posts/hello-valaxy', '/posts/hello-valaxy', Record<never, never>, Record<never, never>>,
@@ -97,6 +98,10 @@ declare module 'vue-router/auto-routes' {
     }
     'pages/posts/alist记录.md': {
       routes: '/posts/alist记录'
+      views: never
+    }
+    'pages/posts/E2000D测试.md': {
+      routes: '/posts/E2000D测试'
       views: never
     }
     'pages/posts/ffmpeg常用教程.md': {

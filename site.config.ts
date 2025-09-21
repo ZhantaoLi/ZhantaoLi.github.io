@@ -2,7 +2,7 @@ import { defineSiteConfig } from 'valaxy'
 
 export default defineSiteConfig({
   url: 'https://valaxy.site/',
-  favicon: "/wlop.svg",
+  favicon: "/favicon.svg",
   lang: 'zh-CN',
   title: 'LMing',
   subtitle: 'Think Twice, Code Once',
@@ -14,6 +14,7 @@ export default defineSiteConfig({
     },
   },
   description: '别急 想起来才会更新',
+  codeHeightLimit: 400,
   social: [
     {
       name: 'RSS',
@@ -28,10 +29,10 @@ export default defineSiteConfig({
       color: '#6e5494',
     },
     {
-      name: 'BiliBili',
-      link: 'https://space.bilibili.com/1078303870',
-      icon: 'i-ri-bilibili-line',
-      color: '#FF8EB3',
+      name: 'E-Mail',
+      link: 'mailto:lizhantao213@qq.com',
+      icon: 'i-ri-mail-line',
+      color: '#73c2fb',
     },
   ],
 
@@ -63,6 +64,9 @@ export default defineSiteConfig({
         en: 200,
       },
     },
+  },
+  mediumZoom: {
+    enable: true
   },
   sponsor: {
     enable: false,
