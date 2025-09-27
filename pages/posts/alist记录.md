@@ -1,12 +1,15 @@
 ---
-title: alist记录
+title: Alist记录
 tags:
-  - 笔记
-  - alist
-categories: 笔记
+  - Alist
+categories: Alist
 date: 2024-04-12
 updated: 2025-09-01
 ---
+::: tip
+随着 Alist 项目被出售并由新团队接手，原 Alist 的部分核心贡献者决定创建一个全新的分支项目 —— OpenList。这个项目旨在保持 Alist 的原有优势，同时去除商业化带来的限制，回归开源本质。
+:::
+<!-- more -->  
 
 ### Alist资源站
 

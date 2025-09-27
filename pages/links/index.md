@@ -44,5 +44,7 @@ updated: 2025-07-17 20:00:00
 ```yaml
 - url: https://zhantaoli.github.io
   avatar: https://thirdqq.qlogo.cn/g?b=sdk&nk=1489298615&s=640
-  name: LMing
+  name: "LMing"
+  blog: "LMing's Blog"
+  desc: "Think Twice, Code Once"
 ```

@@ -1,13 +1,16 @@
 ---
 title: Ai-Thinker环境搭建
 tags:
-  - 笔记
   - 嵌入式
-categories: 笔记
+categories: 嵌入式
 date: 2024-04-12
 updated: 2025-02-16
 ---
 
+::: tip
+这里使用的是 `Ai-Thinker小安派` ，更多详细资料详见官网：[小安派-开源硬件系列 从选型到开发全流程](https://docs.ai-thinker.com/open_hardware/index.html)
+:::
+<!-- more -->  
 ## 1.VSCode&Git
 
 ### VSCode

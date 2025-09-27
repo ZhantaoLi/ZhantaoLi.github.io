@@ -1,9 +1,9 @@
 ---
 title: ZYNQ记录
 tags:
-  - 笔记
   - ZYNQ
-categories: 笔记
+  - FPGA
+categories: FPGA
 date: 2025-01-11
 updated: 2025-04-04
 ---
@@ -12,7 +12,7 @@ updated: 2025-04-04
 
 * 矿板
 
-[捡了个便宜的高级ZYNQ XC7Z010 开发板玩玩 ](https://whycan.com/t_2297.html)
+[捡了个便宜的高级ZYNQ XC7Z010 开发板玩玩 ](https://whycan.com/t_2297.html)  <!-- more -->  
 
 [xjtuecho/EBAZ4205: A 5$ Xilinx ZYNQ development board.](https://github.com/xjtuecho/EBAZ4205)
 

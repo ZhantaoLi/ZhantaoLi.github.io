@@ -4,7 +4,7 @@ date: 2022-04-01
 updated: 2022-04-01
 categories: Valaxy
 tags:
-  - valaxy
+  - Valaxy
 top: 1
 password: 123456
 password_hint: input password:123456

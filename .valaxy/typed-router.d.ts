@@ -37,6 +37,9 @@ declare module 'vue-router/auto-routes' {
     '/posts/Linux记录': RouteRecordInfo<'/posts/Linux记录', '/posts/Linux记录', Record<never, never>, Record<never, never>>,
     '/posts/STM32的PID算法': RouteRecordInfo<'/posts/STM32的PID算法', '/posts/STM32的PID算法', Record<never, never>, Record<never, never>>,
     '/posts/ZYNQ': RouteRecordInfo<'/posts/ZYNQ', '/posts/ZYNQ', Record<never, never>, Record<never, never>>,
+    '/posts/学术规范与论文写作': RouteRecordInfo<'/posts/学术规范与论文写作', '/posts/学术规范与论文写作', Record<never, never>, Record<never, never>>,
+    '/posts/工程伦理': RouteRecordInfo<'/posts/工程伦理', '/posts/工程伦理', Record<never, never>, Record<never, never>>,
+    '/posts/科学道德与学风': RouteRecordInfo<'/posts/科学道德与学风', '/posts/科学道德与学风', Record<never, never>, Record<never, never>>,
     '/posts/英语单词': RouteRecordInfo<'/posts/英语单词', '/posts/英语单词', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
   }
@@ -126,6 +129,18 @@ declare module 'vue-router/auto-routes' {
     }
     'pages/posts/ZYNQ.md': {
       routes: '/posts/ZYNQ'
+      views: never
+    }
+    'pages/posts/学术规范与论文写作.md': {
+      routes: '/posts/学术规范与论文写作'
+      views: never
+    }
+    'pages/posts/工程伦理.md': {
+      routes: '/posts/工程伦理'
+      views: never
+    }
+    'pages/posts/科学道德与学风.md': {
+      routes: '/posts/科学道德与学风'
       views: never
     }
     'pages/posts/英语单词.md': {

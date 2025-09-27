@@ -2,18 +2,15 @@
 title: Linux记录
 date: 2024-04-12
 updated: 2025-09-09
-categories: 笔记
+categories: Linux
 tags:
-  - 笔记
   - Linux
 ---
 
 ### 桌面操作系统
 
-1. Ubuntu
-
+1. Ubuntu  <!-- more -->  
 2. Deepin
-
 3. Kali Linux
 
 ```bash
@@ -112,7 +109,7 @@ curl ipinfo.io #
 netsh wlan show profiles name="" key=clear #
 ```
 
-```shell
+```bash
 df -h	#文件系统的磁盘空间使用状况
 	sudo fdisk -l
 	lsblk
@@ -219,7 +216,7 @@ ZeroTermux
 
 [Moe/TMOE](https://gitee.com/mo2/linux/blob/2021/Readme-old.md)
 
-```basg
+```bash
 pkg update && pkg upgrade -y
 pkg install root-repo
 apt sources

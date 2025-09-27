@@ -1,9 +1,9 @@
 ---
 title: STM32的PID算法
 tags:
-  - 笔记
   - STM32
-categories: 笔记
+  - PID
+categories: STM32
 date: 2024-04-12
 updated: 2024-08-03
 codeHeightLimit: 400
@@ -11,7 +11,7 @@ codeHeightLimit: 400
 
 ## STM32的PID算法
 
-抽象化的模拟 PID 控制系统原理框图，如下图所示。该系统由模拟 PID 控制器和被控对象组成。
+抽象化的模拟 PID 控制系统原理框图，如下图所示。该系统由模拟 PID 控制器和被控对象组成。  <!-- more -->  
 
 ![模拟 PID 控制系统原理图](https://raw.githubusercontent.com/ZhantaoLi/PicGo/main/imgs/2019-01-03_210531.png)
 

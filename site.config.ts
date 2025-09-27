@@ -13,7 +13,7 @@ export default defineSiteConfig({
       emoji: '🤔'
     },
   },
-  description: '别急 想起来才会更新',
+  description: ' ',
   codeHeightLimit: 400,
   social: [
     {

@@ -1,10 +1,8 @@
 ---
 title: HDLBits刷题
 tags:
-  - 笔记
   - FPGA
-categories:
-  - 笔记
+categories: FPGA
 date: 2023-4-12 19:07:32
 updated: 2023-12-21 14:08:45
 codeHeightLimit: 400
@@ -15,7 +13,7 @@ codeHeightLimit: 400
 ### 知识点
 
 * 在`always`里**不能**有`assign`赋值，报错`Procedural Continuous Assignment to register is not supported`
-* `assign`赋值左侧为`wire`；`always`里赋值左侧为`reg`
+* `assign`赋值左侧为`wire`；`always`里赋值左侧为`reg`  <!-- more -->  
 * 连续赋值(`assign x = y;`**不在**always里)；阻塞赋值: (`x = y;`**组合**always)；非阻塞赋值: (`x <= y;`**时序**always)
 * `casez`标示`case`语句中可存在z(无关位)与?同义，`2'bz0==2'b?0`
 * `data[begin +: width]`指`data[(begin+width-1) : begin]`，`data[end -: width]`与`data[end : (end-width+1)]`

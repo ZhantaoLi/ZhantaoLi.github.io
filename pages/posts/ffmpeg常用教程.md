@@ -1,9 +1,8 @@
 ---
 title: ffmpeg常用教程
 tags:
-  - 笔记
   - ffmpeg
-categories: 笔记
+categories: ffmpeg
 date: 2024-06-01
 updated: 2025-08-05
 ---
@@ -12,11 +11,8 @@ updated: 2025-08-05
 
 **ffmpeg官网：https://www.ffmpeg.org/download.html**
 
-该网站中的FFMPEG分为3个版本：Static，Shared，Dev。
-
-前两个版本可以直接在命令行中使用，他们的区别在于
-
-Static里面只有3个应用程序：
+该网站中的FFMPEG分为3个版本：Static，Shared，Dev。  <!-- more -->  
+前两个版本可以直接在命令行中使用，他们的区别在于 Static 里面只有3个应用程序：
 
 - ffmpeg.exe
 - ffplay.exe
