@@ -36,6 +36,7 @@ declare module 'vue-router/auto-routes' {
     '/posts/hello-valaxy': RouteRecordInfo<'/posts/hello-valaxy', '/posts/hello-valaxy', Record<never, never>, Record<never, never>>,
     '/posts/Linux记录': RouteRecordInfo<'/posts/Linux记录', '/posts/Linux记录', Record<never, never>, Record<never, never>>,
     '/posts/STM32的PID算法': RouteRecordInfo<'/posts/STM32的PID算法', '/posts/STM32的PID算法', Record<never, never>, Record<never, never>>,
+    '/posts/T113-i记录': RouteRecordInfo<'/posts/T113-i记录', '/posts/T113-i记录', Record<never, never>, Record<never, never>>,
     '/posts/ZYNQ': RouteRecordInfo<'/posts/ZYNQ', '/posts/ZYNQ', Record<never, never>, Record<never, never>>,
     '/posts/学术规范与论文写作': RouteRecordInfo<'/posts/学术规范与论文写作', '/posts/学术规范与论文写作', Record<never, never>, Record<never, never>>,
     '/posts/工程伦理': RouteRecordInfo<'/posts/工程伦理', '/posts/工程伦理', Record<never, never>, Record<never, never>>,
@@ -125,6 +126,10 @@ declare module 'vue-router/auto-routes' {
     }
     'pages/posts/STM32的PID算法.md': {
       routes: '/posts/STM32的PID算法'
+      views: never
+    }
+    'pages/posts/T113-i记录.md': {
+      routes: '/posts/T113-i记录'
       views: never
     }
     'pages/posts/ZYNQ.md': {

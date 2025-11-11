@@ -1,0 +1,61 @@
+// you can custom css vars here
+:root {
+  // /* 背景图片 */
+  //   --yun-bg-img: url(../public/bg-light.webp);
+  // /* 左侧边栏背景图片 */
+  //   --yun-sidebar-bg-img: url("../public/sidebar-light.webp");
+  // /* 右侧边栏背景图片 */
+  //   --yun-aside-bg-img: url("../public/aside-light.webp");
+
+  /* 文章背景颜色 */
+    --va-c-bg-light: rgba(255, 255, 255, 0.7);
+
+  /* 字体颜色 */
+    --smc-c-text-light: #0d0d0d;
+  }
+
+.dark {
+  // --yun-bg-img: url("../public/bg-dark.webp");
+  // --yun-sidebar-bg-img: url("../public/sidebar-dark.webp");
+  // --yun-aside-bg-img: url("../public/aside-dark.webp");
+
+  --va-c-bg-light: rgba(0, 0, 0, 0.8);
+
+  // 链接颜色
+  --va-c-link: #ffd000;
+  /* markdown中链接的颜色 */
+  --smc-c-primary: #64b4ff;
+}
+
+/* 右边栏设置 */
+.yun-aside.show {
+  width: 30ch;
+}
+
+@media screen and (min-width: 1024px) {
+.post-nav-prev .title,
+  .post-nav-next .title {
+    font-size: medium;
+    text-shadow: 0px 0px 1px rgb(255, 255, 255);
+  }
+}
+
+/* 字体大小 */
+.markdown-body h2 {
+  font-size: 1.6rem;
+}
+
+.markdown-body h3 {
+  font-size: 1.4rem;
+}
+
+.markdown-body h4 {
+  font-size: 1.2rem;
+}
+
+.markdown-body h5 {
+  font-size: 1rem;
+}
+.markdown-body code {
+  font-size: 16px;
+}

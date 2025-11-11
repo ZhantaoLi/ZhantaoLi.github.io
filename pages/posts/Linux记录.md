@@ -85,7 +85,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 ###wifi
 #	https://blog.csdn.net/Alan_615/article/details/123801163
 
-#
+# 优化能效 平衡性能与功耗
 apt install s-tui cpufrequtils linux-cpupower	
 s-tui
 cpupower -c all frequency-set -g powersave    #优化能效 平衡性能与功耗
@@ -96,6 +96,18 @@ curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wir
 chmod +x wireguard-install.sh
 ./wireguard-install.sh
 qrencode -t ansiutf8 < ./xxx.conf		#自己命名的conf
+
+# BBR (uname -r >= 4.9)
+uname -r
+echo "net.core.default_qdisc=fq" | tee -a /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control=bbr" | tee -a /etc/sysctl.conf
+sysctl -p
+
+lsmod | grep bbr
+# 3x-ui
+bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
+ufw allow <PORT>/tcp
+x-ui
 #qing long
 curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 ```
@@ -323,14 +335,14 @@ chmod [选项] 权限模式 文件...
 	#3位8进制模式
 		#Linux/Unix 的文件调用权限分为三级:文件所有者Owner用户组Group其它用户Other Users;	每一级各有读,写,执行的三位权限
 		chmod 777 file	#将 file 设为所有人均可读+写+执行
-		7	读+写+执行	rwx	111
-    6	读+写				rw-	110
-    5	读+执行			r-x	101
-    4	只读				r--	100
-    3	写+执行			-wx	011
-    2	只写				-w-	010
-    1	只执行				--x	001
-    0	无						---	000
+    7	读+写+执行	  rwx	111
+    6	读+写         rw-	110
+    5	读+执行       r-x	101
+    4	只读          r--	100
+    3	写+执行		  -wx	011
+    2	只写		  -w-	010
+    1	只执行		  --x	001
+    0	无			  ---	000
 ```
 
 
@@ -411,6 +423,8 @@ docker
 | synctv         | 9999        |
 | bililive_go    | 8080        |
 | rustdesk       | 21114:21119 |
+| siyuan_d       | 6806        |
+| gpt_load       | 3001        |
 
 RustDesk：
 

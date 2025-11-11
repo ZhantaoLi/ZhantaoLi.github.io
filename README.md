@@ -7,11 +7,15 @@ Example: [valaxy.site](https://valaxy.site)
 ```bash
 # install
 npm i
-# or pnpm i
+# or  pnpm i
 
 # start
 npm run dev
-# or pnpm dev
+# or  pnpm dev
+
+# build
+npm run build
+# or  pnpm build
 ```
 
 See `http://localhost:4859/`, have fun!
