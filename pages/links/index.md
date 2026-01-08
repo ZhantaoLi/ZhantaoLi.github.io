@@ -1,5 +1,5 @@
 ---
-title: 互联网上的朋友们
+title: 友链
 keywords: 友链
 description: 友链
 links: 
@@ -29,7 +29,12 @@ links:
   name: Huffer
   blog: Huffer's blog
   color: "#f5696e"
-
+- url: https://eofs791.github.io
+  avatar: https://cdn.jsdelivr.net/gh/Eofs791/catpic@main/img/avatar.ico
+  name: "见崎美咲"
+  blog: "Catarium"
+  desc: "见崎的猫箱"
+  color: "#f5a9b8"
 random: true
 date: 2025-07-14 00:00:00
 updated: 2025-07-17 20:00:00

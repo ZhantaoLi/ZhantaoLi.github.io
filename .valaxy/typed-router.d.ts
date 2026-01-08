@@ -25,6 +25,7 @@ declare module 'vue-router/auto-routes' {
     '/about/site': RouteRecordInfo<'/about/site', '/about/site', Record<never, never>, Record<never, never>>,
     '/archives/': RouteRecordInfo<'/archives/', '/archives', Record<never, never>, Record<never, never>>,
     '/categories/': RouteRecordInfo<'/categories/', '/categories', Record<never, never>, Record<never, never>>,
+    '/demos/': RouteRecordInfo<'/demos/', '/demos', Record<never, never>, Record<never, never>>,
     '/links/': RouteRecordInfo<'/links/', '/links', Record<never, never>, Record<never, never>>,
     '/page/[page]': RouteRecordInfo<'/page/[page]', '/page/:page', { page: ParamValue<true> }, { page: ParamValue<false> }>,
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
@@ -38,11 +39,13 @@ declare module 'vue-router/auto-routes' {
     '/posts/STM32的PID算法': RouteRecordInfo<'/posts/STM32的PID算法', '/posts/STM32的PID算法', Record<never, never>, Record<never, never>>,
     '/posts/T113-i记录': RouteRecordInfo<'/posts/T113-i记录', '/posts/T113-i记录', Record<never, never>, Record<never, never>>,
     '/posts/ZYNQ': RouteRecordInfo<'/posts/ZYNQ', '/posts/ZYNQ', Record<never, never>, Record<never, never>>,
+    '/posts/信号分析与处理': RouteRecordInfo<'/posts/信号分析与处理', '/posts/信号分析与处理', Record<never, never>, Record<never, never>>,
     '/posts/学术规范与论文写作': RouteRecordInfo<'/posts/学术规范与论文写作', '/posts/学术规范与论文写作', Record<never, never>, Record<never, never>>,
     '/posts/工程伦理': RouteRecordInfo<'/posts/工程伦理', '/posts/工程伦理', Record<never, never>, Record<never, never>>,
     '/posts/科学道德与学风': RouteRecordInfo<'/posts/科学道德与学风', '/posts/科学道德与学风', Record<never, never>, Record<never, never>>,
     '/posts/英语单词': RouteRecordInfo<'/posts/英语单词', '/posts/英语单词', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
+    '/websites/': RouteRecordInfo<'/websites/', '/websites', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -82,6 +85,10 @@ declare module 'vue-router/auto-routes' {
     }
     'pages/categories/index.md': {
       routes: '/categories/'
+      views: never
+    }
+    'pages/demos/index.md': {
+      routes: '/demos/'
       views: never
     }
     'pages/links/index.md': {
@@ -136,6 +143,10 @@ declare module 'vue-router/auto-routes' {
       routes: '/posts/ZYNQ'
       views: never
     }
+    'pages/posts/信号分析与处理.md': {
+      routes: '/posts/信号分析与处理'
+      views: never
+    }
     'pages/posts/学术规范与论文写作.md': {
       routes: '/posts/学术规范与论文写作'
       views: never
@@ -154,6 +165,10 @@ declare module 'vue-router/auto-routes' {
     }
     'pages/tags/index.md': {
       routes: '/tags/'
+      views: never
+    }
+    'pages/websites/index.md': {
+      routes: '/websites/'
       views: never
     }
   }

@@ -3,3 +3,16 @@ intro:
   desc: Valaxy 模版
   hi: 你好，Valaxy
   siteRunning: 网站已运行
+
+# 导航栏
+nav:
+  categories: 分类
+  tags: 标签
+  links: 友链
+  demos: 演示
+  websites: 网址收藏
+# 页面
+pages:
+  categories: 分类
+  tags: 标签
+  links: 友链

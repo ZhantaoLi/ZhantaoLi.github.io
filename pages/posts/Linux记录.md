@@ -14,7 +14,7 @@ tags:
 3. Kali Linux
 
 ```bash
-#kali linux && wsl
+# kali linux && wsl
 wsl --update
 wsl --shutdown
 
@@ -28,11 +28,11 @@ cd /home
 kex
 ```
 
-
-
 ### 命令记录
 
 [Linux常用命令知识点总结](https://www.cnblogs.com/zqingyang/p/18142052)
+
+[VPS基本安全措施](https://idcflare.com/t/topic/38687)
 
 ```bash
 sudo passwd
@@ -42,14 +42,14 @@ sudo -i
 apt update
 apt install curl telnet net-tools inetutils-ping ufw -y
 
-#1c1g cloud server: optimizime resource usage
+# 1c1g cloud server: optimizime resource usage
 vim /etc/apt/apt.conf.d/10periodic
 	APT::Periodic::Update-Package-Lists "0";
 	APT::Periodic::Download-Upgradeable-Packages "0";
 	APT::Periodic::AutocleanInterval "0";
 vim /etc/update-manager/release-upgrades
 	Prompt=never
-#enlarge swapfile 	
+# enlarge swapfile 
 swapon --show
 free -h
 dd if=/dev/zero of=/swapfile bs=1M count=2048
@@ -62,28 +62,38 @@ vim /etc/fstab
 	/swapfile none swap sw 0 0
 
 echo 1 > /sys/module/zswap/parameters/enabled
-#限制部分docker的cpu/memory资源分配
+# 限制部分docker的cpu/memory资源分配
 
-#sources
+#*******************source********************#
+# apt sources
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
-apt upgrade -y
-#docker
+# docker sources
 bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
-#1Panel
+# pip sources
+mkdir ~/.pip
+vim ~/.pip/pip.conf
+    [global]
+    index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+    [install]
+    trusted-host = https://pypi.tuna.tsinghua.edu.cn
+pip3 config list
+#*********************************************#
+
+# 1Panel
 curl -sSL https://resource.fit2cloud.com/1panel/package/quick_start.sh -o quick_start.sh && sudo bash quick_start.sh
 1pctl user-info
 1pctl update password
 #1pctl update port --port=80
-#https://www.bilibili.com/video/BV1ED421V7Dr
-#ohmyzsh
+# https://www.bilibili.com/video/BV1ED421V7Dr
+# ohmyzsh
 cat /etc/shells
 sudo apt install zsh
 chsh -s /bin/zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-#xiaoya树莓派
+# xiaoya树莓派
 #wget -qO pi.sh https://cafe.cpolar.cn/wkdaily/zero3/raw/branch/main/zero3/pi.sh && chmod +x pi.sh && ./pi.sh
 ###wifi
-#	https://blog.csdn.net/Alan_615/article/details/123801163
+# https://blog.csdn.net/Alan_615/article/details/123801163
 
 # 优化能效 平衡性能与功耗
 apt install s-tui cpufrequtils linux-cpupower	
@@ -96,7 +106,7 @@ curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wir
 chmod +x wireguard-install.sh
 ./wireguard-install.sh
 qrencode -t ansiutf8 < ./xxx.conf		#自己命名的conf
-
+    # ufw allow port    /tcp
 # BBR (uname -r >= 4.9)
 uname -r
 echo "net.core.default_qdisc=fq" | tee -a /etc/sysctl.conf
@@ -108,7 +118,14 @@ lsmod | grep bbr
 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 ufw allow <PORT>/tcp
 x-ui
-#qing long
+# 网络加速(BBR)(推荐使用5.5以上内核自带的bbr速度最佳)
+wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
+chmod +x tcp.sh
+./tcp.sh
+
+# v2ray
+bash <(wget -qO- -o- https://github.com/233boy/v2ray/raw/master/install.sh)
+# qing long
 curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 ```
 
@@ -125,6 +142,9 @@ netsh wlan show profiles name="" key=clear #
 df -h	#文件系统的磁盘空间使用状况
 	sudo fdisk -l
 	lsblk
+du -h --max-depth=1	#查看当前目录下每个子目录的磁盘空间占用情况
+    du -sh *
+ls -lh  #查看当前目录下每个文件的详细信息
 free -h	#系统的内存使用情况
 	cat /proc/meminfo
 lscpu	#有关系统的 CPU 架构和拓扑结构的详细信息
@@ -265,21 +285,21 @@ alist admin && alist server
 ### vi/vim
 
 ```bash
-#光标移动
+# 光标移动
           ^							
           k								
     < h       l >
           j						
           v
 空格>		CTRL-E下滑	
-#编辑	i
-#删除	d	dd	dw
-#撤销	u
-#复制	y			v
-#粘贴	p
-#跳转	G	gg	CTRL-O
-#搜索	/	?		n	N
-#保存	:w		:wq
+# 编辑	i
+# 删除	d	dd	dw
+# 撤销	u
+# 复制	y			v
+# 粘贴	p
+# 跳转	G	gg	CTRL-O
+# 搜索	/	?		n	N
+# 保存	:w		:wq
 ```
 
 [.vimrc配置](https://www.cnblogs.com/XNQC1314/p/8692993.html)
@@ -425,6 +445,8 @@ docker
 | rustdesk       | 21114:21119 |
 | siyuan_d       | 6806        |
 | gpt_load       | 3001        |
+| beszel_d       | 8090        |
+| kvideo         | 3000        |
 
 RustDesk：
 

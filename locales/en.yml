@@ -3,3 +3,15 @@ intro:
   desc: Valaxy Template
   hi: Hello, Valaxy!
   siteRunning: Site has been running for
+# navigation
+nav:
+  categories: Categories
+  tags: Tags
+  links: Links
+  demos: Demos
+  websites: Websites
+# pages
+pages:
+  categories: Categories
+  tags: Tags
+  links: Links

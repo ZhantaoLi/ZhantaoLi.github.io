@@ -1,11 +1,13 @@
 import type { UserThemeConfig } from 'valaxy-theme-yun'
-import { defineValaxyConfig } from 'valaxy'
+import { $t, defineValaxyConfig } from 'valaxy'
 import { addonWaline } from 'valaxy-addon-waline'
+import { addonMeting } from 'valaxy-addon-meting'
 import { addonComponents } from 'valaxy-addon-components'
 
 // add icons what you will need
 const safelist = [
   'i-ri-home-line',
+  'i-ri-code-box-line',
 ]
 
 /**
@@ -23,36 +25,46 @@ export default defineValaxyConfig<UserThemeConfig>({
     },
     nav: [
       {
-        text: '分类',
+        text: $t('nav.categories'),
         link: '/categories/',
         icon: 'i-ri-apps-line',
       },
       {
-        text: '标签',
+        text: $t('nav.tags'),
         link: '/tags/',
         icon: 'i-ri-bookmark-3-line',
       },
       {
-        text: '友链',
+        text: $t('nav.links'),
         link: '/links/',
         icon: 'i-ri-open-arm-line',
-      },  
+      },
+      {
+        text: $t('nav.websites'),
+        link: '/websites/',
+        icon: 'i-ri-window-line',
+      },
+      {
+        text: $t('nav.demos'),
+        link: '/demos/',
+        icon: 'i-ri-code-box-line',
+      },
     ],
     pages: [
       {
-        name: '分类',
+        name: $t('pages.categories'),
         url: '/categories/',
         icon: 'i-ri-apps-line',
         color: 'dodgerblue',
       },
       {
-        name: '标签',
+        name: $t('pages.tags'),
         url: '/tags/',
         icon: 'i-ri-bookmark-3-line',
         color: 'dodgerblue',
       },
       {
-        name: '友链',
+        name: $t('pages.links'),
         url: '/links/',
         icon: 'i-ri-open-arm-line',
         color: 'hotpink',
@@ -89,6 +101,19 @@ export default defineValaxyConfig<UserThemeConfig>({
       serverURL: 'https://walinelming.vercel.app/',
       pageview: true,
       comment: true,
+    }),
+    addonMeting({
+      global: true,
+      props: {
+        id: '13112729612',
+        server: 'netease',
+        type: 'playlist',
+        autoplay: false,
+        theme: "#409EFF",
+      },
+      options: {
+        lyricHidden: true,
+      },
     }),
     addonComponents(),
   ],

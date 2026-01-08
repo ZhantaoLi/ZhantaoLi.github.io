@@ -1,7 +1,7 @@
 import { defineSiteConfig } from 'valaxy'
 
 export default defineSiteConfig({
-  url: 'https://valaxy.site/',
+  url: 'https://zhantaoli.github.io/',
   favicon: "/favicon.svg",
   lang: 'zh-CN',
   title: 'LMing',
@@ -52,7 +52,8 @@ export default defineSiteConfig({
   },
 
   license: {
-    enabled: false,
+    enabled: true,
+    type: 'by-nc-sa',
   },
 
   statistics: {

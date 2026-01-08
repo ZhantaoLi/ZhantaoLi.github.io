@@ -1,0 +1,147 @@
+/* APlayer 深色模式样式 - 使用高优先级选择器 */
+
+/* 主容器 */
+html.dark .aplayer {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 信息区域 */
+html.dark .aplayer .aplayer-info {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 歌曲标题 */
+html.dark .aplayer .aplayer-info .aplayer-music .aplayer-title {
+  color: #e0e0e0 !important;
+}
+
+/* 歌手名 */
+html.dark .aplayer .aplayer-info .aplayer-music .aplayer-author {
+  color: #888888 !important;
+}
+
+/* 控制器时间 */
+html.dark .aplayer .aplayer-info .aplayer-controller .aplayer-time {
+  color: #aaaaaa !important;
+}
+
+/* 控制器时间 - 备用样式 */
+html.dark .aplayer-time {
+  color: #aaaaaa !important;
+}
+
+/* 图标 */
+html.dark .aplayer .aplayer-info .aplayer-controller .aplayer-time .aplayer-icon path {
+  fill: #aaaaaa !important;
+}
+
+html.dark .aplayer .aplayer-icon path {
+  fill: #aaaaaa !important;
+}
+
+html.dark .aplayer .aplayer-icon:hover path {
+  fill: #ffffff !important;
+}
+
+/* 进度条背景 */
+html.dark .aplayer .aplayer-bar-wrap .aplayer-bar {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 歌词 */
+html.dark .aplayer .aplayer-lrc {
+  background: transparent !important;
+}
+
+html.dark .aplayer .aplayer-lrc p {
+  color: #888888 !important;
+}
+
+html.dark .aplayer .aplayer-lrc p.aplayer-lrc-current {
+  color: #ffffff !important;
+}
+
+/* 播放列表 */
+html.dark .aplayer .aplayer-list {
+  background: rgba(30, 30, 30, 0.98) !important;
+}
+
+html.dark .aplayer .aplayer-list ol li {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark .aplayer .aplayer-list ol li:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark .aplayer .aplayer-list ol li.aplayer-list-light {
+  background: rgba(64, 158, 255, 0.2) !important;
+}
+
+html.dark .aplayer .aplayer-list ol li .aplayer-list-title {
+  color: #e0e0e0 !important;
+}
+
+html.dark .aplayer .aplayer-list ol li .aplayer-list-author {
+  color: #888888 !important;
+}
+
+/* Mini 切换按钮 */
+html.dark .aplayer .aplayer-miniswitcher {
+  background: rgba(30, 30, 30, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 播放按钮覆盖层 */
+html.dark .aplayer .aplayer-pic .aplayer-play {
+  background: rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .aplayer .aplayer-pic .aplayer-play svg {
+  fill: #ffffff !important;
+}
+
+/* 音量条 */
+html.dark .aplayer .aplayer-volume-wrap .aplayer-volume-bar-wrap {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 播放列表外边框 */
+html.dark .aplayer .aplayer-list {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark .aplayer .aplayer-list ol {
+  border: none !important;
+}
+
+/* 播放列表滚动条 */
+html.dark .aplayer .aplayer-list ol::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+html.dark .aplayer .aplayer-list ol::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+html.dark .aplayer .aplayer-list ol::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 3px !important;
+}
+
+html.dark .aplayer .aplayer-list ol::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 主容器边框 */
+html.dark .aplayer {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Mini 切换按钮边框 */
+html.dark .aplayer .aplayer-miniswitcher {
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
