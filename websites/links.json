@@ -1,0 +1,100 @@
+[
+  {
+    "name": "ChatGPT",
+    "url": "https://chat.openai.com",
+    "avatar": "https://chat.openai.com/favicon.ico",
+    "type": "AI",
+    "reason": "OpenAI 的对话式 AI 助手"
+  },
+  {
+    "name": "Claude",
+    "url": "https://claude.ai",
+    "avatar": "https://claude.ai/favicon.ico",
+    "type": "AI",
+    "reason": "Anthropic 的 AI 助手"
+  },
+  {
+    "name": "Gemini",
+    "url": "https://gemini.google.com",
+    "avatar": "https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg",
+    "type": "AI",
+    "reason": "Google 的多模态 AI 模型"
+  },
+  {
+    "name": "Stable Diffusion",
+    "url": "https://stability.ai",
+    "avatar": "https://stability.ai/favicon.ico",
+    "type": "AI",
+    "reason": "开源 AI 图像生成模型"
+  },
+  {
+    "name": "Hugging Face",
+    "url": "https://huggingface.co",
+    "avatar": "https://huggingface.co/favicon.ico",
+    "type": "AI",
+    "reason": "AI 模型托管与分享平台"
+  },
+  {
+    "name": "Poe",
+    "url": "https://poe.com",
+    "avatar": "https://psc2.cf2.poecdn.net/assets/favicon.svg",
+    "type": "AI",
+    "reason": "Quora 多 AI 模型聚合平台"
+  },
+  {
+    "name": "GitHub",
+    "url": "https://github.com",
+    "avatar": "https://github.githubassets.com/favicons/favicon.svg",
+    "type": "Code",
+    "reason": "全球最大的代码托管平台"
+  },
+  {
+    "name": "Stack Overflow",
+    "url": "https://stackoverflow.com",
+    "avatar": "https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico",
+    "type": "Code",
+    "reason": "程序员问答社区"
+  },
+  {
+    "name": "CodePen",
+    "url": "https://codepen.io",
+    "avatar": "https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico",
+    "type": "Web",
+    "reason": "前端代码在线演示平台"
+  },
+  {
+    "name": "LeetCode",
+    "url": "https://leetcode.com",
+    "avatar": "https://leetcode.com/favicon.ico",
+    "type": "Code",
+    "reason": "编程算法练习平台"
+  },
+  {
+    "name": "MDN Web Docs",
+    "url": "https://developer.mozilla.org",
+    "avatar": "https://developer.mozilla.org/favicon-48x48.png",
+    "type": "Web",
+    "reason": "Web 开发权威文档"
+  },
+  {
+    "name": "Cursor",
+    "url": "https://cursor.sh",
+    "avatar": "https://cursor.sh/favicon.ico",
+    "type": "AI",
+    "reason": "AI 驱动的代码编辑器"
+  },
+  {
+    "name": "Vercel",
+    "url": "https://vercel.com",
+    "avatar": "https://vercel.com/favicon.ico",
+    "type": "Web",
+    "reason": "前端部署与托管平台"
+  },
+  {
+    "name": "Netlify",
+    "url": "https://www.netlify.com",
+    "avatar": "https://www.netlify.com/favicon.ico",
+    "type": "Web",
+    "reason": "静态网站部署平台"
+  }
+]

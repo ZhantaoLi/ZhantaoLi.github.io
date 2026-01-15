@@ -1,0 +1,182 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "LMing",
+    "home_page_url": "https://zhantaoli.github.io/",
+    "feed_url": "https://zhantaoli.github.io/feed.json",
+    "description": " ",
+    "icon": "https://thirdqq.qlogo.cn/g?b=sdk&nk=1489298615&s=640",
+    "author": {
+        "name": "LMing",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "https://zhantaoli.github.io/posts/信号分析与处理",
+            "content_html": "<h1>信号分析与处理</h1>\n<p><strong>Author:</strong> Ming Li<br>\n<strong>Date:</strong> December 2025</p>\n<hr>\n<h2>一、填空题</h2>\n<ol>\n<li>连续时间傅里叶变换、离散傅里叶变换和短时傅里叶变换的正交基函数分别为____,____,____.</li>\n<li>某线性非时变因果离散系统的系统函数为 $H(z)=\\frac{1-4z^{-1}}{1-0.25z^{-1}}$, 求该系统频率响应在 $\\omega=\\frac{\\pi}{2}$ 时的幅度响应 $\\left | H(e^{j\\frac{\\pi}{2}}) \\right |$.</li>\n</ol>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/信号分析与处理\" target=\"_blank\">https://zhantaoli.github.io/posts/信号分析与处理</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/信号分析与处理",
+            "title": "信号分析与处理",
+            "date_modified": "2025-12-31T00:00:00.000Z",
+            "date_published": "2025-12-31T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/T113-i记录",
+            "content_html": "<h2>搭建环境</h2>\n<p>​<code>VMware17</code></p>\n<p>​<code>Ubuntu18.04</code></p>\n<p>​<code>Tronlong T113-i</code></p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/T113-i记录\" target=\"_blank\">https://zhantaoli.github.io/posts/T113-i记录</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/T113-i记录",
+            "title": "T113-i记录",
+            "date_modified": "2025-10-24T00:00:00.000Z",
+            "date_published": "2025-10-24T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/学术规范与论文写作",
+            "content_html": "<p><strong>雨课堂 - 学术规范与论文写作</strong></p>\n<p>本文转载来自 <a href=\"https://www.luotian.cyou/post/Aca-Stan-Dis-Wri.html\">雨课堂 - 学术规范与论文写作答案</a></p>\n<h2>第一章</h2>\n<h3>如何造就优秀的学术论文--Quiz 1</h3>\n<ol>\n<li>根据本周所讲内容，对于论文标题的撰写，以下描述正确的是<br>\n<strong>A、标题应尽量精炼简洁</strong></li>\n</ol>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/学术规范与论文写作\" target=\"_blank\">https://zhantaoli.github.io/posts/学术规范与论文写作</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/学术规范与论文写作",
+            "title": "雨课堂 - 学术规范与论文写作",
+            "date_modified": "2025-09-25T00:00:00.000Z",
+            "date_published": "2025-09-25T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/工程伦理",
+            "content_html": "<p><strong>雨课堂 - 工程伦理</strong></p>\n<p>本文转载来自 <a href=\"https://www.jacksonlee.work/index.php/archives/6/\">工程伦理慕课答案（可供复习）</a></p>\n<h2>第1章作业</h2>\n<p>1.工程的概念最初主要用于指代与()相关的设计和建造活动,工程师最初指设计、创造和建造火炮、弹射器、云梯或其他用于战争的工具的人。<br>\nA 科技</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/工程伦理\" target=\"_blank\">https://zhantaoli.github.io/posts/工程伦理</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/工程伦理",
+            "title": "雨课堂 - 工程伦理",
+            "date_modified": "2025-09-25T00:00:00.000Z",
+            "date_published": "2025-09-25T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/科学道德与学风",
+            "content_html": "<p><strong>雨课堂 - 科学道德与学风</strong></p>\n<p>本文转载来自 <a href=\"https://www.luotian.cyou/post/Sci-ethics-ethos.html\">雨课堂 - 科学道德与学风答案</a></p>\n<h2>第一章</h2>\n<ol>\n<li>1956 年，谁撰写的《工程控制论》获国家科学一等奖<br>\n<strong>A、钱学森</strong></li>\n</ol>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/科学道德与学风\" target=\"_blank\">https://zhantaoli.github.io/posts/科学道德与学风</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/科学道德与学风",
+            "title": "雨课堂 - 科学道德与学风",
+            "date_modified": "2025-09-25T00:00:00.000Z",
+            "date_published": "2025-09-25T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/E2000D测试",
+            "content_html": "<h3>E2000D核心板</h3>\n<ol>\n<li>测试点基准电压</li>\n<li>使用SFLY Flypro对<u>QSPI</u>(W25Q128JVxxQ)行<u>烧录</u>(flash烧写器夹子)<code>fip-all.bin</code></li>\n</ol>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/E2000D测试\" target=\"_blank\">https://zhantaoli.github.io/posts/E2000D测试</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/E2000D测试",
+            "title": "E2000D测试",
+            "date_modified": "2025-08-19T00:00:00.000Z",
+            "date_published": "2025-08-19T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/ZYNQ",
+            "content_html": "<h2>EBAZ4025</h2>\n<ul>\n<li>矿板</li>\n</ul>\n<p><a href=\"https://whycan.com/t_2297.html\">捡了个便宜的高级ZYNQ XC7Z010 开发板玩玩 </a></p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/ZYNQ\" target=\"_blank\">https://zhantaoli.github.io/posts/ZYNQ</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/ZYNQ",
+            "title": "ZYNQ记录",
+            "date_modified": "2025-01-11T00:00:00.000Z",
+            "date_published": "2025-01-11T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/ffmpeg常用教程",
+            "content_html": "<h2>一、安装</h2>\n<p><strong>ffmpeg官网：<a href=\"https://www.ffmpeg.org/download.html\">https://www.ffmpeg.org/download.html</a></strong></p>\n<p>该网站中的FFMPEG分为3个版本：Static，Shared，Dev。</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/ffmpeg常用教程\" target=\"_blank\">https://zhantaoli.github.io/posts/ffmpeg常用教程</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/ffmpeg常用教程",
+            "title": "ffmpeg常用教程",
+            "date_modified": "2024-06-01T00:00:00.000Z",
+            "date_published": "2024-06-01T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/Ai-Thinker环境搭建",
+            "content_html": "<p>::: tip<br>\n这里使用的是 <code>Ai-Thinker小安派</code> ，更多详细资料详见官网：<a href=\"https://docs.ai-thinker.com/open_hardware/index.html\">小安派-开源硬件系列 从选型到开发全流程</a><br>\n:::</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/Ai-Thinker环境搭建\" target=\"_blank\">https://zhantaoli.github.io/posts/Ai-Thinker环境搭建</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/Ai-Thinker环境搭建",
+            "title": "Ai-Thinker环境搭建",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/Linux记录",
+            "content_html": "<h3>桌面操作系统</h3>\n<ol>\n<li>Ubuntu</li>\n</ol>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/Linux记录\" target=\"_blank\">https://zhantaoli.github.io/posts/Linux记录</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/Linux记录",
+            "title": "Linux记录",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/STM32的PID算法",
+            "content_html": "<h2>STM32的PID算法</h2>\n<p>抽象化的模拟 PID 控制系统原理框图，如下图所示。该系统由模拟 PID 控制器和被控对象组成。</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/STM32的PID算法\" target=\"_blank\">https://zhantaoli.github.io/posts/STM32的PID算法</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/STM32的PID算法",
+            "title": "STM32的PID算法",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/alist记录",
+            "content_html": "<p>::: tip<br>\n随着 Alist 项目被出售并由新团队接手，原 Alist 的部分核心贡献者决定创建一个全新的分支项目 —— OpenList。这个项目旨在保持 Alist 的原有优势，同时去除商业化带来的限制，回归开源本质。<br>\n:::</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/alist记录\" target=\"_blank\">https://zhantaoli.github.io/posts/alist记录</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/alist记录",
+            "title": "Alist记录",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/英语单词",
+            "content_html": "<blockquote>\n<p>这个换行根typora不太一样, 懒得打行尾的两个空格了😢</p>\n</blockquote>\n<blockquote>\n<p>更新: 还好有AI😎</p>\n</blockquote>\n<h3>2024年3月7日</h3>\n<p>liberate\tvt.使自由，使解脱;解放(国家等)</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/英语单词\" target=\"_blank\">https://zhantaoli.github.io/posts/英语单词</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/英语单词",
+            "title": "英语单词",
+            "date_modified": "2024-03-07T00:00:00.000Z",
+            "date_published": "2024-03-07T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/HDLBits刷题",
+            "content_html": "<h2>复习Verilog</h2>\n<h3>知识点</h3>\n<ul>\n<li>在<code>always</code>里<strong>不能</strong>有<code>assign</code>赋值，报错<code>Procedural Continuous Assignment to register is not supported</code></li>\n<li><code>assign</code>赋值左侧为<code>wire</code>；<code>always</code>里赋值左侧为<code>reg</code></li>\n</ul>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/HDLBits刷题\" target=\"_blank\">https://zhantaoli.github.io/posts/HDLBits刷题</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/HDLBits刷题",
+            "title": "HDLBits刷题",
+            "date_modified": "2023-04-12T19:07:32.000Z",
+            "date_published": "2023-04-12T19:07:32.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}
