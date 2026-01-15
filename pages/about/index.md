@@ -6,6 +6,7 @@ tags:
   - 个人
 categories:
   - 公告
+aside: false
 ---
 
 我是LMing

@@ -2,6 +2,11 @@
 
 Example: [valaxy.site](https://valaxy.site)
 
+## Info
+
+![Repo Size](https://img.shields.io/github/repo-size/ZhantaoLi/ZhantaoLi.github.io?style=flat-square&color=blue)
+![Last Commit](https://img.shields.io/github/last-commit/ZhantaoLi/ZhantaoLi.github.io?style=flat-square&color=blue)
+
 ## Usage
 
 ```bash
@@ -16,6 +21,9 @@ npm run dev
 # build
 npm run build
 # or  pnpm build
+
+# update
+pnpm update valaxy valaxy-theme-yun --latest
 ```
 
 See `http://localhost:4859/`, have fun!

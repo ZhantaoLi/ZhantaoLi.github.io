@@ -36,6 +36,7 @@ links:
   desc: "见崎的猫箱"
   color: "#f5a9b8"
 random: true
+aside: false
 date: 2025-07-14 00:00:00
 updated: 2025-07-17 20:00:00
 ---

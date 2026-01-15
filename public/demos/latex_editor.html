@@ -846,8 +846,6 @@
                     <button onclick="toggleTheme()" id="theme-btn" title="切换主题"><i class="fa-solid fa-sun"></i></button>
                     <span class="divider"></span>
                     <button onclick="showHelp()" title="快捷键帮助"><i class="fa-solid fa-keyboard"></i> 帮助</button>
-                    <button onclick="copyMathML()" title="复制为 Word 公式"><i class="fa-regular fa-file-word"></i>
-                        Word</button>
                     <button onclick="exportImage()" title="导出图片"><i class="fa-regular fa-image"></i> 图片</button>
                 </div>
             </header>
@@ -1271,19 +1269,46 @@
         Object.values(symbolData).forEach(arr => arr.forEach(i => {
             if (!allHints.includes(i.insert)) allHints.push(i.insert);
         }));
-        // 添加更多常用命令
-        const extraHints = ["\\text{}", "\\mathbf{}", "\\mathbb{}", "\\mathrm{}", "\\sin", "\\cos", "\\tan", "\\log", "\\ln", "\\exp", "\\max", "\\min"];
+        const extraHints = [
+            "\\\\",
+            "\\,", "\\;", "\\:", "\\!", "\\quad", "\\qquad",
+            "\\text{}", "\\mathbf{}", "\\mathbb{}", "\\mathrm{}", "\\mathcal{}", "\\mathfrak{}",
+            "\\sin", "\\cos", "\\tan", "\\cot", "\\sec", "\\csc",
+            "\\arcsin", "\\arccos", "\\arctan",
+            "\\sinh", "\\cosh", "\\tanh",
+            "\\log", "\\ln", "\\lg", "\\exp",
+            "\\max", "\\min", "\\sup", "\\inf", "\\lim",
+            "\\sum", "\\prod", "\\int", "\\oint", "\\iint", "\\iiint",
+            "\\frac{}{}", "\\sqrt{}", "\\sqrt[]{}",
+            "\\left(", "\\right)", "\\left[", "\\right]", "\\left\\{", "\\right\\}",
+            "\\begin{}", "\\end{}",
+            "\\hline", "\\cline{}", "\\multicolumn{}{}{}"
+        ];
         allHints.push(...extraHints);
 
         editor.on("inputRead", (cm, change) => {
             if (change.text[0] === "\\") {
+                const cur = cm.getCursor();
+                const line = cm.getLine(cur.line);
+                
+                // 检查前一个字符是否也是反斜杠（即输入的是 \\ 换行符）
+                if (cur.ch >= 2 && line.charAt(cur.ch - 2) === "\\") {
+                    return; // 不触发自动补全
+                }
+                
                 CodeMirror.commands.autocomplete(cm, (cm) => {
-                    const cur = cm.getCursor();
-                    const line = cm.getLine(cur.line);
-                    const start = line.lastIndexOf("\\", cur.ch - 1);
-                    const word = line.slice(start, cur.ch);
+                    const curPos = cm.getCursor();
+                    const curLine = cm.getLine(curPos.line);
+                    const start = curLine.lastIndexOf("\\", curPos.ch - 1);
+                    const word = curLine.slice(start, curPos.ch);
+                    
+                    // 只匹配以反斜杠+字母开头的命令
+                    if (word.length < 2 || !/^\\[a-zA-Z]/.test(word)) {
+                        return { list: [], from: curPos, to: curPos };
+                    }
+                    
                     const list = allHints.filter(h => h.toLowerCase().startsWith(word.toLowerCase()));
-                    return { list, from: CodeMirror.Pos(cur.line, start), to: cur };
+                    return { list, from: CodeMirror.Pos(curPos.line, start), to: curPos };
                 }, { completeSingle: false });
             }
         });
@@ -1469,25 +1494,6 @@
 
         function showHelp() { document.getElementById("help-modal").classList.add("active"); }
         function closeHelp() { document.getElementById("help-modal").classList.remove("active"); }
-
-        function copyMathML() {
-            try {
-                const content = editor.getValue().split('\n').filter(l => !l.trim().startsWith('%')).join('\n');
-                const html = katex.renderToString(content, { throwOnError: false, output: "mathml" });
-                const temp = document.createElement("div");
-                temp.innerHTML = html;
-                document.body.appendChild(temp);
-                const range = document.createRange();
-                range.selectNode(temp);
-                window.getSelection().removeAllRanges();
-                window.getSelection().addRange(range);
-                document.execCommand("copy");
-                document.body.removeChild(temp);
-                showToast("success", "已复制为 Word 可用公式");
-            } catch (e) {
-                showToast("error", "复制失败: " + e.message);
-            }
-        }
 
         function exportImage() {
             showToast("info", "正在生成图片...");

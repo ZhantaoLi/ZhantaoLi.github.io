@@ -3,6 +3,7 @@ title: HTML Demos
 nav: false
 date: 2025-12-31
 icon: i-ri-code-box-line
+aside: false
 ---
 
 ## HTML 效果展示

@@ -139,7 +139,7 @@
       height: 100vh;
       display: flex;
       font-family: sans-serif;
-      background: url('https://bing.img.run/1920x1080.php') center/cover no-repeat;
+      background: url('https://picsum.photos/1920/1080') center/cover no-repeat;
       overflow: hidden;
       padding-top: 60px; /* 為標題區域留出空間 */
     }
@@ -764,13 +764,13 @@
       <h3>Noise Distortion</h3>
       <div class="control-row">
         <label>Noise Frequency:</label>
-        <input type="range" id="noiseFrequency" min="0.001" max="0.02" step="0.001" value="0.008">
-        <span id="noiseFrequencyValue">0.008</span>
+        <input type="range" id="noiseFrequency" min="0.001" max="0.02" step="0.001" value="0.005">
+        <span id="noiseFrequencyValue">0.005</span>
       </div>
       <div class="control-row">
         <label>Strength:</label>
-        <input type="range" id="noiseStrength" min="0" max="200" value="77">
-        <span id="noiseStrengthValue">77</span>
+        <input type="range" id="noiseStrength" min="0" max="200" value="99">
+        <span id="noiseStrengthValue">99</span>
       </div>
     </div>
     <div class="control-group">
@@ -962,13 +962,13 @@
 
     // Background image array
     const backgrounds = [
-      "https://bing.img.run/1920x1080.php",
+      "https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?w=1920&h=1080&fit=crop",
+      "https://images.unsplash.com/photo-1624269305548-1527ef905ff6?w=1920&h=1080&fit=crop",
       "https://bing.img.run/rand.php",
       "https://api.dujin.org/bing/1920.php",
       "https://picsum.photos/1920/1080?random=1",
       "https://picsum.photos/1920/1080?random=2",
-      "https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?w=1920&h=1080&fit=crop",
-      "https://images.unsplash.com/photo-1624269305548-1527ef905ff6?w=1920&h=1080&fit=crop",
+
     ];
     let currentBgIndex = 0;
 
@@ -1488,7 +1488,7 @@ noiseStrength={${noiseStrength.value}}`;
         glassWidth:180,
         glassHeight:60,
         glassText:'Login',
-        backgroundImage:'https://bing.img.run/1920x1080.php'
+        backgroundImage:'https://picsum.photos/1920/1080'
       },
       {//有序列表
         id:2,
@@ -1531,7 +1531,7 @@ noiseStrength={${noiseStrength.value}}`;
         textOpacity.value = liquidGlass.textOpacity || 100;
         textOffsetX.value = liquidGlass.textOffsetX || 0;
         textFontFamily.value = liquidGlass.textFontFamily || "'Georgia', 'Microsoft YaHei', '微软雅黑', serif";
-        let backgroundImage = liquidGlass.backgroundImage || 'https://bing.img.run/1920x1080.php';
+        let backgroundImage = liquidGlass.backgroundImage || 'https://picsum.photos/1920/1080';
         document.body.style.backgroundImage = `url('${backgroundImage}')`;
         updateDisplay()
       }
