@@ -1,8 +1,8 @@
 ---
 title: Alist记录
 tags:
-  - Alist
-categories: Alist
+  - Storage
+categories: Storage
 date: 2024-04-12
 updated: 2025-09-01
 ---

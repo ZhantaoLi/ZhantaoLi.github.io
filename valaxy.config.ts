@@ -3,119 +3,135 @@ import { $t, defineValaxyConfig } from 'valaxy'
 import { addonWaline } from 'valaxy-addon-waline'
 import { addonMeting } from 'valaxy-addon-meting'
 import { addonComponents } from 'valaxy-addon-components'
+import { localIconLoader } from 'vitepress-plugin-group-icons'
 
 // add icons what you will need
 const safelist = [
-  'i-ri-home-line',
-  'i-ri-code-box-line',
+    'i-ri-home-line',
+    'i-ri-code-box-line',
 ]
 
 /**
  * User Config
  */
 export default defineValaxyConfig<UserThemeConfig>({
-  // site config see site.config.ts
+    // site config see site.config.ts
 
-  theme: 'yun',
+    theme: 'yun',
 
-  themeConfig: {
-    banner: {
-      enable: true,
-      title: 'LMing',
+    themeConfig: {
+        banner: {
+            enable: true,
+            title: 'LMing',
+        },
+        nav: [
+            {
+                text: $t('nav.categories'),
+                link: '/categories/',
+                icon: 'i-ri-apps-line',
+            },
+            {
+                text: $t('nav.tags'),
+                link: '/tags/',
+                icon: 'i-ri-bookmark-3-line',
+            },
+            {
+                text: $t('nav.links'),
+                link: '/links/',
+                icon: 'i-ri-open-arm-line',
+            },
+            {
+                text: $t('nav.websites'),
+                link: '/websites/',
+                icon: 'i-ri-window-line',
+            },
+            {
+                text: $t('nav.demos'),
+                link: '/demos/',
+                icon: 'i-ri-code-box-line',
+            },
+        ],
+        pages: [
+            {
+                name: $t('pages.categories'),
+                url: '/categories/',
+                icon: 'i-ri-apps-line',
+                color: 'dodgerblue',
+            },
+            {
+                name: $t('pages.tags'),
+                url: '/tags/',
+                icon: 'i-ri-bookmark-3-line',
+                color: 'dodgerblue',
+            },
+            {
+                name: $t('pages.links'),
+                url: '/links/',
+                icon: 'i-ri-open-arm-line',
+                color: 'hotpink',
+            },
+        ],
+
+        footer: {
+            since: 2025,
+            beian: {
+                enable: false,
+                icp: 'xICP备xxxxxx号',
+            },
+            icon: {
+                enable: false,
+                title: 'Home',
+                url: 'https://zhantaoli.github.io/',
+            }
+        },
     },
-    nav: [
-      {
-        text: $t('nav.categories'),
-        link: '/categories/',
-        icon: 'i-ri-apps-line',
-      },
-      {
-        text: $t('nav.tags'),
-        link: '/tags/',
-        icon: 'i-ri-bookmark-3-line',
-      },
-      {
-        text: $t('nav.links'),
-        link: '/links/',
-        icon: 'i-ri-open-arm-line',
-      },
-      {
-        text: $t('nav.websites'),
-        link: '/websites/',
-        icon: 'i-ri-window-line',
-      },
-      {
-        text: $t('nav.demos'),
-        link: '/demos/',
-        icon: 'i-ri-code-box-line',
-      },
+
+    modules: {
+        rss: {
+            enable: true,
+            fullText: false,
+        },
+    },
+
+    groupIcons: {
+        customIcon: {
+            // valaxy: 'https://valaxy.site/favicon.svg',
+            valaxy: localIconLoader(import.meta.url, './public/favicon.svg'),
+            nodejs: 'vscode-icons:file-type-node',
+            playwright: 'vscode-icons:file-type-playwright',
+            typedoc: 'vscode-icons:file-type-typedoc',
+            eslint: 'vscode-icons:file-type-eslint',
+            dockerfile: 'vscode-icons:file-type-docker',
+        },
+    },
+
+    siteConfig: {
+        comment: {
+            enable: true,
+        },
+    },
+
+    addons: [
+        addonWaline({
+            serverURL: 'https://walinelming.vercel.app/',
+            pageview: true,
+            comment: true,
+        }),
+        addonMeting({
+            global: true,
+            props: {
+                id: '13112729612',
+                server: 'netease',
+                type: 'playlist',
+                autoplay: false,
+                theme: "#409EFF",
+            },
+            options: {
+                lyricHidden: true,
+            },
+        }),
+        addonComponents(),
     ],
-    pages: [
-      {
-        name: $t('pages.categories'),
-        url: '/categories/',
-        icon: 'i-ri-apps-line',
-        color: 'dodgerblue',
-      },
-      {
-        name: $t('pages.tags'),
-        url: '/tags/',
-        icon: 'i-ri-bookmark-3-line',
-        color: 'dodgerblue',
-      },
-      {
-        name: $t('pages.links'),
-        url: '/links/',
-        icon: 'i-ri-open-arm-line',
-        color: 'hotpink',
-      },
-    ],
 
-    footer: {
-      since: 2025,
-      beian: {
-        enable: false,
-        icp: 'xICP备xxxxxx号',
-      },
-      icon: {
-        enable: false,
-        title: 'Home',
-        url: 'https://zhantaoli.github.io/',
-      }
-    },
-  },
-  modules: {
-    rss: {
-      enable: true,
-      fullText: false,
-    },
-  },
-
-  siteConfig: {
-    comment: {
-      enable: true,
-    },
-  },
-  addons: [
-    addonWaline({
-      serverURL: 'https://walinelming.vercel.app/',
-      pageview: true,
-      comment: true,
-    }),
-    addonMeting({
-      global: true,
-      props: {
-        id: '13112729612',
-        server: 'netease',
-        type: 'playlist',
-        autoplay: false,
-        theme: "#409EFF",
-      },
-      options: {
-        lyricHidden: true,
-      },
-    }),
-    addonComponents(),
-  ],
-  unocss: { safelist },
+    unocss: { safelist },
 })

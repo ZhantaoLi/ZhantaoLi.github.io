@@ -7,6 +7,10 @@ date: 2024-06-01
 updated: 2025-08-05
 ---
 
+# ffmpeg
+
+[[toc]]
+
 ## 一、安装
 
 **ffmpeg官网：https://www.ffmpeg.org/download.html**

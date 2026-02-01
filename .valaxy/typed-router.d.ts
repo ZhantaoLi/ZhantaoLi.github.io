@@ -142,9 +142,37 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/posts/AI Vocabulary': RouteRecordInfo<
+      '/posts/AI Vocabulary',
+      '/posts/AI%20Vocabulary',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/posts/alist记录': RouteRecordInfo<
       '/posts/alist记录',
       '/posts/alist%E8%AE%B0%E5%BD%95',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/CCG': RouteRecordInfo<
+      '/posts/CCG',
+      '/posts/CCG',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/CCG by cc-switch': RouteRecordInfo<
+      '/posts/CCG by cc-switch',
+      '/posts/CCG%20by%20cc-switch',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/CSTC&OSCA': RouteRecordInfo<
+      '/posts/CSTC&OSCA',
+      '/posts/CSTC&OSCA',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -194,6 +222,13 @@ declare module 'vue-router/auto-routes' {
     '/posts/T113-i记录': RouteRecordInfo<
       '/posts/T113-i记录',
       '/posts/T113-i%E8%AE%B0%E5%BD%95',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/Unify Chat Provider for Copilot': RouteRecordInfo<
+      '/posts/Unify Chat Provider for Copilot',
+      '/posts/Unify%20Chat%20Provider%20for%20Copilot',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -334,9 +369,33 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/posts/AI Vocabulary.md': {
+      routes:
+        | '/posts/AI Vocabulary'
+      views:
+        | never
+    }
     'pages/posts/alist记录.md': {
       routes:
         | '/posts/alist记录'
+      views:
+        | never
+    }
+    'pages/posts/CCG.md': {
+      routes:
+        | '/posts/CCG'
+      views:
+        | never
+    }
+    'pages/posts/CCG by cc-switch.md': {
+      routes:
+        | '/posts/CCG by cc-switch'
+      views:
+        | never
+    }
+    'pages/posts/CSTC&OSCA.md': {
+      routes:
+        | '/posts/CSTC&OSCA'
       views:
         | never
     }
@@ -379,6 +438,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/T113-i记录.md': {
       routes:
         | '/posts/T113-i记录'
+      views:
+        | never
+    }
+    'pages/posts/Unify Chat Provider for Copilot.md': {
+      routes:
+        | '/posts/Unify Chat Provider for Copilot'
       views:
         | never
     }

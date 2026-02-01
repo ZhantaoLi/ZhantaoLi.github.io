@@ -7,6 +7,10 @@ tags:
   - Linux
 ---
 
+# Linux记录
+
+[[toc]]
+
 ### 桌面操作系统
 
 1. Ubuntu  <!-- more -->  

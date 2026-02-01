@@ -8,7 +8,7 @@ tags:
 top: 1
 password: 123456
 password_hint: input password:123456
-aplyer: true
+aplayer: true
 ---
 
 ## Valaxy

@@ -7,6 +7,23 @@ Example: [valaxy.site](https://valaxy.site)
 ![Repo Size](https://img.shields.io/github/repo-size/ZhantaoLi/ZhantaoLi.github.io?style=flat-square&color=blue)
 ![Last Commit](https://img.shields.io/github/last-commit/ZhantaoLi/ZhantaoLi.github.io?style=flat-square&color=blue)
 
+## Project Tree
+valaxy-blog/
+  ├── pages/              # 页面和博客文章
+  │   ├── posts/          # 博客文章 (Markdown)
+  │   ├── about/          # 关于页面
+  │   ├── categories/     # 分类页
+  │   ├── tags/           # 标签页
+  │   ├── links/          # 友链页
+  │   ├── demos/          # 演示页
+  │   └── websites/       # 网站收藏页
+  ├── components/         # 自定义 Vue 组件
+  ├── styles/             # 自定义样式
+  ├── public/             # 静态资源
+  ├── dist/               # 构建输出 (gitignore)
+  ├── valaxy.config.ts    # Valaxy 主配置
+  └── site.config.ts      # 站点配置
+
 ## Usage
 
 ```bash

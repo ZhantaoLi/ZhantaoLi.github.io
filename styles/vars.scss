@@ -8,11 +8,11 @@
   //   --yun-aside-bg-img: url("../public/aside-light.webp");
 
   /* 文章背景颜色 */
-    --va-c-bg-light: rgba(255, 255, 255, 0.7);
+  --va-c-bg-light: rgba(255, 255, 255, 0.7);
 
   /* 字体颜色 */
-    --smc-c-text-light: #0d0d0d;
-  }
+  --smc-c-text-light: #0d0d0d;
+}
 
 .dark {
   // --yun-bg-img: url("../public/bg-dark.webp");
@@ -33,7 +33,7 @@
 }
 
 @media screen and (min-width: 1024px) {
-.post-nav-prev .title,
+  .post-nav-prev .title,
   .post-nav-next .title {
     font-size: medium;
     text-shadow: 0px 0px 1px rgb(255, 255, 255);
