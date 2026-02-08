@@ -10,7 +10,7 @@ updated: 2026-02-01
 [[toc]]
 
 ::: info
-CCG = Claude Code + Codex + Gemini CLI 三合一配置方案  
+CCG = Claude Code + Codex + Gemini CLI 配置方案  
 Reference:
  - https://docs.packyapi.com/docs/
 :::
@@ -21,7 +21,7 @@ Reference:
 
 本教程将指导你使用 **CC-Switch** 在同一台电脑上**统一管理与一键切换** Claude Code、Codex、Gemini CLI 三款 AI 编程工具的配置。
 
-**CCG 三合一：**
+**CCG:**
 - **C**laude Code - Anthropic 官方 CLI 工具
 - **C**odex - OpenAI 代码助手
 - **G**emini CLI - Google AI 编程工具
@@ -62,10 +62,14 @@ Reference:
 npm list -g --depth-0
 ```
 
-- 若提示"命令未找到"，需要先安装 Node.js
+- 若提示"命令未找到"，需要先安装 [Node.js](https://nodejs.org/zh-cn/download)
 - Node.js 正常后再继续后续步骤
+```bash
+node -v
+npm -v
+```
 
-### 2.2 一次性安装三大 CLI
+### 2.2 安装三大 CLI
 
 在终端执行：
 
@@ -73,6 +77,10 @@ npm list -g --depth-0
 npm i -g @anthropic-ai/claude-code@latest
 npm i -g @openai/codex@latest
 npm i -g @google/gemini-cli@latest
+
+claude --version
+codex --version
+gemini --version
 ```
 
 ### 2.3 运行命令生成配置目录
@@ -124,12 +132,12 @@ brew install --cask cc-switch
 ### 3.3 Linux 安装
 
 ```bash
-wget https://github.com/farion1231/cc-switch/releases/latest/download/cc-switch_x.x.x_amd64.deb
-sudo dpkg -i cc-switch_x.x.x_amd64.deb
+wget https://github.com/farion1231/cc-switch/releases/download/v3.10.3/CC-Switch-v3.10.3-Linux-x86_64.deb
+sudo dpkg -i CC-Switch-v3.10.3-Linux-x86_64.deb
 ```
 
 ::: tip 提示
-文件名中的 `x.x.x` 需要替换为实际版本号。
+路径中的 `v3.10.3` 可以根据需要替换为实际版本号。
 :::
 
 ---
@@ -143,60 +151,12 @@ CC-Switch 已内置部分API站模板，无需手动编辑配置文件。
 ### 配置流程（三者通用）
 
 1. 打开 CC-Switch
-2. 选择对应分组（Claude / Codex / Gemini）
+2. 选择对应分组 (Claude / Codex / Gemini)
 3. 供应商选择对应的API站
 4. 粘贴对应分组的 API Key
 5. 点击"添加"
 6. 回到主界面点击"启用"，显示"使用中"
 7. 终端验证对话功能
-
-### 4.1 配置 Claude Code
-
-**步骤：**
-
-1. 打开 CC-Switch
-2. 顶部分组选择：`Claude`
-3. 供应商选择对应的API站配置
-4. 填入 CC 分组的 API Key
-5. 点击右下角 `添加`
-6. 回主界面点击 `启用`
-7. 终端验证：
-
-```bash
-claude
-```
-
-能进入对话并正常回复，即配置成功。
-
-### 4.2 配置 Codex
-
-**步骤：**
-
-1. 打开 CC-Switch
-2. 分组选择：`Codex`
-3. 供应商选择对应的API站配置
-4. 填入 Codex 分组的 API Key
-5. 点击 `添加` 并启用
-6. 终端验证：
-
-```bash
-codex
-```
-
-### 4.3 配置 Gemini
-
-**步骤：**
-
-1. 打开 CC-Switch
-2. 分组选择：`Gemini`
-3. 供应商选择对应的API站配置
-4. 填入 Gemini 分组的 API Key
-5. 点击 `添加` 并启用
-6. 终端验证：
-
-```bash
-gemini
-```
 
 ---
 
@@ -208,12 +168,12 @@ gemini
 
 **配置目录：**
 
-Windows：
+Windows:
 ```text
 %userprofile%\.claude
 ```
 
-macOS：
+macOS/Linux:
 ```text
 ~/.claude
 ```
@@ -223,14 +183,14 @@ macOS：
 ```json
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://www.xxxxxx",
+    "ANTHROPIC_BASE_URL": "https://www.example.com/v1",
     "ANTHROPIC_AUTH_TOKEN": "your-api-key"
   }
 }
 ```
 
 ::: tip 说明
-将 `https://www.xxxxxx` 替换为你的API站 URL，`your-api-key` 替换为实际的 API Key。
+将 `https://www.example.com/v1` 替换为你的API站 URL，`your-api-key` 替换为实际的 API Key。
 :::
 
 **验证：**
@@ -243,12 +203,12 @@ claude
 
 **配置目录：**
 
-Windows：
+Windows:
 ```text
 %userprofile%\.codex
 ```
 
-macOS：
+macOS/Linux:
 ```text
 ~/.codex
 ```
@@ -262,7 +222,7 @@ macOS：
 
 ```toml
 model_provider = "custom"
-model = "gpt-5.1-codex"
+model = "gpt-5.2-codex"
 model_reasoning_effort = "high"
 network_access = "enabled"
 disable_response_storage = true
@@ -271,7 +231,7 @@ model_verbosity = "high"
 
 [model_providers.custom]
 name = "custom"
-base_url = "https://www.xxxxxx/v1"
+base_url = "https://www.example.com/v1"
 wire_api = "responses"
 requires_openai_auth = true
 ```
@@ -301,13 +261,13 @@ Gemini CLI 使用 `.env` 配置文件。
 **配置示例：**
 
 ```text
-GOOGLE_GEMINI_BASE_URL=https://www.xxxxxx
+GOOGLE_GEMINI_BASE_URL=https://www.example.com
 GEMINI_API_KEY=your-api-key
 GEMINI_MODEL=gemini-2.5-pro
 ```
 
 ::: tip 说明
-将 `https://www.xxxxxx` 替换为你的API站 URL。
+将 `https://www.example.com` 替换为你的API站 URL。
 :::
 
 **验证：**
@@ -440,11 +400,11 @@ Connection failed: error sending request for url
 
 ### 配置建议
 
-- ✅ **优先使用 CC-Switch**：减少手动配置错误
-- ✅ **配置后立即验证**：确保三个 CLI 都能正常回复
-- ✅ **任务拆分**：避免把任务描述得太笼统
-- ✅ **避免频繁压缩**：如果经常需要 `/compact`，说明任务拆分不够细
-- ✅ **检查环境变量**：401 错误时优先检查环境变量
+- **优先使用 CC-Switch**：减少手动配置错误
+- **配置后立即验证**：确保三个 CLI 都能正常回复
+- **任务拆分**：避免把任务描述得太笼统
+- **避免频繁压缩**：如果经常需要 `/compact`，说明任务拆分不够细
+- **检查环境变量**：401 错误时优先检查环境变量
 
 ### 使用技巧
 
@@ -454,35 +414,7 @@ Connection failed: error sending request for url
 
 ---
 
-## 9. 快速验收清单
-
-完成以下检查，确保配置成功：
-
-**1. CLI 可执行**
-
-```bash
-claude
-codex
-gemini
-```
-
-三个命令都能进入交互界面。
-
-**2. CC-Switch 状态**
-
-三个分组都显示"启用 / 使用中"。
-
-**3. 功能验证**
-
-分别发送"你好"测试，确保都能收到回复。
-
-**4. 特殊配置确认**
-
-如使用特殊的 base_url，确认配置正确。
-
----
-
 ::: tip 完成
-完成以上步骤，你的 CCG（Claude / Codex / Gemini）三合一环境就搭建完成了！
+完成以上步骤，你的 CCG（Claude / Codex / Gemini）环境就搭建完成了！
 :::
 

@@ -1,10 +1,10 @@
----
+﻿---
 title: Unify Chat Provider for Copilot
 tags:
   - AI
 categories: AI
 date: 2026-01-24
-updated: 2026-01-24
+updated: 2026-02-08
 ---
 
 # Unify Chat Provider for Copilot
@@ -13,114 +13,151 @@ updated: 2026-01-24
 
 ::: info
 Source: [vscode-unify-chat-provider](https://github.com/smallmain/vscode-unify-chat-provider) by [SmallMain](https://linux.do/t/topic/1381609)  
-Just for practicing English and AI writing skills.
+This second-pass write-up follows the repository's documentation style and terminology.
 :::
 <!-- more -->
 
 ## Overview
 
-The Unify Chat Provider is a powerful Visual Studio Code extension that seamlessly integrates multiple chat services into GitHub Copilot's ecosystem. This innovative plugin empowers developers to leverage various AI language models through a unified interface, providing unprecedented flexibility in choosing the optimal service for AI-assisted coding tasks.
+Unify Chat Provider integrates multiple LLM API providers into VS Code's GitHub Copilot Chat through the Language Model API.  
+The core idea is simple: keep Copilot Chat as the UI, and plug in many providers and model families behind it.
 
 ### What is it?
 
-`vscode-unify-chat-provider` is a sophisticated Visual Studio Code extension that integrates deeply with VS Code's native Chat and Language Model API. It enables developers to utilize different LLM backends with a "bring your own key" (BYOK) approach through a single, streamlined chat provider interface.
+`vscode-unify-chat-provider` is a provider orchestration layer for Copilot Chat. It supports:
 
-#### How it works:
+- Multiple API formats (OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, Ollama Chat, Gemini)
+- BYOK provider setup
+- One-click provider/model onboarding
+- One-click migration from other apps/extensions
+- Import/export of full config state
 
-The extension functions as an intelligent bridge between VS Code and various LLM providers. When you initiate a chat request in VS Code, the extension intercepts it, routes it to your configured model/provider, and streams the response back seamlessly into the native chat UI—all without leaving your development environment.
+It also includes deep provider/model parameter controls, so advanced users can tune behavior without leaving VS Code.
 
-#### Core capabilities:
+### Request flow
 
- - Unified Interface: Consolidates multiple LLM providers behind one VS Code chat provider, allowing effortless model switching without workflow disruption
- - Native Integration: Leverages VS Code's built-in chat experience rather than introducing a separate custom UI, maintaining consistency with your familiar development environment
- - BYOK Philosophy: Prioritizes user control—configure your own API keys and settings directly in VS Code, then use chat functionality as normal
+The runtime path is:
 
-### Why It's Useful
+- VS Code Chat UI -> VS Code Language Model API -> Unify Chat Provider -> external model API -> streamed response in Copilot Chat
 
-**Model Flexibility**  
-Choose the optimal model for each specific task based on your priorities—whether you need blazing speed for quick queries, superior quality for complex problem-solving, or cost-effectiveness for high-volume usage.
+## Features (Repo-Aligned)
 
-**Reduced Vendor Lock-in**  
-Maintain a consistent, efficient workflow within VS Code while retaining the freedom to switch between providers. No need to learn new tools or adapt to different interfaces when changing LLM services.
-
-**Accelerated Experimentation**  
-Rapidly compare different providers and models using identical prompts and context, enabling data-driven decisions about which AI service best suits your needs.
-
-**Architecture Overview**  
-The extension follows a clean, efficient architecture:
-- VS Code chat UI → VS Code Language Model API → Unify Chat Provider Extension → External LLM API(s) → Response streamed back to VS Code Chat.  
-This design ensures minimal latency while maintaining full compatibility with VS Code's native features.
+- Broad compatibility across major LLM API styles
+- 45+ provider adaptations and 200+ built-in model recommendations (per repo docs)
+- Visual provider/model management from Command Palette workflows
+- Auto-fetch official model lists for supported providers
+- Provider and model-level overrides (`extraHeaders`, `extraBody`, timeout, capabilities, thinking/web search options)
+- Import/export support (JSON/Base64/URL/URI paths in official docs)
+- Multiple provider configs and multiple variants of the same model ID via suffix strategy
 
 ## Getting Started
 
 ### Installation
 
-1. **Install the Extension**
-   - Open VS Code
-   - Navigate to the Extensions marketplace
-   - Search for "Unify Chat Provider"
-   - Click "Install"
+1. Open VS Code.
+2. Go to the Extensions marketplace.
+3. Search for `Unify Chat Provider`.
+4. Install the extension.
 
-2. **Configure Your Provider**
-   - Open VS Code Command Palette (Ctrl+Shift+P / Cmd+Shift+P)
-   - Search for "Unify Chat Provider"
-   - Select your preferred chat provider (e.g., OpenAI, Anthropic, etc.)
-   - Enter your API key and configure additional parameters such as:
-     - Model selection (e.g., GPT-5, Claude 4, Gemini 3)
-     - API Base URL
-     - API Format
-     - Authentication
+### Basic operation
 
-3. **Start Chatting**
-   - Open the VS Code chat panel (Ctrl+Alt+I / Cmd+Option+I)
-   - Select your configured model from the model dropdown
-   - Begin interacting with your chosen LLM provider just as you would with GitHub Copilot
+The command prefix is `Unify Chat Provider:` (or `ucp:`).  
+Most workflows are command-driven:
 
-### Usage Example
+- Add provider
+- Add provider from well-known list
+- Import config from other applications
+- Manage providers
+- Refresh all providers' official models
 
-```txt
-// Example: Ask the AI to refactor a function
-// Simply select your code and ask in the chat:
-"Can you refactor this function to be more efficient and add error handling?"
+### Quick path
 
-// The extension will:
-// 1. Send your code context to the configured LLM
-// 2. Stream the response back in real-time
-// 3. Display the improved code with explanations
-```
+1. Run `Unify Chat Provider: Add Provider From Well-Known Provider List`.
+2. Choose a provider and complete auth (API key or browser login, depending on provider).
+3. Save config.
+4. Open Copilot Chat and select your model.
 
-## Advanced Features
+## Cookbook-Style Examples
 
-### Context Awareness
-The extension automatically includes relevant code context from your workspace, ensuring more accurate and contextual responses.
+### Add a provider quickly
 
-### Streaming Responses
-Real-time response streaming provides immediate feedback, allowing you to see answers as they're generated rather than waiting for complete responses.
+Use the well-known provider list when available.  
+This path is usually faster and safer than manual setup because it pre-fills API format and recommended defaults.
 
-### Multi-Model Comparison
-Quickly switch between different models to compare responses and choose the best solution for your specific use case.
+### Migrate from another tool
 
-### Privacy & Security
-All API keys are stored securely in VS Code's encrypted settings storage, and no data is sent to third parties except your configured LLM provider.
+Run `Unify Chat Provider: Import Config From Other Applications`.  
+The extension detects supported config files and lets you review/edit before saving.
 
-## Best Practices
+### Manual configuration (advanced)
 
-1. **Choose the Right Model**: Use faster, cheaper models for simple queries and reserve premium models for complex tasks
-2. **Manage API Costs**: Monitor your usage and set up billing alerts with your provider
-3. **Experiment**: Try different models for the same task to find the best fit for your workflow
-4. **Provide Context**: Include relevant code snippets and clear descriptions for better responses
+Manual setup requires:
 
-## Troubleshooting
+- API format
+- Base URL
+- Auth method
+- Models and capabilities
 
-**Common Issues:**
-- **API Key Errors**: Verify your API key is correctly entered and has sufficient credits
-- **Connection Timeouts**: Check your internet connection and provider status
-- **Rate Limiting**: Consider upgrading your API plan or implementing request throttling
+This is useful when you use a custom gateway or a provider not covered by one-click templates.
+
+## Provider and Model Management
+
+### Providers
+
+- You can create multiple provider configs.
+- Provider names must be unique.
+- Providers can be duplicated, exported, and deleted from the management UI.
+
+### Models
+
+- Each provider can hold multiple models.
+- Model IDs can be duplicated across different providers.
+- Auto-fetch official models can be enabled per provider.
+- Manual model configs can coexist with auto-fetched models.
+
+## Parameter Controls
+
+The repository exposes detailed controls at provider and model levels, including:
+
+- Timeout behavior
+- Model capability flags (tool calling, image input)
+- Sampling parameters (temperature, top-p/top-k, penalties)
+- Thinking controls
+- Web search controls
+- Extra headers/body injection for provider-specific needs
+
+## Practical Notes
+
+- This extension is best for users who want Copilot Chat UI plus broad provider flexibility.
+- It is also a strong fit for users migrating from several AI coding tools into one unified VS Code workflow.
+- Some cookbook scenarios in the repo include explicit ToS risk warnings (for example, account-based client impersonation flows). Read and follow those warnings carefully.
+
+## Troubleshooting Checklist
+
+1. Verify API key/account status.
+2. Verify API base URL and selected API format.
+3. Check model capability mismatches (tool calling/image input/thinking behavior).
+4. Use provider/model management screens to inspect effective config.
+5. Refresh official model lists if provider model metadata changed.
 
 ## License
 
-This project is open-source and available under the MIT License.
+The project is licensed under MIT.
 
----
+## What's Next
 
-**Ready to supercharge your coding workflow?** Install Unify Chat Provider today and experience the freedom of choosing the best AI model for every task!
+There are also some other Vibe Coding extensions in VS Code, such as: 
+ - `Cline`
+ - `Roo Code`
+ - `Kilo Code`
+
+Simple Usage:
+
+```json
+{
+  "baseUrl": "https://example.com/v1",
+  "apiKey": "YOUR_API_KEY"
+}
+```
+
+

@@ -81,6 +81,16 @@ vim ~/.pip/pip.conf
     [install]
     trusted-host = https://pypi.tuna.tsinghua.edu.cn
 pip3 config list
+# conda sources
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+conda config --set show_channel_urls True
+conda config --show-sources
+# npm sources
+npm config set registry https://registry.npmmirror.com
+npm config get registry
 #*********************************************#
 
 # 1Panel

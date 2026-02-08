@@ -55,6 +55,47 @@ $env:ANTHROPIC_API_KEY="your-api-key"
 export ANTHROPIC_API_KEY="your-api-key"
 ```
 
+### cc-statusline(自定义状态行)
+Reference:
+ - [状态行配置](https://code.claude.com/docs/zh-CN/statusline)
+ - [CCometixLine](https://github.com/Haleclipse/CCometixLine/)
+
+```bash
+# Install globally
+npm install -g @cometix/ccline
+
+# Or using yarn
+yarn global add @cometix/ccline
+
+# Or using pnpm
+pnpm add -g @cometix/ccline
+
+# Update
+npm update -g @cometix/ccline
+```
+**Configure `cc-statusline`** :
+
+Linux/MacOS:
+```json
+{
+  "statusLine": {
+    "type": "command", 
+    "command": "~/.claude/ccline/ccline",
+    "padding": 0
+  }
+}
+```
+Windows:
+```json
+{
+  "statusLine": {
+    "type": "command", 
+    "command": "%USERPROFILE%\\.claude\\ccline\\ccline.exe",
+    "padding": 0
+  }
+}
+```
+
 ### 基本使用
 
 **启动 Claude Code：**
@@ -85,7 +126,7 @@ CodeX 是一款强大的 AI 代码助手工具，可以集成到多种开发环�
 
 **获取访问权限：**
 
-1. 注册 CodeX 账号
+1. 访问 [OpenAI Platform](https://platform.openai.com/)
 2. 获取 API 密钥
 3. 配置开发环境
 
@@ -102,8 +143,8 @@ export CODEX_API_KEY="your-codex-api-key"
 
 CodeX 可以集成到主流 IDE 中：
 - VS Code
-- JetBrains 系列
-- Vim/Neovim
+- Cursor
+- Windsurf
 
 **主要功能：**
 
@@ -121,7 +162,7 @@ Gemini 是 Google 推出的多模态 AI 模型，支持代码生成、分析和�
 
 ### 获取 API Key
 
-1. 访问 [Google AI Studio](https://makersuite.google.com/app/apikey)
+1. 访问 [Google AI Studio](https://aistudio.google.com/api-keys)
 2. 使用 Google 账号登录
 3. 创建新的 API Key
 4. 复制并保存 API Key
@@ -133,19 +174,6 @@ Gemini 是 Google 推出的多模态 AI 模型，支持代码生成、分析和�
 ```bash
 # 设置 Gemini API Key
 export GOOGLE_API_KEY="your-gemini-api-key"
-```
-
-**Python 使用示例：**
-
-```python
-import google.generativeai as genai
-
-genai.configure(api_key="your-api-key")
-model = genai.GenerativeModel('gemini-pro')
-
-# 代码生成
-response = model.generate_content("编写一个快速排序算法")
-print(response.text)
 ```
 
 ### 主要特点
@@ -195,5 +223,6 @@ print(response.text)
 ---
 
 **相关资源：**
-- [Anthropic API 文档](https://docs.anthropic.com/)
-- [Google AI Studio](https://makersuite.google.com/)
+- [Anthropic API](https://docs.anthropic.com/)
+- [OpenAI Platform](https://platform.openai.com/)
+- [Google AI Studio](https://aistudio.google.com/)

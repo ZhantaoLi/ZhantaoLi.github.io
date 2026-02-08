@@ -1,4 +1,4 @@
-# create-valaxy
+﻿# create-valaxy
 
 Example: [valaxy.site](https://valaxy.site)
 
@@ -6,23 +6,6 @@ Example: [valaxy.site](https://valaxy.site)
 
 ![Repo Size](https://img.shields.io/github/repo-size/ZhantaoLi/ZhantaoLi.github.io?style=flat-square&color=blue)
 ![Last Commit](https://img.shields.io/github/last-commit/ZhantaoLi/ZhantaoLi.github.io?style=flat-square&color=blue)
-
-## Project Tree
-valaxy-blog/
-  ├── pages/              # 页面和博客文章
-  │   ├── posts/          # 博客文章 (Markdown)
-  │   ├── about/          # 关于页面
-  │   ├── categories/     # 分类页
-  │   ├── tags/           # 标签页
-  │   ├── links/          # 友链页
-  │   ├── demos/          # 演示页
-  │   └── websites/       # 网站收藏页
-  ├── components/         # 自定义 Vue 组件
-  ├── styles/             # 自定义样式
-  ├── public/             # 静态资源
-  ├── dist/               # 构建输出 (gitignore)
-  ├── valaxy.config.ts    # Valaxy 主配置
-  └── site.config.ts      # 站点配置
 
 ## Usage
 
@@ -78,3 +61,30 @@ In most cases, you only need to work in the `pages` folder.
 - `.github`: GitHub Actions to auto build & deploy to GitHub Pages
 - `netlify.toml`: for [netlify](https://www.netlify.com/)
 - `vercel.json`: for [vercel](https://vercel.com/)
+
+### Project Tree
+```
+valaxy-blog/
+├─ .github/               # GitHub Actions workflows and CI config
+├─ .valaxy/               # Valaxy local cache and temporary files
+├─ .vscode/               # Workspace settings and extension recommendations
+├─ components/            # Auto-registered custom Vue components
+├─ layouts/               # Custom layout components
+├─ locales/               # i18n locale resources
+├─ pages/                 # Main content pages
+│  ├─ about/              # About page
+│  ├─ categories/         # Category index page
+│  ├─ demos/              # Demo pages
+│  ├─ links/              # Friends/links page
+│  ├─ posts/              # Blog posts written in Markdown
+│  ├─ tags/               # Tag index page
+│  └─ websites/           # Website showcase pages
+├─ public/                # Static assets copied directly to the output
+├─ styles/                # Global style overrides and variables
+├─ netlify.toml           # Netlify build and deploy settings
+├─ package.json           # Project scripts and dependencies
+├─ README.md              # Project documentation
+├─ site.config.ts         # Site metadata (title, links, and profile info)
+├─ valaxy.config.ts       # Valaxy framework configuration
+└─ vercel.json            # Vercel build and deploy settings
+```
