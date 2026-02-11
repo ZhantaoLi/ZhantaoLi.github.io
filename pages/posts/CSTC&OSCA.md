@@ -8,7 +8,7 @@ updated: 2026-01-24
 ---
 
 [[toc]]
-
+<!-- more -->
 ## CSTC(中国科技云)
 
 ::: info
@@ -17,7 +17,7 @@ Reference:
  - https://linux.do/t/topic/1505165  
  - https://mp.weixin.qq.com/s/h1yuli7-74E4YAuLYNU9WQ
 :::
-<!-- more -->  
+
 ### 注册并创建 S3 存储桶
 
 1. 进入 [数据胶囊](https://data.cstcloud.cn/) 网站，选择Github登录(可以不用实名)。  

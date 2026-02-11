@@ -7,8 +7,6 @@ date: 2026-01-24
 updated: 2026-02-08
 ---
 
-# Unify Chat Provider for Copilot
-
 [[toc]]
 
 ::: info

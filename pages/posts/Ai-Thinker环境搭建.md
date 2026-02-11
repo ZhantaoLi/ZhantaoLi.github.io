@@ -7,8 +7,6 @@ date: 2024-04-12
 updated: 2025-02-16
 ---
 
-# Ai-Thinker
-
 [[toc]]
 
 ::: tip

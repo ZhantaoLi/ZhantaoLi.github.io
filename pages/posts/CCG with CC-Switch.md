@@ -1,5 +1,5 @@
 ---
-title: CCG by CC-Switch
+title: CCG with CC-Switch
 tags:
   - AI
 categories: AI
@@ -180,7 +180,7 @@ macOS/Linux:
 
 **创建/编辑 `settings.json`：**
 
-```json
+```json [.claude/settings.json]
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://www.example.com/v1",
@@ -220,7 +220,7 @@ macOS/Linux:
 
 **`config.toml` 示例：**
 
-```toml
+```toml [.codex/config.toml]
 model_provider = "custom"
 model = "gpt-5.2-codex"
 model_reasoning_effort = "high"
@@ -238,7 +238,7 @@ requires_openai_auth = true
 
 **`auth.json` 示例：**
 
-```json
+```json [.codex/auth.json]
 {
   "OPENAI_API_KEY": "your-api-key"
 }
@@ -260,7 +260,7 @@ Gemini CLI 使用 `.env` 配置文件。
 
 **配置示例：**
 
-```text
+```text [.env]
 GOOGLE_GEMINI_BASE_URL=https://www.example.com
 GEMINI_API_KEY=your-api-key
 GEMINI_MODEL=gemini-2.5-pro

@@ -7,8 +7,6 @@ date: 2026-02-07
 updated: 2026-02-07
 ---
 
-# GCMP
-
 [[toc]]
 
 ::: info
@@ -91,7 +89,7 @@ So it is not only "chat model switching"; it is closer to a full Copilot-side en
 
 You can configure model behavior through `settings.json`, for example:
 
-```json
+```json [settings.json]
 {
   "gcmp.maxTokens": 16000,
   "gcmp.editToolMode": "gpt-5",
@@ -130,7 +128,7 @@ There are also some other Vibe Coding extensions in VS Code, such as:
 
 Simple Usage:
 
-```json
+```json [API config example]
 {
   "baseUrl": "https://example.com/v1",
   "apiKey": "YOUR_API_KEY"

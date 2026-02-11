@@ -7,13 +7,11 @@ tags:
   - Linux
 ---
 
-# Linux记录
-
 [[toc]]
-
+<!-- more -->
 ### 桌面操作系统
 
-1. Ubuntu  <!-- more -->  
+1. Ubuntu    
 2. Deepin
 3. Kali Linux
 
@@ -46,6 +44,10 @@ sudo -i
 apt update
 apt install curl telnet net-tools inetutils-ping ufw -y
 
+# IP/Net Quality
+bash <(curl -Ls Check.Place)
+bash <(curl -Ls Check.Place) -I # IP
+bash <(curl -Ls Check.Place) -N # Net
 # 1c1g cloud server: optimizime resource usage
 vim /etc/apt/apt.conf.d/10periodic
 	APT::Periodic::Update-Package-Lists "0";
@@ -115,12 +117,15 @@ s-tui
 cpupower -c all frequency-set -g powersave    #优化能效 平衡性能与功耗
 cpupower -c all frequency-set -g performance  #最大化 CPU 性能
 cpufreq-info -o
+```
+
+```bash
 # wireguard		注意Endpoints
 curl -O https://raw.githubusercontent.com/angristan/wireguard-install/master/wireguard-install.sh
 chmod +x wireguard-install.sh
 ./wireguard-install.sh
 qrencode -t ansiutf8 < ./xxx.conf		#自己命名的conf
-    # ufw allow port    /tcp
+    # ufw allow <PORT>/tcp
 # BBR (uname -r >= 4.9)
 uname -r
 echo "net.core.default_qdisc=fq" | tee -a /etc/sysctl.conf
@@ -132,6 +137,7 @@ lsmod | grep bbr
 bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)
 ufw allow <PORT>/tcp
 x-ui
+    # https://chxpro.com/%E4%BB%A3%E7%90%86/vless-reality%E8%8A%82%E7%82%B9%E6%90%AD%E5%BB%BA.html
 # 网络加速(BBR)(推荐使用5.5以上内核自带的bbr速度最佳)
 wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh"
 chmod +x tcp.sh
@@ -442,11 +448,14 @@ docker
 
 #### Azure IP防火墙
 
-| SSH            | 22          |
+| Name           | Port        |
 | -------------- | ----------- |
+| SSH            | 22          |
+| FTP            | 21          |
 | HTTPS          | 443         |
 | HTTP           | 80          |
 | wireguard      | 51985       |
+| 3x-ui          | 8686        |
 | 1panel         | 42090       |
 | alist/openlist | 5244        |
 | qbittorrent    | 8181,48181  |
@@ -459,8 +468,10 @@ docker
 | rustdesk       | 21114:21119 |
 | siyuan_d       | 6806        |
 | gpt_load       | 3001        |
-| beszel_d       | 8090        |
+| beszel_hub     | 8090        |
+| beszel_agent   | 45876       |
 | kvideo         | 3000        |
+| grok2api       | 8000        |
 
 RustDesk：
 

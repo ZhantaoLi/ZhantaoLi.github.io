@@ -8,11 +8,14 @@ date: 2025-01-11
 updated: 2025-04-04
 ---
 
+**ZYNQ记录**  
+<!-- more -->
+
 ## EBAZ4025
 
 * 矿板
 
-[捡了个便宜的高级ZYNQ XC7Z010 开发板玩玩 ](https://whycan.com/t_2297.html)  <!-- more -->  
+[捡了个便宜的高级ZYNQ XC7Z010 开发板玩玩 ](https://whycan.com/t_2297.html)    
 
 [xjtuecho/EBAZ4205: A 5$ Xilinx ZYNQ development board.](https://github.com/xjtuecho/EBAZ4205)
 

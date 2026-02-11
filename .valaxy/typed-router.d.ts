@@ -163,9 +163,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/posts/CCG by cc-switch': RouteRecordInfo<
-      '/posts/CCG by cc-switch',
-      '/posts/CCG%20by%20cc-switch',
+    '/posts/CCG with CC-Switch': RouteRecordInfo<
+      '/posts/CCG with CC-Switch',
+      '/posts/CCG%20with%20CC-Switch',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -187,6 +187,13 @@ declare module 'vue-router/auto-routes' {
     '/posts/ffmpeg常用教程': RouteRecordInfo<
       '/posts/ffmpeg常用教程',
       '/posts/ffmpeg%E5%B8%B8%E7%94%A8%E6%95%99%E7%A8%8B',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/GCMP': RouteRecordInfo<
+      '/posts/GCMP',
+      '/posts/GCMP',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -267,13 +274,13 @@ declare module 'vue-router/auto-routes' {
    * @internal
    */
   export interface _RouteFileInfoMap {
-    'node_modules/.pnpm/valaxy-theme-yun@0.26.12_vue@3.5.22_typescript@5.9.2_/node_modules/valaxy-theme-yun/pages/index.vue': {
+    'node_modules/valaxy-theme-yun/pages/index.vue': {
       routes:
         | '/'
       views:
         | never
     }
-    'node_modules/.pnpm/valaxy@0.26.12_@babel+parse_84756eabff3d9ab2876e24dace7fdb6f/node_modules/valaxy/client/pages/[...path].vue': {
+    'node_modules/valaxy/client/pages/[...path].vue': {
       routes:
         | '/[...path]'
       views:
@@ -321,13 +328,13 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'node_modules/.pnpm/valaxy-theme-yun@0.26.12_vue@3.5.22_typescript@5.9.2_/node_modules/valaxy-theme-yun/pages/page/[page].vue': {
+    'node_modules/valaxy-theme-yun/pages/page/[page].vue': {
       routes:
         | '/page/[page]'
       views:
         | never
     }
-    'node_modules/.pnpm/valaxy-theme-yun@0.26.12_vue@3.5.22_typescript@5.9.2_/node_modules/valaxy-theme-yun/pages/posts/index.vue': {
+    'node_modules/valaxy-theme-yun/pages/posts/index.vue': {
       routes:
         | '/posts/'
       views:
@@ -387,9 +394,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'pages/posts/CCG by cc-switch.md': {
+    'pages/posts/CCG with CC-Switch.md': {
       routes:
-        | '/posts/CCG by cc-switch'
+        | '/posts/CCG with CC-Switch'
       views:
         | never
     }
@@ -408,6 +415,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/ffmpeg常用教程.md': {
       routes:
         | '/posts/ffmpeg常用教程'
+      views:
+        | never
+    }
+    'pages/posts/GCMP.md': {
+      routes:
+        | '/posts/GCMP'
       views:
         | never
     }
