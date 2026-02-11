@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Glass Generator - iOS 26 Apple-Style Effects</title>
+    
+    <meta name="description" content="Use the iOS 26 liquid glass generator to create Apple-style UI with blur and transparency. Customize and copy clean CSS & HTML instantly.">
+    
+    <link rel="canonical" href="https://www.liquid-glass.pro/generator.html" />
+    <!-- Open Graph for social media previews -->
+    <meta property="og:title" content="Liquid Glass Generator - iOS 26 Apple Blur Effects" />
+    <meta property="og:description" content="Create iPhone-style liquid glass effects like iOS 26. Customize blur, transparency, and colors, and copy the CSS/HTML code instantly." />
+    <meta property="og:url" content="https://www.liquid-glass.pro/generator.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://www.liquid-glass.pro/img/preview-liquid-glass.jpg" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Liquid Glass Generator - iOS 26 Apple Blur Effects" />
+    <meta name="twitter:description" content="Try our iOS 26-style liquid glass generator. Customize and export Apple-inspired blur effects with CSS & HTML code." />
+    <meta name="twitter:image" content="https://www.liquid-glass.pro/img/preview-liquid-glass.jpg" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;500;700&family=Lato:wght@400;700&family=Montserrat:wght@400;500;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="icon" href="/img/favicon.ico">
+  <style>
+    :root {
+      --inner-shadow-color: rgba(255, 255, 255, 0.7);
+      --inner-shadow-blur: 20px;
+      --inner-shadow-spread: -5px;
+      --glass-tint-color: 255, 255, 255;
+      --glass-tint-opacity: 0.4;
+      --frost-blur-radius: 2px;
+      --noise-frequency: 0.008;
+      --noise-strength: 77;
+      --glass-width: 300px;
+      --glass-height: 200px;
+      --glass-border-radius: 28px;
+      --text-color: #ffffff;
+      --text-size: 24px;
+      --text-weight: 400;
+      --text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      --text-opacity: 1;
+      --text-offset-x: 0;
+      --text-offset-y: 0;
+      --text-font-family: "'Microsoft YaHei', '微软雅黑', Arial, sans-serif";
+    }
+
+    /* 添加標題區域樣式 */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 2000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-title {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 500;
+      font-family: var(--text-font-family);
+    }
+
+    .back-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .back-button svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      position: static;
+      overflow: visible;
+    }
+
+    /* 语言切换按钮 */
+    .lang-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 10px;
+    }
+
+    .lang-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .lang-button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    /* 調整現有樣式以適應新的標題區域 */
+    body {
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      font-family: sans-serif;
+      background: url('https://picsum.photos/1920/1080') center/cover no-repeat;
+      overflow: hidden;
+      padding-top: 60px; /* 為標題區域留出空間 */
+    }
+
+    /* 主容器樣式 */
+    .main-container {
+      display: flex;
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
+
+    /* 中間內容區域 */
+    .content-area {
+      flex: 1;
+      display: flex;
+    }
+
+    .control-panel {
+      width: 350px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      height: calc(100vh - 60px); /* 調整高度以適應標題區域 */
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 15px;
+    }
+
+    .control-group:last-child {
+      border-bottom: none;
+    }
+
+    .control-group h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .control-row label {
+      width: 80px;
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .control-row input[type="range"] {
+      flex: 1;
+      margin: 0 10px;
+    }
+
+    .control-row input[type="number"] {
+      width: 80px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      margin-left: 10px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .control-row input[type="number"]:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.4);
+      background-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    }
+
+    .control-row input[type="number"]::-webkit-inner-spin-button,
+    .control-row input[type="number"]::-webkit-outer-spin-button {
+      opacity: 1;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .control-row .unit {
+      margin-left: 8px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    .control-row span {
+      width: 40px;
+      display: inline-block;
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .color-picker {
+      width: 24px;
+      height: 24px;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 10px;
+    }
+
+    /* Glass Container Styles */
+    .glass-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .glass-div {
+      width: var(--glass-width);
+      height: var(--glass-height);
+      border-radius: var(--glass-border-radius);
+      cursor: move;
+      isolation: isolate;
+      touch-action: none;
+      box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.2);
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      text-decoration: none;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .glass-div:focus {
+      outline: none;
+    }
+    .glass-text {
+      position: relative;
+      color: var(--text-color);
+      font-size: var(--text-size);
+      font-weight: var(--text-weight);
+      text-shadow: var(--text-shadow);
+      opacity: var(--text-opacity);
+      transform: translate(var(--text-offset-x), var(--text-offset-y));
+      font-family: var(--text-font-family);
+    }
+
+    .glass-div::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: var(--glass-border-radius);
+      box-shadow: inset 0 0 var(--inner-shadow-blur) var(--inner-shadow-spread) var(--inner-shadow-color);
+      background-color: rgba(var(--glass-tint-color), calc(var(--glass-tint-opacity) / 100));
+    }
+
+    .glass-div::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: var(--glass-border-radius);
+      backdrop-filter: blur(var(--frost-blur-radius));
+      filter: url(#glass-distortion);
+      isolation: isolate;
+      -webkit-backdrop-filter: blur(var(--frost-blur-radius));
+      -webkit-filter: url("#glass-distortion");
+    }
+
+    /* 修改 SVG 樣式，只針對玻璃效果的 SVG */
+    .glass-container svg {
+      width: 0;
+      height: 0;
+      position: absolute;
+      overflow: hidden;
+    }
+
+    /* Copy Buttons Styles */
+    .copy-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .copy-button {
+      margin-top: 10px;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .copy-button:hover {
+      background-color: #1d4ed8;
+    }
+
+    .copy-button:active {
+      background-color: #1e40af;
+    }
+
+    .copy-success {
+      font-size: 12px;
+      color: #10b981;
+      margin-top: 5px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .copy-success.show {
+      opacity: 1;
+    }
+
+    .vue-tutorial-link {
+      display: block;
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 12px;
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .vue-tutorial-link:hover {
+      color: #3b82f6;
+      text-decoration: underline;
+    }
+
+    /* Code Preview Area Styles */
+    .code-preview {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #e2e8f0;
+      max-height: 150px;
+      overflow-y: auto;
+      white-space: pre;
+      word-break: normal;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #2563eb #222c37;
+    }
+
+    .code-preview-container {
+      margin-top: 15px;
+    }
+
+    .code-preview-container h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #e2e8f0;
+    }
+
+    .element-select {
+      background-color: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-left: 10px;
+      font-size: 14px;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .element-select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px #2563eb44;
+    }
+
+    .element-select option {
+      background: #222c37;
+      color: #fff;
+    }
+
+    /* Optimized Scrollbar Styles (Webkit) */
+    .code-preview::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+      background: #222c37;
+      border-radius: 4px;
+    }
+    .code-preview::-webkit-scrollbar-thumb {
+      background: #2563eb;
+      border-radius: 4px;
+    }
+    .code-preview::-webkit-scrollbar-thumb:hover {
+      background: #1d4ed8;
+    }
+
+    /* Textarea Scrollbar Styles */
+    .text-input::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    .text-input::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+
+    .text-input::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .text-input::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    .text-input {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 900px) {
+      /* 在小螢幕上隱藏廣告側邊欄 */
+      .ad-sidebar-left,
+      .ad-sidebar-right {
+        display: none;
+      }
+
+      .control-panel {
+        width: 100vw;
+        height: 48px;
+        max-height: 48px;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        padding: 0 16px;
+        overflow: hidden;
+        transition: max-height 0.3s cubic-bezier(.4,0,.2,1);
+        border-radius: 0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+      }
+
+      .control-panel.expanded {
+        max-height: calc(100vh - 60px);
+        height: auto;
+        overflow-y: auto;
+        padding: 20px;
+        display: block;
+      }
+
+      .control-panel .control-group,
+      .control-panel .copy-buttons,
+      .control-panel .code-preview-container {
+        display: none;
+      }
+
+      .control-panel.expanded .control-group,
+      .control-panel.expanded .copy-buttons,
+      .control-panel.expanded .code-preview-container {
+        display: block;
+      }
+
+      .control-panel-toggle {
+        display: block;
+        top: 60px;
+      }
+
+      .glass-container {
+        margin-top: 108px;
+      }
+
+      .scroll-hint {
+        display: none;
+      }
+
+      .control-panel.expanded .scroll-hint {
+        display: block;
+        margin-top: 0;
+      }
+    }
+
+    @media (min-width: 901px) {
+      .control-panel-toggle {
+        display: none !important;
+      }
+    }
+
+    .control-panel-toggle {
+      width: 100vw;
+      height: 48px;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      padding: 0 16px;
+      position: fixed;
+      left: 0;
+      z-index: 1100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .control-panel-toggle .toggle-icon {
+      font-size: 22px;
+      margin-left: 0;
+      margin-right: 20px;
+      transition: transform 0.3s;
+    }
+    .control-panel.expanded + .control-panel-toggle .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .liquid-glass ul,
+    .liquid-glass ol {
+      list-style-position: inside;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .liquid-glass li {
+      margin: 5px 0;
+      padding: 0 10px;
+    }
+
+    .liquid-glass ul li {
+      list-style-type: disc;
+    }
+
+    .liquid-glass ol li {
+      list-style-type: decimal;
+    }
+
+    /* 添加来源按钮样式 */
+    .source-button {
+      display: block;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .source-button:hover {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    }
+
+    .source-button:active {
+      transform: translateY(0);
+    }
+
+    /* 添加提示訊息樣式 */
+    .scroll-hint {
+      background-color: rgba(37, 99, 235, 0.9);
+      color: white;
+      padding: 5px;
+      text-align: center;
+      font-size: 12px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .control-panel:not(.expanded) .source-button,
+      .control-panel:not(.expanded) .scroll-hint {
+        display: none;
+      }
+      .control-panel.expanded .source-button {
+        display: block;
+        margin-top: 48px;
+      }
+      .control-panel.expanded .scroll-hint {
+        display: block;
+        margin-top: 10px;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- 添加標題區域 -->
+  <header class="header">
+    <h1 class="header-title" data-i18n="title">Liquid Glass Generator</h1>
+    <div class="header-right">
+      <button class="lang-button" id="langToggle" title="切换语言 / Switch Language">
+        <svg viewBox="0 0 24 24">
+          <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+        </svg>
+      </button>
+      <a href="/" class="back-button">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        <span data-i18n="back">Back</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- 主容器 -->
+  <div class="main-container">
+    <!-- 中間內容區域 -->
+    <div class="content-area">
+      <!-- Glass Effect Container -->
+      <div class="glass-container">
+        <div class="glass-div"></div>
+        <!-- SVG Filter Definition -->
+        <svg xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+              <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
+              <feDisplacementMap in="SourceGraphic" in2="blurred" scale="77" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Control Panel -->
+      <div class="control-panel" id="controlPanel">
+    <a href="https://www.liquid-glass.pro/" target="_blank" class="source-button">Original Source</a>
+    <div class="scroll-hint">Scroll down for more options and code export ▼</div>
+    <div class="control-group">
+      <h3>Container Settings</h3>
+      <div class="control-row">
+        <label>Element Type:</label>
+        <select id="elementType" class="element-select">
+          <option value="div">div</option>
+          <option value="button">button</option>
+          <option value="a">a</option>
+          <option value="span">span</option>
+          <option value="p">p</option>
+          <option value="ul">ul</option>
+          <option value="ol">ol</option>
+        </select>
+      </div>
+      <div class="control-row">
+        <label>Width:</label>
+        <input type="number" id="glassWidthInput" value="300">
+        <span class="unit">px</span>
+      </div>
+      <div class="control-row">
+        <label>Height:</label>
+        <input type="number" id="glassHeightInput" value="200">
+        <span class="unit">px</span>
+      </div>
+      <div class="control-row">
+        <label>Border Radius:</label>
+        <input type="number" id="glassBorderRadius" min="0" max="100" value="28">
+        <span class="unit">%</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Inner Shadow</h3>
+      <div class="control-row">
+        <label>Color:</label>
+        <input type="color" class="color-picker" id="innerShadowColor" value="#ffffff70">
+      </div>
+      <div class="control-row">
+        <label>Blur:</label>
+        <input type="range" id="innerShadowBlur" min="0" max="80" value="15">
+        <span id="innerShadowBlurValue">15</span>px
+      </div>
+      <div class="control-row">
+        <label>Spread:</label>
+        <input type="range" id="innerShadowSpread" min="-20" max="20" value="-5">
+        <span id="innerShadowSpreadValue">-5</span>px
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Glass Tint</h3>
+      <div class="control-row">
+        <label>Tint Color:</label>
+        <input type="color" class="color-picker" id="glassTintColor" value="#ffffff">
+      </div>
+      <div class="control-row">
+        <label>Opacity:</label>
+        <input type="range" id="glassTintOpacity" min="0" max="100" value="0">
+        <span id="glassTintOpacityValue">0</span>%
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Frost Blur</h3>
+      <div class="control-row">
+        <label>Blur Radius:</label>
+        <input type="range" id="frostBlurRadius" min="0" max="20" value="0">
+        <span id="frostBlurRadiusValue">0</span>px
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Noise Distortion</h3>
+      <div class="control-row">
+        <label>Noise Frequency:</label>
+        <input type="range" id="noiseFrequency" min="0.001" max="0.02" step="0.001" value="0.005">
+        <span id="noiseFrequencyValue">0.005</span>
+      </div>
+      <div class="control-row">
+        <label>Strength:</label>
+        <input type="range" id="noiseStrength" min="0" max="200" value="99">
+        <span id="noiseStrengthValue">99</span>
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Background Control</h3>
+      <div class="control-row" style="justify-content: center; gap: 10px;">
+        <button id="prevBgBtn" class="copy-button" style="margin: 0;">Previous</button>
+        <button id="nextBgBtn" class="copy-button" style="margin: 0;">Next</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Text Settings</h3>
+      <div class="control-row">
+        <label>Text Content:</label>
+        <textarea id="glassText" class="text-input" rows="4" style="width: 100%; margin-top: 5px; background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 8px; border-radius: 6px; resize: vertical;">Liquid Glass</textarea>
+      </div>
+      <div class="control-row">
+        <label>Text Color:</label>
+        <input type="color" class="color-picker" id="textColor" value="#ffffff">
+      </div>
+      <div class="control-row">
+        <label>Text Size:</label>
+        <input type="number" id="textSize" value="24">
+        <span class="unit">px</span>
+      </div>
+      <div class="control-row">
+        <label>Font Weight:</label>
+        <input type="number" id="textWeight" min="100" max="900" step="100" value="400">
+      </div>
+      <div class="control-row">
+        <label>Text Opacity:</label>
+        <input type="range" id="textOpacity" min="0" max="100" value="100">
+        <span id="textOpacityValue">100</span>%
+      </div>
+      <div class="control-row">
+        <label>Text X Offset:</label>
+        <input type="range" id="textOffsetX" min="-50" max="50" value="0">
+        <span id="textOffsetXValue">0</span>px
+      </div>
+      <div class="control-row">
+        <label>Text Y Offset:</label>
+        <input type="range" id="textOffsetY" min="-50" max="50" value="0">
+        <span id="textOffsetYValue">0</span>px
+      </div>
+      <div class="control-row">
+        <label>Shadow X Offset:</label>
+        <input type="range" id="textShadowX" min="-20" max="50" value="0">
+        <span id="textShadowXValue">0</span>px
+      </div>
+      <div class="control-row">
+        <label>Shadow Y Offset:</label>
+        <input type="range" id="textShadowY" min="-20" max="50" value="2">
+        <span id="textShadowYValue">2</span>px
+      </div>
+      <div class="control-row">
+        <label>Shadow Blur:</label>
+        <input type="range" id="textShadowBlur" min="0" max="50" value="4">
+        <span id="textShadowBlurValue">4</span>px
+      </div>
+      <div class="control-row">
+        <label>Shadow Opacity:</label>
+        <input type="range" id="textShadowOpacity" min="0" max="100" value="20">
+        <span id="textShadowOpacityValue">20</span>%
+      </div>
+      <div class="control-row">
+        <label>Font Family:</label>
+        <select id="textFontFamily" class="element-select">
+          <option value="'Georgia', 'Microsoft YaHei', '微软雅黑', serif">Georgia</option>
+          <option value="Arial, 'Microsoft YaHei', '微软雅黑', sans-serif">Arial</option>
+          <option value="'Times New Roman', 'Microsoft YaHei', '微软雅黑', Times, serif">Times New Roman</option>
+          <option value="'Courier New', 'Microsoft YaHei', '微软雅黑', Courier, monospace">Courier New</option>
+          
+          <option value="'SimSun', Arial, '宋体', serif">SimSun / Arial</option>
+          <option value="'Verdana', 'Microsoft YaHei', '微软雅黑', sans-serif">Verdana</option>
+          <option value="'Tahoma', 'Microsoft YaHei', '微软雅黑', sans-serif">Tahoma</option>
+          <option value="'Trebuchet MS', 'Microsoft YaHei', '微软雅黑', sans-serif">Trebuchet MS</option>
+          <option value="'Impact', 'Microsoft YaHei', '微软雅黑', sans-serif">Impact</option>
+          <option value="'PingFang SC', Arial, 'Hiragino Sans GB', '微软雅黑', Helvetica, sans-serif">PingFang SC</option>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <h3>Code Export</h3>
+      <div class="code-preview-container">
+        <h4>HTML Code Preview:</h4>
+        <div class="code-preview" id="htmlCodePreview"></div>
+      </div>
+      <div class="copy-buttons">
+        <button id="copyHtmlBtn" class="copy-button">Copy Container Source</button>
+        <div id="copyHtmlSuccess" class="copy-success">Copied Successfully!</div>
+      </div>
+      <div class="code-preview-container">
+        <h4>CSS Code Preview:</h4>
+        <div class="code-preview" id="cssCodePreview"></div>
+      </div>
+      <div class="copy-buttons">
+        <button id="copyCssBtn" class="copy-button">Copy Container Style</button>
+        <div id="copyCssSuccess" class="copy-success">Copied Successfully!</div>
+      </div>
+      <div class="code-preview-container">
+        <h4>Vue Component Props:</h4>
+        <div class="code-preview" id="vuePropsPreview"></div>
+      </div>
+      <div class="copy-buttons">
+        <button id="copyVuePropsBtn" class="copy-button">Copy Vue Props</button>
+        <div id="copyVuePropsSuccess" class="copy-success">Copied Successfully!</div>
+        <a href="https://liquid-glass.pro/doc/vue.html" class="vue-tutorial-link">Copy to Vue component and click here for Vue component tutorial</a>
+      </div>
+      <div class="code-preview-container">
+        <h4>React Component Props:</h4>
+        <div class="code-preview" id="reactPropsPreview"></div>
+      </div>
+      <div class="copy-buttons">
+        <button id="copyReactPropsBtn" class="copy-button">Copy React Props</button>
+        <div id="copyReactPropsSuccess" class="copy-success">Copied Successfully!</div>
+        <a href="https://liquid-glass.pro/doc/react.html" class="vue-tutorial-link">Copy to React component and click here for React component tutorial</a>
+      </div>
+    </div>
+  </div>
+      </div>
+      <div class="control-panel-toggle" id="controlPanelToggle">
+        <span>Settings</span>
+        <span class="toggle-icon">▼</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get all control elements
+    const innerShadowColor = document.getElementById('innerShadowColor');
+    const innerShadowBlur = document.getElementById('innerShadowBlur');
+    const innerShadowBlurValue = document.getElementById('innerShadowBlurValue');
+    const innerShadowSpread = document.getElementById('innerShadowSpread');
+    const innerShadowSpreadValue = document.getElementById('innerShadowSpreadValue');
+    const glassTintColor = document.getElementById('glassTintColor');
+    const glassTintOpacity = document.getElementById('glassTintOpacity');
+    const glassTintOpacityValue = document.getElementById('glassTintOpacityValue');
+    const frostBlurRadius = document.getElementById('frostBlurRadius');
+    const frostBlurRadiusValue = document.getElementById('frostBlurRadiusValue');
+    const noiseFrequency = document.getElementById('noiseFrequency');
+    const noiseFrequencyValue = document.getElementById('noiseFrequencyValue');
+    const noiseStrength = document.getElementById('noiseStrength');
+    const noiseStrengthValue = document.getElementById('noiseStrengthValue');
+    const glassWidth = document.getElementById('glassWidth');
+    const glassWidthValue = document.getElementById('glassWidthValue');
+    const glassHeight = document.getElementById('glassHeight');
+    const glassHeightValue = document.getElementById('glassHeightValue');
+    const glassBorderRadius = document.getElementById('glassBorderRadius');
+    const glassBorderRadiusValue = document.getElementById('glassBorderRadiusValue');
+    const filterEl = document.querySelector('#glass-distortion feTurbulence');
+    const displacementEl = document.querySelector('#glass-distortion feDisplacementMap');
+    let glassDiv = document.querySelector('.glass-div');
+    const copyHtmlBtn = document.getElementById('copyHtmlBtn');
+    const copyCssBtn = document.getElementById('copyCssBtn');
+    const copyHtmlSuccess = document.getElementById('copyHtmlSuccess');
+    const copyCssSuccess = document.getElementById('copyCssSuccess');
+    const htmlCodePreview = document.getElementById('htmlCodePreview');
+    const cssCodePreview = document.getElementById('cssCodePreview');
+    const vuePropsPreview = document.getElementById('vuePropsPreview');
+    const copyVuePropsBtn = document.getElementById('copyVuePropsBtn');
+    const copyVuePropsSuccess = document.getElementById('copyVuePropsSuccess');
+    const glassWidthInput = document.getElementById('glassWidthInput');
+    const glassHeightInput = document.getElementById('glassHeightInput');
+    const glassText = document.getElementById('glassText');
+    const textColor = document.getElementById('textColor');
+    const textSize = document.getElementById('textSize');
+    const textWeight = document.getElementById('textWeight');
+    const textOpacity = document.getElementById('textOpacity');
+    const textOpacityValue = document.getElementById('textOpacityValue');
+    const textOffsetX = document.getElementById('textOffsetX');
+    const textOffsetY = document.getElementById('textOffsetY');
+    const textOffsetXValue = document.getElementById('textOffsetXValue');
+    const textOffsetYValue = document.getElementById('textOffsetYValue');
+    const textShadowX = document.getElementById('textShadowX');
+    const textShadowY = document.getElementById('textShadowY');
+    const textShadowBlur = document.getElementById('textShadowBlur');
+    const textShadowOpacity = document.getElementById('textShadowOpacity');
+    const textShadowXValue = document.getElementById('textShadowXValue');
+    const textShadowYValue = document.getElementById('textShadowYValue');
+    const textShadowBlurValue = document.getElementById('textShadowBlurValue');
+    const textShadowOpacityValue = document.getElementById('textShadowOpacityValue');
+    const elementType = document.getElementById('elementType');
+    const textFontFamily = document.getElementById('textFontFamily');
+    const reactPropsPreview = document.getElementById('reactPropsPreview');
+    const copyReactPropsBtn = document.getElementById('copyReactPropsBtn');
+    const copyReactPropsSuccess = document.getElementById('copyReactPropsSuccess');
+
+
+    
+
+    // Background image array
+    const backgrounds = [
+      "https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?w=1920&h=1080&fit=crop",
+      "https://images.unsplash.com/photo-1624269305548-1527ef905ff6?w=1920&h=1080&fit=crop",
+      "https://bing.img.run/rand.php",
+      "https://api.dujin.org/bing/1920.php",
+      "https://picsum.photos/1920/1080?random=1",
+      "https://picsum.photos/1920/1080?random=2",
+
+    ];
+    let currentBgIndex = 0;
+
+    // Background switching buttons
+    const prevBgBtn = document.getElementById('prevBgBtn');
+    const nextBgBtn = document.getElementById('nextBgBtn');
+
+    // Background switching function
+    function changeBackground(direction) {
+      if (direction === 'next') {
+        currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
+      } else {
+        currentBgIndex = (currentBgIndex - 1 + backgrounds.length) % backgrounds.length;
+      }
+      document.body.style.backgroundImage = `url('${backgrounds[currentBgIndex]}')`;
+    }
+
+    // Bind background switching events
+    prevBgBtn.addEventListener('click', () => changeBackground('prev'));
+    nextBgBtn.addEventListener('click', () => changeBackground('next'));
+
+    // Update display function
+    function updateDisplay() {
+      // Update element type
+      const currentType = glassDiv.tagName.toLowerCase();
+      if (currentType !== elementType.value) {
+        const newElement = document.createElement(elementType.value);
+        newElement.className = 'glass-div';
+        newElement.innerHTML = glassDiv.innerHTML;
+        glassDiv.parentNode.replaceChild(newElement, glassDiv);
+        glassDiv = newElement;
+        bindDragEvents(glassDiv); // Rebind drag events
+      }
+
+      // Container size
+      const width = parseInt(glassWidthInput.value) || 0;
+      const height = parseInt(glassHeightInput.value) || 0;
+      document.documentElement.style.setProperty('--glass-width', `${width}px`);
+      document.documentElement.style.setProperty('--glass-height', `${height}px`);
+      
+      // Update text offset range
+      const maxOffsetX = Math.floor(width / 2);
+      const maxOffsetY = Math.floor(height / 2);
+      textOffsetX.min = -maxOffsetX;
+      textOffsetX.max = maxOffsetX;
+      textOffsetY.min = -maxOffsetY;
+      textOffsetY.max = maxOffsetY;
+
+      // Ensure current offset value is within range
+      if (parseInt(textOffsetX.value) > maxOffsetX) textOffsetX.value = maxOffsetX;
+      if (parseInt(textOffsetX.value) < -maxOffsetX) textOffsetX.value = -maxOffsetX;
+      if (parseInt(textOffsetY.value) > maxOffsetY) textOffsetY.value = maxOffsetY;
+      if (parseInt(textOffsetY.value) < -maxOffsetY) textOffsetY.value = -maxOffsetY;
+      
+      // Calculate actual border radius value (percentage of smaller dimension)
+      const borderRadiusPercent = parseInt(glassBorderRadius.value) || 0;
+      const borderRadiusValue = Math.min(width, height) * (borderRadiusPercent / 100);
+      document.documentElement.style.setProperty('--glass-border-radius', `${borderRadiusValue}px`);
+
+      // Inner shadow
+      document.documentElement.style.setProperty('--inner-shadow-color', innerShadowColor.value);
+      innerShadowBlurValue.textContent = innerShadowBlur.value;
+      document.documentElement.style.setProperty('--inner-shadow-blur', `${innerShadowBlur.value}px`);
+      innerShadowSpreadValue.textContent = innerShadowSpread.value;
+      document.documentElement.style.setProperty('--inner-shadow-spread', `${innerShadowSpread.value}px`);
+
+      // Glass tint
+      const tintRgb = hexToRgb(glassTintColor.value);
+      document.documentElement.style.setProperty('--glass-tint-color', `${tintRgb.r}, ${tintRgb.g}, ${tintRgb.b}`);
+      glassTintOpacityValue.textContent = glassTintOpacity.value;
+      document.documentElement.style.setProperty('--glass-tint-opacity', glassTintOpacity.value);
+
+      // Frost blur
+      frostBlurRadiusValue.textContent = frostBlurRadius.value;
+      document.documentElement.style.setProperty('--frost-blur-radius', `${frostBlurRadius.value}px`);
+
+      // Noise distortion
+      noiseFrequencyValue.textContent = noiseFrequency.value;
+      filterEl.setAttribute('baseFrequency', `${noiseFrequency.value} ${noiseFrequency.value}`);
+      noiseStrengthValue.textContent = noiseStrength.value;
+      displacementEl.setAttribute('scale', noiseStrength.value);
+
+      // Text settings
+      document.documentElement.style.setProperty('--text-color', textColor.value);
+      document.documentElement.style.setProperty('--text-size', `${textSize.value}px`);
+      document.documentElement.style.setProperty('--text-weight', textWeight.value);
+      document.documentElement.style.setProperty('--text-font-family', textFontFamily.value);
+      
+      // Update text opacity
+      textOpacityValue.textContent = textOpacity.value;
+      document.documentElement.style.setProperty('--text-opacity', textOpacity.value / 100);
+
+      // Update text offset
+      textOffsetXValue.textContent = textOffsetX.value;
+      textOffsetYValue.textContent = textOffsetY.value;
+      document.documentElement.style.setProperty('--text-offset-x', `${textOffsetX.value}px`);
+      document.documentElement.style.setProperty('--text-offset-y', `${textOffsetY.value}px`);
+      
+      // Update text shadow value display
+      textShadowXValue.textContent = textShadowX.value;
+      textShadowYValue.textContent = textShadowY.value;
+      textShadowBlurValue.textContent = textShadowBlur.value;
+      textShadowOpacityValue.textContent = textShadowOpacity.value;
+      
+      // Generate text shadow style
+      const shadowColor = `rgba(0, 0, 0, ${textShadowOpacity.value / 100})`;
+      const shadowStyle = `${textShadowX.value}px ${textShadowY.value}px ${textShadowBlur.value}px ${shadowColor}`;
+      document.documentElement.style.setProperty('--text-shadow', shadowStyle);
+      
+      // Update text content
+      const textElement = glassDiv.querySelector('.glass-text');
+      if (textElement) {
+        if (elementType.value === 'ul' || elementType.value === 'ol') {
+          // 处理列表类型
+          const lines = glassText.value.split('\n').filter(line => line.trim());
+          const listItems = lines.map(line => `<li>${line}</li>`).join('');
+          textElement.innerHTML = listItems;
+        } else {
+          // 处理其他类型，支持HTML标签
+          textElement.innerHTML = glassText.value;
+        }
+      } else {
+        const newTextElement = document.createElement('div');
+        newTextElement.className = 'glass-text';
+        if (elementType.value === 'ul' || elementType.value === 'ol') {
+          const lines = glassText.value.split('\n').filter(line => line.trim());
+          const listItems = lines.map(line => `<li>${line}</li>`).join('');
+          newTextElement.innerHTML = listItems;
+        } else {
+          newTextElement.innerHTML = glassText.value;
+        }
+        glassDiv.appendChild(newTextElement);
+      }
+
+      // Update code preview
+      updateCodePreview();
+    }
+
+    // Color conversion function: Hex to RGB
+    function hexToRgb(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return { r, g, b };
+    }
+
+    // Update code preview
+    function updateCodePreview() {
+      const htmlCode = generateHtmlCode();
+      const cssCode = generateCssCode();
+      const vueProps = generateVueProps();
+      const reactProps = generateReactProps();
+      htmlCodePreview.textContent = htmlCode;
+      cssCodePreview.textContent = cssCode;
+      vuePropsPreview.textContent = vueProps;
+      reactPropsPreview.textContent = reactProps;
+    }
+
+    function bindDragEvents(target) {
+      let startX = 0, startY = 0;
+      let isDragging = false;
+      let initialLeft = 0, initialTop = 0;
+
+      target.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        const rect = target.getBoundingClientRect();
+        const containerRect = document.querySelector('.glass-container').getBoundingClientRect();
+
+        target.style.transition = 'none';
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = rect.left - containerRect.left;
+        initialTop = rect.top - containerRect.top;
+        isDragging = true;
+      });
+
+      document.addEventListener('pointermove', (e) => {
+        if (isDragging) {
+          const deltaX = e.clientX - startX;
+          const deltaY = e.clientY - startY;
+
+          target.style.left = `${initialLeft + deltaX}px`;
+          target.style.top = `${initialTop + deltaY}px`;
+        }
+      });
+
+      document.addEventListener('pointerup', () => {
+        if (isDragging) {
+          target.style.transition = 'all 0.2s ease-out';
+          isDragging = false;
+        }
+      });
+    }
+
+    // Generate HTML code
+    function generateHtmlCode() {
+      let content = '';
+      if (elementType.value === 'ul' || elementType.value === 'ol') {
+        const lines = glassText.value.split('\n').filter(line => line.trim());
+        const listItems = lines.map(line => `  <li>${line}</li>`).join('\n');
+        content = `\n  <div class="glass-text">\n${listItems}\n  </div>\n`;
+      } else {
+        content = `\n  <div class="glass-text">${glassText.value}</div>\n`;
+      }
+
+      return `<${elementType.value} class="liquid-glass">${content}</${elementType.value}>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <defs>
+    <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="${noiseFrequency.value} ${noiseFrequency.value}" numOctaves="2" seed="92" result="noise" />
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="${noiseStrength.value}" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>`;
+    }
+
+    // Generate CSS code
+    function generateCssCode() {
+      const tintRgb = hexToRgb(glassTintColor.value);
+      const width = parseInt(glassWidthInput.value) || 0;
+      const height = parseInt(glassHeightInput.value) || 0;
+      const borderRadiusPercent = parseInt(glassBorderRadius.value) || 0;
+      const borderRadiusValue = Math.min(width, height) * (borderRadiusPercent / 100);
+      const shadowColor = `rgba(0, 0, 0, ${textShadowOpacity.value / 100})`;
+      const shadowStyle = `${textShadowX.value}px ${textShadowY.value}px ${textShadowBlur.value}px ${shadowColor}`;
+
+      let css = '';
+      
+      // 基础容器样式
+      css += `
+.liquid-glass {
+  width: ${width}px;
+  height: ${height}px;
+  border-radius: ${borderRadiusValue}px;
+  position: relative;
+  isolation: isolate;
+  box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.liquid-glass:focus {
+  outline: none;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: ${borderRadiusValue}px;
+  box-shadow: inset 0 0 ${innerShadowBlur.value}px ${innerShadowSpread.value}px ${innerShadowColor.value};
+  background-color: rgba(${tintRgb.r}, ${tintRgb.g}, ${tintRgb.b}, ${glassTintOpacity.value / 100});
+}
+
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: ${borderRadiusValue}px;
+  backdrop-filter: blur(${frostBlurRadius.value}px);
+  -webkit-backdrop-filter: blur(${frostBlurRadius.value}px);
+  filter: url(#glass-distortion);
+  -webkit-filter: url(#glass-distortion);
+}
+
+.glass-text {
+  position: relative;
+  color: ${textColor.value};
+  font-size: ${textSize.value}px;
+  font-weight: ${textWeight.value};
+  text-shadow: ${shadowStyle};
+  opacity: ${textOpacity.value / 100};
+  transform: translate(${textOffsetX.value}px, ${textOffsetY.value}px);
+  font-family: ${textFontFamily.value};
+}`;
+
+      // 列表特定样式
+      if (elementType.value === 'ul' || elementType.value === 'ol') {
+        css += `
+        .glass-text ul,
+        .glass-text ol {
+          list-style-position: inside;
+          margin: 0;
+          padding: 0;
+          width: 100%;
+        }
+
+        `;
+
+        if (elementType.value === 'ul') {
+          css += `
+          .glass-text ul li {
+            list-style-type: disc;
+          }`;
+        } else {
+          css += `
+          .glass-text ol li {
+            list-style-type: decimal;
+          }`;
+        }
+      }
+
+      return css;
+    }
+
+    // Generate Vue props code
+    function generateVueProps() {
+      const width = parseInt(glassWidthInput.value) || 0;
+      const height = parseInt(glassHeightInput.value) || 0;
+      const borderRadiusPercent = parseInt(glassBorderRadius.value) || 0;
+      const tintRgb = hexToRgb(glassTintColor.value);
+      const tintColor = `rgba(${tintRgb.r}, ${tintRgb.g}, ${tintRgb.b}, ${glassTintOpacity.value / 100})`;
+
+      return `:width="${width}"
+:height="${height}"
+:borderRadius="${borderRadiusPercent}"
+:innerShadowColor="'${innerShadowColor.value}'"
+:innerShadowBlur="${innerShadowBlur.value}"
+:innerShadowSpread="${innerShadowSpread.value}"
+:glassTintColor="'${glassTintColor.value}'"
+:glassTintOpacity="${glassTintOpacity.value}"
+:frostBlurRadius="${frostBlurRadius.value}"
+:noiseFrequency="${noiseFrequency.value}"
+:noiseStrength="${noiseStrength.value}"`;
+    }
+
+    // Generate React props code
+    function generateReactProps() {
+      const width = parseInt(glassWidthInput.value) || 0;
+      const height = parseInt(glassHeightInput.value) || 0;
+      const borderRadiusPercent = parseInt(glassBorderRadius.value) || 0;
+      const tintRgb = hexToRgb(glassTintColor.value);
+      const tintColor = `rgba(${tintRgb.r}, ${tintRgb.g}, ${tintRgb.b}, ${glassTintOpacity.value / 100})`;
+
+      return `width={${width}}
+height={${height}}
+borderRadius={${borderRadiusPercent}}
+innerShadowColor="${innerShadowColor.value}"
+innerShadowBlur={${innerShadowBlur.value}}
+innerShadowSpread={${innerShadowSpread.value}}
+glassTintColor="${tintColor}"
+glassTintOpacity={${glassTintOpacity.value}}
+frostBlurRadius={${frostBlurRadius.value}}
+noiseFrequency={${noiseFrequency.value}}
+noiseStrength={${noiseStrength.value}}`;
+    }
+
+    // Copy HTML code
+    copyHtmlBtn.addEventListener('click', () => {
+      const htmlCode = generateHtmlCode();
+      navigator.clipboard.writeText(htmlCode).then(() => {
+        copyHtmlSuccess.classList.add('show');
+        setTimeout(() => {
+          copyHtmlSuccess.classList.remove('show');
+        }, 2000);
+      });
+    });
+
+    // Copy CSS code
+    copyCssBtn.addEventListener('click', () => {
+      const cssCode = generateCssCode();
+      navigator.clipboard.writeText(cssCode).then(() => {
+        copyCssSuccess.classList.add('show');
+        setTimeout(() => {
+          copyCssSuccess.classList.remove('show');
+        }, 2000);
+      });
+    });
+
+    // Copy Vue props code
+    copyVuePropsBtn.addEventListener('click', () => {
+      const vueProps = generateVueProps();
+      navigator.clipboard.writeText(vueProps).then(() => {
+        copyVuePropsSuccess.classList.add('show');
+        setTimeout(() => {
+          copyVuePropsSuccess.classList.remove('show');
+        }, 2000);
+      });
+    });
+
+    // Copy React props code
+    copyReactPropsBtn.addEventListener('click', () => {
+      const reactProps = generateReactProps();
+      navigator.clipboard.writeText(reactProps).then(() => {
+        copyReactPropsSuccess.classList.add('show');
+        setTimeout(() => {
+          copyReactPropsSuccess.classList.remove('show');
+        }, 2000);
+      });
+    });
+
+    // Bind event listeners
+    innerShadowColor.addEventListener('change', updateDisplay);
+    innerShadowBlur.addEventListener('input', updateDisplay);
+    innerShadowSpread.addEventListener('input', updateDisplay);
+    glassTintColor.addEventListener('change', updateDisplay);
+    glassTintOpacity.addEventListener('input', updateDisplay);
+    frostBlurRadius.addEventListener('input', updateDisplay);
+    noiseFrequency.addEventListener('input', updateDisplay);
+    noiseStrength.addEventListener('input', updateDisplay);
+    glassWidthInput.addEventListener('input', (e) => {
+      const value = parseInt(e.target.value) || 0;
+      e.target.value = value;
+      updateDisplay();
+    });
+    glassHeightInput.addEventListener('input', (e) => {
+      const value = parseInt(e.target.value) || 0;
+      e.target.value = value;
+      updateDisplay();
+    });
+    glassBorderRadius.addEventListener('input', updateDisplay);
+    glassText.addEventListener('input', updateDisplay);
+    textColor.addEventListener('change', updateDisplay);
+    textSize.addEventListener('input', updateDisplay);
+    textWeight.addEventListener('input', updateDisplay);
+    textOpacity.addEventListener('input', updateDisplay);
+    textOffsetX.addEventListener('input', updateDisplay);
+    textOffsetY.addEventListener('input', updateDisplay);
+    textShadowX.addEventListener('input', updateDisplay);
+    textShadowY.addEventListener('input', updateDisplay);
+    textShadowBlur.addEventListener('input', updateDisplay);
+    textShadowOpacity.addEventListener('input', updateDisplay);
+    elementType.addEventListener('change', updateDisplay);
+    textFontFamily.addEventListener('change', updateDisplay);
+
+    // Initialize display
+    updateDisplay();
+
+    // Glass block drag functionality
+    let startX = 0, startY = 0;
+    let isDragging = false;
+    let initialLeft = 0, initialTop = 0;
+
+    glassDiv.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      const rect = glassDiv.getBoundingClientRect();
+      const containerRect = document.querySelector('.glass-container').getBoundingClientRect();
+      
+      glassDiv.style.transition = 'none';
+      startX = e.clientX;
+      startY = e.clientY;
+      initialLeft = rect.left - containerRect.left;
+      initialTop = rect.top - containerRect.top;
+      isDragging = true;
+    });
+
+    document.addEventListener('pointermove', (e) => {
+      if (isDragging) {
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+        
+        glassDiv.style.left = `${initialLeft + deltaX}px`;
+        glassDiv.style.top = `${initialTop + deltaY}px`;
+      }
+    });
+
+    document.addEventListener('pointerup', () => {
+      if (isDragging) {
+        glassDiv.style.transition = 'all 0.2s ease-out';
+        isDragging = false;
+      }
+    });
+
+    // Mobile control panel expansion/collapse
+    const controlPanel = document.getElementById('controlPanel');
+    const controlPanelToggle = document.getElementById('controlPanelToggle');
+    function isMobile() {
+      return window.innerWidth <= 900;
+    }
+    function collapsePanel() {
+      controlPanel.classList.remove('expanded');
+    }
+    function expandPanel() {
+      controlPanel.classList.add('expanded');
+    }
+    controlPanelToggle.addEventListener('click', function() {
+      if (controlPanel.classList.contains('expanded')) {
+        collapsePanel();
+      } else {
+        expandPanel();
+      }
+    });
+    // Default mobile side collapse
+    if (isMobile()) {
+      collapsePanel();
+    }
+    window.addEventListener('resize', function() {
+      if (isMobile()) {
+        collapsePanel();
+      } else {
+        controlPanel.classList.remove('expanded');
+      }
+    });
+
+    // 點擊提示滾動到底部
+    document.querySelector('.scroll-hint').addEventListener('click', function() {
+      const panel = document.getElementById('controlPanel');
+      panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' });
+    });
+
+    // 設定預設值
+    liquidGlassList = [
+      {//登录按钮
+        id:1,
+        elementType:'button',
+        glassWidth:180,
+        glassHeight:60,
+        glassText:'Login',
+        backgroundImage:'https://picsum.photos/1920/1080'
+      },
+      {//有序列表
+        id:2,
+        elementType:'ol',
+        glassWidth:800,
+        glassHeight:200,
+        glassText:'<strong>Liquid Glass</strong> is Apple\'s new UI design from WWDC 2025.\nIt features blur, transparency, and light reflection.\nUsed in iOS 26, macOS Sequoia, and more.\nGives a soft, glossy, glass-like look.\nIt\'s Apple\'s biggest visual update in years.',
+        textSize:22,
+        textColor:'#374b86',
+        backgroundImage:'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1920&h=1080&fit=crop'
+      },
+      {//文字显示
+        id:3,
+        elementType:'div',
+        glassWidth:650,
+        glassHeight:200,
+        glassText:'<p>Liquid Glass is Apple\'s latest UI design language, introduced at WWDC 2025. It combines transparency, blur, and subtle reflections to create a sleek, glass-like appearance across iOS, macOS, and other platforms.</p>',
+        textOpacity:81,
+        textWeight:500,
+        textOffsetX:19,
+        textFontFamily:"'Arial', 'Microsoft YaHei', '微软雅黑', serif",
+        backgroundImage:'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1920&h=1080&fit=crop'
+      },
+    ]
+
+    //从url获取参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    if(id){
+      const liquidGlass = liquidGlassList.find(item => item.id === parseInt(id));
+      if(liquidGlass){
+        //把liquidGlass的属性赋值给对应的元素，如果属性没有值使用默认属性
+        elementType.value = liquidGlass.elementType || 'div';
+        glassWidthInput.value = liquidGlass.glassWidth || 300;
+        glassHeightInput.value = liquidGlass.glassHeight || 200;
+        glassText.value = liquidGlass.glassText || '';
+        textSize.value = liquidGlass.textSize || 24;
+        textWeight.value = liquidGlass.textWeight || 400;
+        textColor.value = liquidGlass.textColor || '#ffffff';
+        textOpacity.value = liquidGlass.textOpacity || 100;
+        textOffsetX.value = liquidGlass.textOffsetX || 0;
+        textFontFamily.value = liquidGlass.textFontFamily || "'Georgia', 'Microsoft YaHei', '微软雅黑', serif";
+        let backgroundImage = liquidGlass.backgroundImage || 'https://picsum.photos/1920/1080';
+        document.body.style.backgroundImage = `url('${backgroundImage}')`;
+        updateDisplay()
+      }
+    }
+
+    // Multi-language support
+    const translations = {
+      en: {
+        title: 'Liquid Glass Generator',
+        back: 'Back',
+        source: 'Original Source',
+        scrollHint: 'Scroll down for more options and code export ▼',
+        containerSettings: 'Container Settings',
+        elementType: 'Element Type:',
+        width: 'Width:',
+        height: 'Height:',
+        borderRadius: 'Border Radius:',
+        innerShadow: 'Inner Shadow',
+        color: 'Color:',
+        blur: 'Blur:',
+        spread: 'Spread:',
+        glassTint: 'Glass Tint',
+        tintColor: 'Tint Color:',
+        opacity: 'Opacity:',
+        frostBlur: 'Frost Blur',
+        blurRadius: 'Blur Radius:',
+        noiseDistortion: 'Noise Distortion',
+        noiseFrequency: 'Noise Frequency:',
+        strength: 'Strength:',
+        backgroundControl: 'Background Control',
+        previous: 'Previous',
+        next: 'Next',
+        textSettings: 'Text Settings',
+        textContent: 'Text Content:',
+        textColor: 'Text Color:',
+        textSize: 'Text Size:',
+        fontWeight: 'Font Weight:',
+        textOpacity: 'Text Opacity:',
+        textXOffset: 'Text X Offset:',
+        textYOffset: 'Text Y Offset:',
+        shadowXOffset: 'Shadow X Offset:',
+        shadowYOffset: 'Shadow Y Offset:',
+        shadowBlur: 'Shadow Blur:',
+        shadowOpacity: 'Shadow Opacity:',
+        fontFamily: 'Font Family:',
+        codeExport: 'Code Export',
+        htmlPreview: 'HTML Code Preview:',
+        cssPreview: 'CSS Code Preview:',
+        vueProps: 'Vue Component Props:',
+        reactProps: 'React Component Props:',
+        copyHtml: 'Copy Container Source',
+        copyCss: 'Copy Container Style',
+        copyVue: 'Copy Vue Props',
+        copyReact: 'Copy React Props',
+        vueTutorial: 'Copy to Vue component and click here for Vue component tutorial',
+        reactTutorial: 'Copy to React component and click here for React component tutorial'
+      },
+      zh: {
+        title: '液态玻璃生成器',
+        back: '返回',
+        source: '原始来源',
+        scrollHint: '向下滚动查看更多选项和代码导出 ▼',
+        containerSettings: '容器设置',
+        elementType: '元素类型:',
+        width: '宽度:',
+        height: '高度:',
+        borderRadius: '圆角:',
+        innerShadow: '内阴影',
+        color: '颜色:',
+        blur: '模糊:',
+        spread: '扩散:',
+        glassTint: '玻璃色调',
+        tintColor: '色调颜色:',
+        opacity: '透明度:',
+        frostBlur: '磨砂模糊',
+        blurRadius: '模糊半径:',
+        noiseDistortion: '噪波扭曲',
+        noiseFrequency: '噪波频率:',
+        strength: '强度:',
+        backgroundControl: '背景控制',
+        previous: '上一张',
+        next: '下一张',
+        textSettings: '文字设置',
+        textContent: '文字内容:',
+        textColor: '文字颜色:',
+        textSize: '文字大小:',
+        fontWeight: '字体粗细:',
+        textOpacity: '文字透明度:',
+        textXOffset: '文字X偏移:',
+        textYOffset: '文字Y偏移:',
+        shadowXOffset: '阴影X偏移:',
+        shadowYOffset: '阴影Y偏移:',
+        shadowBlur: '阴影模糊:',
+        shadowOpacity: '阴影透明度:',
+        fontFamily: '字体:',
+        codeExport: '代码导出',
+        htmlPreview: 'HTML 代码预览:',
+        cssPreview: 'CSS 代码预览:',
+        vueProps: 'Vue 组件属性:',
+        reactProps: 'React 组件属性:',
+        copyHtml: '复制容器源码',
+        copyCss: '复制容器样式',
+        copyVue: '复制 Vue 属性',
+        copyReact: '复制 React 属性',
+        vueTutorial: '复制到 Vue 组件并点击查看 Vue 组件教程',
+        reactTutorial: '复制到 React 组件并点击查看 React 组件教程'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+      
+      // Update all translatable elements
+      document.querySelector('[data-i18n="title"]').textContent = t.title;
+      document.querySelector('[data-i18n="back"]').textContent = t.back;
+      document.querySelector('.source-button').textContent = t.source;
+      document.querySelector('.scroll-hint').textContent = t.scrollHint;
+      
+      // Update control panel headers and labels
+      const h3s = document.querySelectorAll('.control-group h3');
+      if (h3s[0]) h3s[0].textContent = t.containerSettings;
+      if (h3s[1]) h3s[1].textContent = t.innerShadow;
+      if (h3s[2]) h3s[2].textContent = t.glassTint;
+      if (h3s[3]) h3s[3].textContent = t.frostBlur;
+      if (h3s[4]) h3s[4].textContent = t.noiseDistortion;
+      if (h3s[5]) h3s[5].textContent = t.backgroundControl;
+      if (h3s[6]) h3s[6].textContent = t.textSettings;
+      if (h3s[7]) h3s[7].textContent = t.codeExport;
+      
+      // Update all labels in control rows
+      const labels = document.querySelectorAll('.control-row label');
+      const labelKeys = [
+        'elementType', 'width', 'height', 'borderRadius',
+        'color', 'blur', 'spread',
+        'tintColor', 'opacity',
+        'blurRadius',
+        'noiseFrequency', 'strength',
+        'textContent', 'textColor', 'textSize', 'fontWeight',
+        'textOpacity', 'textXOffset', 'textYOffset',
+        'shadowXOffset', 'shadowYOffset', 'shadowBlur', 'shadowOpacity', 'fontFamily'
+      ];
+      labels.forEach((label, index) => {
+        if (labelKeys[index] && t[labelKeys[index]]) {
+          label.textContent = t[labelKeys[index]];
+        }
+      });
+      
+      // Update code preview headers
+      const h4s = document.querySelectorAll('.code-preview-container h4');
+      if (h4s[0]) h4s[0].textContent = t.htmlPreview;
+      if (h4s[1]) h4s[1].textContent = t.cssPreview;
+      if (h4s[2]) h4s[2].textContent = t.vueProps;
+      if (h4s[3]) h4s[3].textContent = t.reactProps;
+      
+      // Update buttons
+      document.getElementById('prevBgBtn').textContent = t.previous;
+      document.getElementById('nextBgBtn').textContent = t.next;
+      document.getElementById('copyHtmlBtn').textContent = t.copyHtml;
+      document.getElementById('copyCssBtn').textContent = t.copyCss;
+      document.getElementById('copyVuePropsBtn').textContent = t.copyVue;
+      document.getElementById('copyReactPropsBtn').textContent = t.copyReact;
+      
+      // Update tutorial links
+      const tutorialLinks = document.querySelectorAll('.vue-tutorial-link');
+      if (tutorialLinks[0]) tutorialLinks[0].textContent = t.vueTutorial;
+      if (tutorialLinks[1]) tutorialLinks[1].textContent = t.reactTutorial;
+      
+      // Save preference
+      localStorage.setItem('liquidGlassLang', lang);
+    }
+
+    // Language toggle button
+    document.getElementById('langToggle').addEventListener('click', function() {
+      const newLang = currentLang === 'en' ? 'zh' : 'en';
+      updateLanguage(newLang);
+    });
+
+    // Load saved language preference
+    const savedLang = localStorage.getItem('liquidGlassLang') || 'en';
+    if (savedLang !== 'en') {
+      updateLanguage(savedLang);
+    }
+  </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"a793fa0ec6c84fa39ce29f9bb965fbdc","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DSN0DWTXXE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DSN0DWTXXE');
+</script>
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "rzoupd4oi8");
+</script>
+</html>

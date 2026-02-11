@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>LMing</title>
+        <link>https://zhantaoli.github.io/</link>
+        <description> </description>
+        <lastBuildDate>Wed, 11 Feb 2026 13:30:08 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <image>
+            <title>LMing</title>
+            <url>https://thirdqq.qlogo.cn/g?b=sdk&amp;nk=1489298615&amp;s=640</url>
+            <link>https://zhantaoli.github.io/</link>
+        </image>
+        <copyright>CC BY-NC-SA 4.0 2026 © LMing</copyright>
+        <atom:link href="https://zhantaoli.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[GCMP]]></title>
+            <link>https://zhantaoli.github.io/posts/GCMP</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/GCMP</guid>
+            <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<p>::: info<br>
+Source: <a href="https://github.com/VicBilibily/GCMP">GCMP</a> by <a href="https://github.com/VicBilibily">VicBilibily</a><br>
+:::</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/GCMP" target="_blank">https://zhantaoli.github.io/posts/GCMP</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[CCG with CC-Switch]]></title>
+            <link>https://zhantaoli.github.io/posts/CCG with CC-Switch</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/CCG with CC-Switch</guid>
+            <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<p>::: info<br>
+CCG = Claude Code + Codex + Gemini CLI 配置方案<br>
+Reference:</p>
+<ul>
+<li><a href="https://docs.packyapi.com/docs/">https://docs.packyapi.com/docs/</a><br>
+:::</li>
+</ul>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/CCG with CC-Switch" target="_blank">https://zhantaoli.github.io/posts/CCG with CC-Switch</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[CCG]]></title>
+            <link>https://zhantaoli.github.io/posts/CCG</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/CCG</guid>
+            <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<p>::: info<br>
+本文整理了 Claude Code、CodeX 和 Gemini 三款 AI 编程工具的配置和使用教程。<br>
+Reference:</p>
+<ul>
+<li><a href="https://oftem67e2m.feishu.cn/docx/GCYGd93qaoW0SAx0YeQcLgh1nnc">https://oftem67e2m.feishu.cn/docx/GCYGd93qaoW0SAx0YeQcLgh1nnc</a></li>
+<li><a href="https://chxpro.com/ai/cc%E5%90%88%E9%9B%86">https://chxpro.com/ai/cc合集</a><br>
+:::</li>
+</ul>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/CCG" target="_blank">https://zhantaoli.github.io/posts/CCG</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[AI Vocabulary]]></title>
+            <link>https://zhantaoli.github.io/posts/AI Vocabulary</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/AI Vocabulary</guid>
+            <pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>本文整理了 AI Agent 领域的核心概念和术语，帮助理解当前 AI 技术的发展趋势。</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/AI Vocabulary" target="_blank">https://zhantaoli.github.io/posts/AI Vocabulary</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[CSTC & OSCA]]></title>
+            <link>https://zhantaoli.github.io/posts/CSTC&amp;OSCA</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/CSTC&amp;OSCA</guid>
+            <pubDate>Sat, 24 Jan 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/CSTC&OSCA" target="_blank">https://zhantaoli.github.io/posts/CSTC&OSCA</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[Unify Chat Provider for Copilot]]></title>
+            <link>https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot</guid>
+            <pubDate>Sat, 24 Jan 2026 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<p>::: info<br>
+Source: <a href="https://github.com/smallmain/vscode-unify-chat-provider">vscode-unify-chat-provider</a> by <a href="https://linux.do/t/topic/1381609">SmallMain</a><br>
+This second-pass write-up follows the repository's documentation style and terminology.<br>
+:::</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot" target="_blank">https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[信号分析与处理]]></title>
+            <link>https://zhantaoli.github.io/posts/信号分析与处理</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/信号分析与处理</guid>
+            <pubDate>Wed, 31 Dec 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>信号分析与处理</strong></p>
+<p><strong>Author:</strong> Ming Li<br>
+<strong>Date:</strong> December 2025</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/信号分析与处理" target="_blank">https://zhantaoli.github.io/posts/信号分析与处理</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[T113-i记录]]></title>
+            <link>https://zhantaoli.github.io/posts/T113-i记录</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/T113-i记录</guid>
+            <pubDate>Fri, 24 Oct 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/T113-i记录" target="_blank">https://zhantaoli.github.io/posts/T113-i记录</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[雨课堂 - 学术规范与论文写作]]></title>
+            <link>https://zhantaoli.github.io/posts/学术规范与论文写作</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/学术规范与论文写作</guid>
+            <pubDate>Thu, 25 Sep 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>雨课堂 - 学术规范与论文写作</strong></p>
+<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/学术规范与论文写作" target="_blank">https://zhantaoli.github.io/posts/学术规范与论文写作</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[雨课堂 - 工程伦理]]></title>
+            <link>https://zhantaoli.github.io/posts/工程伦理</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/工程伦理</guid>
+            <pubDate>Thu, 25 Sep 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>雨课堂 - 工程伦理</strong></p>
+<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/工程伦理" target="_blank">https://zhantaoli.github.io/posts/工程伦理</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[雨课堂 - 科学道德与学风]]></title>
+            <link>https://zhantaoli.github.io/posts/科学道德与学风</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/科学道德与学风</guid>
+            <pubDate>Thu, 25 Sep 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>雨课堂 - 科学道德与学风</strong></p>
+<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/科学道德与学风" target="_blank">https://zhantaoli.github.io/posts/科学道德与学风</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[E2000D测试]]></title>
+            <link>https://zhantaoli.github.io/posts/E2000D测试</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/E2000D测试</guid>
+            <pubDate>Tue, 19 Aug 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>E2000D测试</strong></p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/E2000D测试" target="_blank">https://zhantaoli.github.io/posts/E2000D测试</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[ZYNQ记录]]></title>
+            <link>https://zhantaoli.github.io/posts/ZYNQ</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/ZYNQ</guid>
+            <pubDate>Sat, 11 Jan 2025 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p><strong>ZYNQ记录</strong></p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/ZYNQ" target="_blank">https://zhantaoli.github.io/posts/ZYNQ</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[ffmpeg常用教程]]></title>
+            <link>https://zhantaoli.github.io/posts/ffmpeg常用教程</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/ffmpeg常用教程</guid>
+            <pubDate>Sat, 01 Jun 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/ffmpeg常用教程" target="_blank">https://zhantaoli.github.io/posts/ffmpeg常用教程</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[Ai-Thinker环境搭建]]></title>
+            <link>https://zhantaoli.github.io/posts/Ai-Thinker环境搭建</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/Ai-Thinker环境搭建</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<p>::: tip<br>
+这里使用的是 <code>Ai-Thinker小安派</code> ，更多详细资料详见官网：<a href="https://docs.ai-thinker.com/open_hardware/index.html">小安派-开源硬件系列 从选型到开发全流程</a><br>
+:::</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/Ai-Thinker环境搭建" target="_blank">https://zhantaoli.github.io/posts/Ai-Thinker环境搭建</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[Linux记录]]></title>
+            <link>https://zhantaoli.github.io/posts/Linux记录</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/Linux记录</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/Linux记录" target="_blank">https://zhantaoli.github.io/posts/Linux记录</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[STM32的PID算法]]></title>
+            <link>https://zhantaoli.github.io/posts/STM32的PID算法</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/STM32的PID算法</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>这篇文章将介绍 STM32 中的 PID（比例-积分-微分）控制算法的原理和实现方法。PID 控制器是一种常用的反馈控制系统，用于调节系统的输出以达到设定值。STM32 作为一款广泛使用的微控制器，提供了丰富的资源和功能，使得实现 PID 控制算法变得更加高效和灵活。</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/STM32的PID算法" target="_blank">https://zhantaoli.github.io/posts/STM32的PID算法</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[Alist记录]]></title>
+            <link>https://zhantaoli.github.io/posts/alist记录</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/alist记录</guid>
+            <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<p>::: tip<br>
+随着 Alist 项目被出售并由新团队接手，原 Alist 的部分核心贡献者决定创建一个全新的分支项目 —— OpenList。这个项目旨在保持 Alist 的原有优势，同时去除商业化带来的限制，回归开源本质。<br>
+:::</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/alist记录" target="_blank">https://zhantaoli.github.io/posts/alist记录</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[英语单词]]></title>
+            <link>https://zhantaoli.github.io/posts/英语单词</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/英语单词</guid>
+            <pubDate>Thu, 07 Mar 2024 00:00:00 GMT</pubDate>
+            <content:encoded><![CDATA[<blockquote>
+<p>这个换行根typora不太一样, 懒得打行尾的两个空格了😢</p>
+</blockquote>
+<blockquote>
+<p>更新: 还好有AI😎</p>
+</blockquote>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/英语单词" target="_blank">https://zhantaoli.github.io/posts/英语单词</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+        <item>
+            <title><![CDATA[HDLBits刷题]]></title>
+            <link>https://zhantaoli.github.io/posts/HDLBits刷题</link>
+            <guid isPermaLink="false">https://zhantaoli.github.io/posts/HDLBits刷题</guid>
+            <pubDate>Wed, 12 Apr 2023 19:07:32 GMT</pubDate>
+            <content:encoded><![CDATA[<p>[[toc]]</p>
+<br/><p>访问 <a href="https://zhantaoli.github.io/posts/HDLBits刷题" target="_blank">https://zhantaoli.github.io/posts/HDLBits刷题</a> 阅读全文。</p>]]></content:encoded>
+            <author>i@valaxy.site (LMing)</author>
+        </item>
+    </channel>
+</rss>

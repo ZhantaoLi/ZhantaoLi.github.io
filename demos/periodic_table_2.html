@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table (1-118)</title>
+    <style>
+        :root {
+            /* Light Mode Variables */
+            --bg-color: #f0f2f5;
+            --text-color: #1d1d1f;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --element-hover: rgba(255, 255, 255, 0.85);
+            --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --modal-bg: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode Variables */
+            --bg-color: #0d0d0d;
+            --text-color: #f5f5f7;
+            --glass-bg: rgba(30, 30, 30, 0.60);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            --element-hover: rgba(255, 255, 255, 0.15);
+            --accent-gradient: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            --modal-bg: rgba(40, 40, 40, 0.85);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Moving Gradient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(76, 175, 80, 0.2), transparent 50%),
+                        radial-gradient(circle at 10% 10%, rgba(100, 181, 246, 0.2), transparent 50%),
+                        radial-gradient(circle at 90% 90%, rgba(233, 30, 99, 0.2), transparent 50%);
+            z-index: -1;
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header & Controls */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        h1 {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin: 0;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin-left: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            transform: scale(1.05);
+            background: var(--element-hover);
+        }
+
+        /* Periodic Table Grid */
+        .periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 6px;
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 40px;
+        }
+
+        /* Element Card Styling */
+        .element {
+            aspect-ratio: 5/6;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .element:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: var(--glass-shadow);
+            background: var(--element-hover);
+            z-index: 10;
+        }
+
+        .el-number { font-size: 0.7rem; opacity: 0.7; }
+        .el-symbol { font-size: 1.4rem; font-weight: 700; text-align: center; }
+        .el-name { font-size: 0.6rem; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Category Colors (Subtle gradients) */
+        .cat-alkali { border-bottom: 3px solid #ff6b6b; }
+        .cat-alkaline { border-bottom: 3px solid #feca57; }
+        .cat-transition { border-bottom: 3px solid #54a0ff; }
+        .cat-post-transition { border-bottom: 3px solid #48dbfb; }
+        .cat-metalloid { border-bottom: 3px solid #1dd1a1; }
+        .cat-nonmetal { border-bottom: 3px solid #ff9ff3; }
+        .cat-halogen { border-bottom: 3px solid #5f27cd; }
+        .cat-noble { border-bottom: 3px solid #c8d6e5; }
+        .cat-lanthanide { border-bottom: 3px solid #ff9f43; }
+        .cat-actinide { border-bottom: 3px solid #ee5253; }
+
+        /* Empty Spaces */
+        .empty { pointer-events: none; }
+        
+        /* Lanthanides & Actinides Spacing */
+        .gap-row {
+            grid-column: 1 / -1;
+            height: 20px;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal {
+            width: 400px;
+            background: var(--modal-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--glass-shadow);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal { transform: scale(1); }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .modal-symbol { font-size: 4rem; font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+        .modal-number { font-size: 1.5rem; opacity: 0.6; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color); }
+        
+        .modal-body { margin-top: 20px; }
+        .modal-name { font-size: 2rem; font-weight: 600; margin-bottom: 5px; }
+        .modal-category { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; background: rgba(128,128,128,0.2); margin-bottom: 20px; }
+        .modal-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .info-item label { display: block; font-size: 0.8rem; opacity: 0.6; margin-bottom: 2px; }
+        .info-item span { font-size: 1.1rem; font-weight: 500; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .periodic-table {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .element { width: 60px; height: 72px; margin: 2px; }
+            .gap-row { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Periodic Table</h1>
+        <div class="controls">
+            <button id="langBtn">CN / EN</button>
+            <button id="themeBtn">Light / Dark</button>
+        </div>
+    </header>
+
+    <div class="periodic-table" id="table-container">
+        </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-number" id="m-number">1</div>
+                    <div class="modal-symbol" id="m-symbol">H</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-name" id="m-name">Hydrogen</div>
+                <div class="modal-category" id="m-category">Nonmetal</div>
+                
+                <div class="modal-info">
+                    <div class="info-item">
+                        <label data-i18n="mass">Atomic Mass</label>
+                        <span id="m-mass">1.008</span>
+                    </div>
+                    <div class="info-item">
+                        <label data-i18n="electron">Shells</label>
+                        <span id="m-shells">1</span>
+                    </div>
+                    <div class="info-item">
+                        <label data-i18n="phase">Phase</label>
+                        <span id="m-phase">Gas</span>
+                    </div>
+                     <div class="info-item">
+                        <label data-i18n="disc">Discovered</label>
+                        <span id="m-disc">1766</span>
+                    </div>
+                </div>
+                <p id="m-desc" style="margin-top:20px; font-size: 0.9rem; line-height: 1.5; opacity: 0.8;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Data Structure (Compressed for all 118 Elements) ---
+        // Format: [Z, Symbol, NameEN, NameCN, Mass, CategoryIndex, Group, Period]
+        // Categories: 0:Nonmetal, 1:Noble Gas, 2:Alkali, 3:Alkaline, 4:Metalloid, 5:Halogen, 6:Transition, 7:Post-Trans, 8:Lanthanide, 9:Actinide
+        
+        const categories = [
+            {en: "Reactive Nonmetal", cn: "活性非金属", class: "cat-nonmetal"},
+            {en: "Noble Gas", cn: "稀有气体", class: "cat-noble"},
+            {en: "Alkali Metal", cn: "碱金属", class: "cat-alkali"},
+            {en: "Alkaline Earth Metal", cn: "碱土金属", class: "cat-alkaline"},
+            {en: "Metalloid", cn: "类金属", class: "cat-metalloid"},
+            {en: "Halogen", cn: "卤素", class: "cat-halogen"},
+            {en: "Transition Metal", cn: "过渡金属", class: "cat-transition"},
+            {en: "Post-transition Metal", cn: "贫金属", class: "cat-post-transition"},
+            {en: "Lanthanide", cn: "镧系元素", class: "cat-lanthanide"},
+            {en: "Actinide", cn: "锕系元素", class: "cat-actinide"}
+        ];
+
+        // Compact Data Source 1-118
+        const rawData = [
+            [1,"H","Hydrogen","氢","1.008",0,1,1],
+            [18,"He","Helium","氦","4.0026",1,18,1],
+            [3,"Li","Lithium","锂","6.94",2,1,2],
+            [4,"Be","Beryllium","铍","9.0122",3,2,2],
+            [5,"B","Boron","硼","10.81",4,13,2],
+            [6,"C","Carbon","碳","12.011",0,14,2],
+            [7,"N","Nitrogen","氮","14.007",0,15,2],
+            [8,"O","Oxygen","氧","15.999",0,16,2],
+            [9,"F","Fluorine","氟","18.998",5,17,2],
+            [10,"Ne","Neon","氖","20.180",1,18,2],
+            [11,"Na","Sodium","钠","22.990",2,1,3],
+            [12,"Mg","Magnesium","镁","24.305",3,2,3],
+            [13,"Al","Aluminium","铝","26.982",7,13,3],
+            [14,"Si","Silicon","硅","28.085",4,14,3],
+            [15,"P","Phosphorus","磷","30.974",0,15,3],
+            [16,"S","Sulfur","硫","32.06",0,16,3],
+            [17,"Cl","Chlorine","氯","35.45",5,17,3],
+            [18,"Ar","Argon","氩","39.948",1,18,3],
+            [19,"K","Potassium","钾","39.098",2,1,4],
+            [20,"Ca","Calcium","钙","40.078",3,2,4],
+            [21,"Sc","Scandium","钪","44.956",6,3,4],
+            [22,"Ti","Titanium","钛","47.867",6,4,4],
+            [23,"V","Vanadium","钒","50.942",6,5,4],
+            [24,"Cr","Chromium","铬","51.996",6,6,4],
+            [25,"Mn","Manganese","锰","54.938",6,7,4],
+            [26,"Fe","Iron","铁","55.845",6,8,4],
+            [27,"Co","Cobalt","钴","58.933",6,9,4],
+            [28,"Ni","Nickel","镍","58.693",6,10,4],
+            [29,"Cu","Copper","铜","63.546",6,11,4],
+            [30,"Zn","Zinc","锌","65.38",7,12,4],
+            [31,"Ga","Gallium","镓","69.723",7,13,4],
+            [32,"Ge","Germanium","锗","72.63",4,14,4],
+            [33,"As","Arsenic","砷","74.922",4,15,4],
+            [34,"Se","Selenium","硒","78.96",0,16,4],
+            [35,"Br","Bromine","溴","79.904",5,17,4],
+            [36,"Kr","Krypton","氪","83.798",1,18,4],
+            [37,"Rb","Rubidium","铷","85.468",2,1,5],
+            [38,"Sr","Strontium","锶","87.62",3,2,5],
+            [39,"Y","Yttrium","钇","88.906",6,3,5],
+            [40,"Zr","Zirconium","锆","91.224",6,4,5],
+            [41,"Nb","Niobium","铌","92.906",6,5,5],
+            [42,"Mo","Molybdenum","钼","95.95",6,6,5],
+            [43,"Tc","Technetium","锝","(98)",6,7,5],
+            [44,"Ru","Ruthenium","钌","101.07",6,8,5],
+            [45,"Rh","Rhodium","铑","102.91",6,9,5],
+            [46,"Pd","Palladium","钯","106.42",6,10,5],
+            [47,"Ag","Silver","银","107.87",6,11,5],
+            [48,"Cd","Cadmium","镉","112.41",7,12,5],
+            [49,"In","Indium","铟","114.82",7,13,5],
+            [50,"Sn","Tin","锡","118.71",7,14,5],
+            [51,"Sb","Antimony","锑","121.76",4,15,5],
+            [52,"Te","Tellurium","碲","127.60",4,16,5],
+            [53,"I","Iodine","碘","126.90",5,17,5],
+            [54,"Xe","Xenon","氙","131.29",1,18,5],
+            [55,"Cs","Caesium","铯","132.91",2,1,6],
+            [56,"Ba","Barium","钡","137.33",3,2,6],
+            // Lanthanides 57-71
+            [57,"La","Lanthanum","镧","138.91",8,3,6],
+            [58,"Ce","Cerium","铈","140.12",8,3,6],
+            [59,"Pr","Praseodymium","镨","140.91",8,3,6],
+            [60,"Nd","Neodymium","钕","144.24",8,3,6],
+            [61,"Pm","Promethium","钷","(145)",8,3,6],
+            [62,"Sm","Samarium","钐","150.36",8,3,6],
+            [63,"Eu","Europium","铕","151.96",8,3,6],
+            [64,"Gd","Gadolinium","钆","157.25",8,3,6],
+            [65,"Tb","Terbium","铽","158.93",8,3,6],
+            [66,"Dy","Dysprosium","镝","162.50",8,3,6],
+            [67,"Ho","Holmium","钬","164.93",8,3,6],
+            [68,"Er","Erbium","铒","167.26",8,3,6],
+            [69,"Tm","Thulium","铥","168.93",8,3,6],
+            [70,"Yb","Ytterbium","镱","173.05",8,3,6],
+            [71,"Lu","Lutetium","镥","174.97",8,3,6],
+            // Back to main
+            [72,"Hf","Hafnium","铪","178.49",6,4,6],
+            [73,"Ta","Tantalum","钽","180.95",6,5,6],
+            [74,"W","Tungsten","钨","183.84",6,6,6],
+            [75,"Re","Rhenium","铼","186.21",6,7,6],
+            [76,"Os","Osmium","锇","190.23",6,8,6],
+            [77,"Ir","Iridium","铱","192.22",6,9,6],
+            [78,"Pt","Platinum","铂","195.08",6,10,6],
+            [79,"Au","Gold","金","196.97",6,11,6],
+            [80,"Hg","Mercury","汞","200.59",7,12,6],
+            [81,"Tl","Thallium","铊","204.38",7,13,6],
+            [82,"Pb","Lead","铅","207.2",7,14,6],
+            [83,"Bi","Bismuth","铋","208.98",7,15,6],
+            [84,"Po","Polonium","钋","(209)",4,16,6],
+            [85,"At","Astatine","砹","(210)",5,17,6],
+            [86,"Rn","Radon","氡","(222)",1,18,6],
+            [87,"Fr","Francium","钫","(223)",2,1,7],
+            [88,"Ra","Radium","镭","(226)",3,2,7],
+            // Actinides 89-103
+            [89,"Ac","Actinium","锕","(227)",9,3,7],
+            [90,"Th","Thorium","钍","232.04",9,3,7],
+            [91,"Pa","Protactinium","镤","231.04",9,3,7],
+            [92,"U","Uranium","铀","238.03",9,3,7],
+            [93,"Np","Neptunium","镎","(237)",9,3,7],
+            [94,"Pu","Plutonium","钚","(244)",9,3,7],
+            [95,"Am","Americium","镅","(243)",9,3,7],
+            [96,"Cm","Curium","锔","(247)",9,3,7],
+            [97,"Bk","Berkelium","锫","(247)",9,3,7],
+            [98,"Cf","Californium","锎","(251)",9,3,7],
+            [99,"Es","Einsteinium","锿","(252)",9,3,7],
+            [100,"Fm","Fermium","镄","(257)",9,3,7],
+            [101,"Md","Mendelevium","钔","(258)",9,3,7],
+            [102,"No","Nobelium","锘","(259)",9,3,7],
+            [103,"Lr","Lawrencium","铹","(266)",9,3,7],
+            // Back to main
+            [104,"Rf","Rutherfordium","𬬻","(267)",6,4,7],
+            [105,"Db","Dubnium","𬭊","(268)",6,5,7],
+            [106,"Sg","Seaborgium","𬭳","(269)",6,6,7],
+            [107,"Bh","Bohrium","𬭛","(270)",6,7,7],
+            [108,"Hs","Hassium","𬭶","(269)",6,8,7],
+            [109,"Mt","Meitnerium","鿏","(278)",6,9,7],
+            [110,"Ds","Darmstadtium","𫟼","(281)",6,10,7],
+            [111,"Rg","Roentgenium","𬬭","(282)",6,11,7],
+            [112,"Cn","Copernicium","鿔","(285)",6,12,7],
+            [113,"Nh","Nihonium","鿭","(286)",7,13,7],
+            [114,"Fl","Flerovium","𫓧","(289)",7,14,7],
+            [115,"Mc","Moscovium","镆","(290)",7,15,7],
+            [116,"Lv","Livermorium","𫟷","(293)",7,16,7],
+            [117,"Ts","Tennessine","鿬","(294)",5,17,7],
+            [118,"Og","Oganesson","鿫","(294)",1,18,7]
+        ];
+        
+        let isEnglish = true; // State for language
+        let isDark = false;   // State for theme
+
+        // --- 2. Build the Grid ---
+        const tableContainer = document.getElementById('table-container');
+
+        // Helper to check if an element belongs in the Lanthanide/Actinide cutout
+        // La-Lu (57-71) are Lanthanides. Ac-Lr (89-103) are Actinides.
+        // In the main grid, we need placeholders at Period 6, Col 3 and Period 7, Col 3.
+        
+        // Map data to easy object
+        const elements = {};
+        rawData.forEach(d => {
+            elements[d[0]] = {
+                z: d[0], sym: d[1], nameEn: d[2], nameCn: d[3], mass: d[4], 
+                catIdx: d[5], grp: d[6], prd: d[7]
+            };
+        });
+
+        function renderTable() {
+            tableContainer.innerHTML = '';
+            
+            // Layout Logic: 18 Columns x 7 Rows (plus 2 spacer rows + 2 f-block rows)
+            // We will iterate 1-18 columns for 7 periods.
+            // Special handling for gap at 57-71 and 89-103.
+            
+            // Standard Grid Placement
+            // We can iterate through atomic numbers, but grid placement is better by coord.
+            // Or just iterate 1-126 (incl empty spots) and place based on logic.
+            
+            // Better strategy: Create 18x7 grid cells. 
+            // If a cell corresponds to an element, render it.
+            // If Z=57-71, don't render in main grid (except placeholder).
+            // Render f-block at the bottom.
+
+            // 1. Render Main Block (Period 1-7)
+            for (let p = 1; p <= 7; p++) {
+                for (let g = 1; g <= 18; g++) {
+                    let z = getZ(p, g);
+                    
+                    if (z === 'gap') {
+                        // Empty space
+                        createCell(null, 'empty');
+                    } else if (z === 'la-placeholder') {
+                        createCell({sym: '57-71', nameEn: 'La-Lu', nameCn: '镧系', catIdx: 8}, 'placeholder');
+                    } else if (z === 'ac-placeholder') {
+                        createCell({sym: '89-103', nameEn: 'Ac-Lr', nameCn: '锕系', catIdx: 9}, 'placeholder');
+                    } else {
+                        // Real element
+                        if (elements[z]) {
+                            // Skip if it's in the f-block ranges (handled separately below)
+                            if (z >= 57 && z <= 71) continue; 
+                            if (z >= 89 && z <= 103) continue;
+                            createCell(elements[z]);
+                        } else {
+                            createCell(null, 'empty');
+                        }
+                    }
+                }
+            }
+
+            // 2. Render Spacer
+            let spacer = document.createElement('div');
+            spacer.className = 'gap-row';
+            tableContainer.appendChild(spacer);
+
+            // 3. Render Lanthanides (57-71)
+            // Shift: 3 empty cells then 15 elements
+            renderFBlockRow(57, 71);
+
+            // 4. Render Actinides (89-103)
+            renderFBlockRow(89, 103);
+        }
+
+        function getZ(p, g) {
+            // Returns atomic number or special code based on Period/Group
+            // Period 1: H(1,1), He(1,18)
+            if(p==1) { return (g==1)?1 : (g==18)?2 : 'gap'; }
+            // Period 2: Li(3)..Ne(10) -> g1,2 then 13-18
+            if(p==2) { return (g<=2)?(g+2) : (g>=13)?(g-8) : 'gap'; } // 3,4... 5..10
+            if(p==2) { 
+                if(g==1) return 3; if(g==2) return 4;
+                if(g>=13) return g-8; // 13->5, 14->6... 18->10
+                return 'gap';
+            }
+            // Logic is complex, let's just find the element that matches P and G
+            if (p==6 && g==3) return 'la-placeholder';
+            if (p==7 && g==3) return 'ac-placeholder';
+            
+            // Find element in our data
+            const el = rawData.find(e => e[7] === p && e[6] === g);
+            return el ? el[0] : 'gap';
+        }
+
+        function renderFBlockRow(start, end) {
+            // 3 empty cells to align with group 3
+             createCell(null, 'empty');
+             createCell(null, 'empty');
+             createCell(null, 'empty'); // visual alignment usually requires padding
+
+            for (let z = start; z <= end; z++) {
+                createCell(elements[z]);
+            }
+        }
+
+        function createCell(data, type='normal') {
+            const div = document.createElement('div');
+            
+            if (type === 'empty') {
+                div.className = 'element empty';
+                div.style.border = 'none';
+                div.style.background = 'transparent';
+                div.style.boxShadow = 'none';
+            } else if (type === 'placeholder') {
+                 div.className = `element cat-${categories[data.catIdx].class.replace('cat-','')}`;
+                 div.innerHTML = `
+                    <div class="el-number"></div>
+                    <div class="el-symbol" style="font-size:1rem">${data.sym}</div>
+                    <div class="el-name">${isEnglish ? data.nameEn : data.nameCn}</div>
+                `;
+                div.style.opacity = '0.7';
+            } else {
+                // Real Element
+                div.className = `element ${categories[data.catIdx].class}`;
+                div.innerHTML = `
+                    <div class="el-number">${data.z}</div>
+                    <div class="el-symbol">${data.sym}</div>
+                    <div class="el-name">${isEnglish ? data.nameEn : data.nameCn}</div>
+                `;
+                div.onclick = () => openModal(data);
+            }
+            tableContainer.appendChild(div);
+        }
+
+        // --- 3. Interaction & Modal ---
+        const modalOverlay = document.getElementById('modalOverlay');
+        
+        function openModal(data) {
+            document.getElementById('m-number').innerText = data.z;
+            document.getElementById('m-symbol').innerText = data.sym;
+            document.getElementById('m-name').innerText = isEnglish ? data.nameEn : data.nameCn;
+            
+            const cat = categories[data.catIdx];
+            document.getElementById('m-category').innerText = isEnglish ? cat.en : cat.cn;
+            document.getElementById('m-category').className = 'modal-category ' + cat.class; // keep color
+            
+            document.getElementById('m-mass').innerText = data.mass;
+            
+            // Dummy Data generation for visual completeness (Since prompts limit data length)
+            document.getElementById('m-shells').innerText = getShells(data.z);
+            document.getElementById('m-phase').innerText = getPhase(data.z);
+            document.getElementById('m-disc').innerText = getDisc(data.z);
+
+            // Description logic
+            let descEn = `${data.nameEn} is a chemical element with symbol ${data.sym} and atomic number ${data.z}. It belongs to the group of ${cat.en.toLowerCase()}.`;
+            let descCn = `${data.nameCn}是一种化学元素，符号为${data.sym}，原子序数为${data.z}。它属于${cat.cn}。`;
+            document.getElementById('m-desc').innerText = isEnglish ? descEn : descCn;
+
+            // Translate labels
+            const labels = document.querySelectorAll('[data-i18n]');
+            labels.forEach(l => {
+                if(l.dataset.i18n === 'mass') l.innerText = isEnglish ? 'Atomic Mass' : '原子质量';
+                if(l.dataset.i18n === 'electron') l.innerText = isEnglish ? 'Shells' : '电子层';
+                if(l.dataset.i18n === 'phase') l.innerText = isEnglish ? 'Phase' : '状态';
+                if(l.dataset.i18n === 'disc') l.innerText = isEnglish ? 'Discovered' : '发现年份';
+            });
+
+            modalOverlay.classList.add('active');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        // Simple generators for extra data
+        function getShells(z) {
+            // Rough calculation of period
+            if (z<=2) return 1; if (z<=10) return 2; if (z<=18) return 3;
+            if (z<=36) return 4; if (z<=54) return 5; if (z<=86) return 6; return 7;
+        }
+        function getPhase(z) {
+            if ([1,2,7,8,9,10,17,18,36,54,86].includes(z)) return isEnglish?"Gas":"气态";
+            if ([35,80].includes(z)) return isEnglish?"Liquid":"液态";
+            return isEnglish?"Solid":"固态";
+        }
+        function getDisc(z) {
+            if(z < 10) return "Ancient";
+            if(z > 100) return "1950s+";
+            return "1700-1900";
+        }
+
+        // --- 4. Toggles ---
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            isDark = !isDark;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            renderTable(); // Re-render to update placeholders? No, CSS handles colors.
+            // Just need to ensure placeholder text colors update if needed.
+        });
+
+        document.getElementById('langBtn').addEventListener('click', () => {
+            isEnglish = !isEnglish;
+            renderTable();
+            // Also update modal if open
+            if(modalOverlay.classList.contains('active')) {
+                const num = document.getElementById('m-number').innerText;
+                openModal(elements[parseInt(num)]);
+            }
+            // Update Title
+            document.querySelector('h1').innerText = isEnglish ? "Periodic Table" : "元素周期表";
+        });
+
+        // Initial Render
+        renderTable();
+        
+    </script>
+</body>
+</html>

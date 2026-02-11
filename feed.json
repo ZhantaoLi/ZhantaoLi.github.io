@@ -1,0 +1,254 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "LMing",
+    "home_page_url": "https://zhantaoli.github.io/",
+    "feed_url": "https://zhantaoli.github.io/feed.json",
+    "description": " ",
+    "icon": "https://thirdqq.qlogo.cn/g?b=sdk&nk=1489298615&s=640",
+    "author": {
+        "name": "LMing",
+        "url": "https://valaxy.site"
+    },
+    "items": [
+        {
+            "id": "https://zhantaoli.github.io/posts/GCMP",
+            "content_html": "<p>[[toc]]</p>\n<p>::: info<br>\nSource: <a href=\"https://github.com/VicBilibily/GCMP\">GCMP</a> by <a href=\"https://github.com/VicBilibily\">VicBilibily</a><br>\n:::</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/GCMP\" target=\"_blank\">https://zhantaoli.github.io/posts/GCMP</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/GCMP",
+            "title": "GCMP",
+            "date_modified": "2026-02-07T00:00:00.000Z",
+            "date_published": "2026-02-07T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/CCG with CC-Switch",
+            "content_html": "<p>[[toc]]</p>\n<p>::: info<br>\nCCG = Claude Code + Codex + Gemini CLI 配置方案<br>\nReference:</p>\n<ul>\n<li><a href=\"https://docs.packyapi.com/docs/\">https://docs.packyapi.com/docs/</a><br>\n:::</li>\n</ul>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/CCG with CC-Switch\" target=\"_blank\">https://zhantaoli.github.io/posts/CCG with CC-Switch</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/CCG with CC-Switch",
+            "title": "CCG with CC-Switch",
+            "date_modified": "2026-02-01T00:00:00.000Z",
+            "date_published": "2026-02-01T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/CCG",
+            "content_html": "<p>[[toc]]</p>\n<p>::: info<br>\n本文整理了 Claude Code、CodeX 和 Gemini 三款 AI 编程工具的配置和使用教程。<br>\nReference:</p>\n<ul>\n<li><a href=\"https://oftem67e2m.feishu.cn/docx/GCYGd93qaoW0SAx0YeQcLgh1nnc\">https://oftem67e2m.feishu.cn/docx/GCYGd93qaoW0SAx0YeQcLgh1nnc</a></li>\n<li><a href=\"https://chxpro.com/ai/cc%E5%90%88%E9%9B%86\">https://chxpro.com/ai/cc合集</a><br>\n:::</li>\n</ul>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/CCG\" target=\"_blank\">https://zhantaoli.github.io/posts/CCG</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/CCG",
+            "title": "CCG",
+            "date_modified": "2026-02-01T00:00:00.000Z",
+            "date_published": "2026-02-01T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/AI Vocabulary",
+            "content_html": "<p>本文整理了 AI Agent 领域的核心概念和术语，帮助理解当前 AI 技术的发展趋势。</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/AI Vocabulary\" target=\"_blank\">https://zhantaoli.github.io/posts/AI Vocabulary</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/AI Vocabulary",
+            "title": "AI Vocabulary",
+            "date_modified": "2026-01-31T00:00:00.000Z",
+            "date_published": "2026-01-31T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/CSTC&OSCA",
+            "content_html": "<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/CSTC&OSCA\" target=\"_blank\">https://zhantaoli.github.io/posts/CSTC&OSCA</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/CSTC&OSCA",
+            "title": "CSTC & OSCA",
+            "date_modified": "2026-01-24T00:00:00.000Z",
+            "date_published": "2026-01-24T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot",
+            "content_html": "<p>[[toc]]</p>\n<p>::: info<br>\nSource: <a href=\"https://github.com/smallmain/vscode-unify-chat-provider\">vscode-unify-chat-provider</a> by <a href=\"https://linux.do/t/topic/1381609\">SmallMain</a><br>\nThis second-pass write-up follows the repository's documentation style and terminology.<br>\n:::</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot\" target=\"_blank\">https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/Unify Chat Provider for Copilot",
+            "title": "Unify Chat Provider for Copilot",
+            "date_modified": "2026-01-24T00:00:00.000Z",
+            "date_published": "2026-01-24T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/信号分析与处理",
+            "content_html": "<p><strong>信号分析与处理</strong></p>\n<p><strong>Author:</strong> Ming Li<br>\n<strong>Date:</strong> December 2025</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/信号分析与处理\" target=\"_blank\">https://zhantaoli.github.io/posts/信号分析与处理</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/信号分析与处理",
+            "title": "信号分析与处理",
+            "date_modified": "2025-12-31T00:00:00.000Z",
+            "date_published": "2025-12-31T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/T113-i记录",
+            "content_html": "<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/T113-i记录\" target=\"_blank\">https://zhantaoli.github.io/posts/T113-i记录</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/T113-i记录",
+            "title": "T113-i记录",
+            "date_modified": "2025-10-24T00:00:00.000Z",
+            "date_published": "2025-10-24T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/学术规范与论文写作",
+            "content_html": "<p><strong>雨课堂 - 学术规范与论文写作</strong></p>\n<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/学术规范与论文写作\" target=\"_blank\">https://zhantaoli.github.io/posts/学术规范与论文写作</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/学术规范与论文写作",
+            "title": "雨课堂 - 学术规范与论文写作",
+            "date_modified": "2025-09-25T00:00:00.000Z",
+            "date_published": "2025-09-25T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/工程伦理",
+            "content_html": "<p><strong>雨课堂 - 工程伦理</strong></p>\n<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/工程伦理\" target=\"_blank\">https://zhantaoli.github.io/posts/工程伦理</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/工程伦理",
+            "title": "雨课堂 - 工程伦理",
+            "date_modified": "2025-09-25T00:00:00.000Z",
+            "date_published": "2025-09-25T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/科学道德与学风",
+            "content_html": "<p><strong>雨课堂 - 科学道德与学风</strong></p>\n<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/科学道德与学风\" target=\"_blank\">https://zhantaoli.github.io/posts/科学道德与学风</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/科学道德与学风",
+            "title": "雨课堂 - 科学道德与学风",
+            "date_modified": "2025-09-25T00:00:00.000Z",
+            "date_published": "2025-09-25T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/E2000D测试",
+            "content_html": "<p><strong>E2000D测试</strong></p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/E2000D测试\" target=\"_blank\">https://zhantaoli.github.io/posts/E2000D测试</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/E2000D测试",
+            "title": "E2000D测试",
+            "date_modified": "2025-08-19T00:00:00.000Z",
+            "date_published": "2025-08-19T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/ZYNQ",
+            "content_html": "<p><strong>ZYNQ记录</strong></p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/ZYNQ\" target=\"_blank\">https://zhantaoli.github.io/posts/ZYNQ</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/ZYNQ",
+            "title": "ZYNQ记录",
+            "date_modified": "2025-01-11T00:00:00.000Z",
+            "date_published": "2025-01-11T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/ffmpeg常用教程",
+            "content_html": "<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/ffmpeg常用教程\" target=\"_blank\">https://zhantaoli.github.io/posts/ffmpeg常用教程</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/ffmpeg常用教程",
+            "title": "ffmpeg常用教程",
+            "date_modified": "2024-06-01T00:00:00.000Z",
+            "date_published": "2024-06-01T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/Ai-Thinker环境搭建",
+            "content_html": "<p>[[toc]]</p>\n<p>::: tip<br>\n这里使用的是 <code>Ai-Thinker小安派</code> ，更多详细资料详见官网：<a href=\"https://docs.ai-thinker.com/open_hardware/index.html\">小安派-开源硬件系列 从选型到开发全流程</a><br>\n:::</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/Ai-Thinker环境搭建\" target=\"_blank\">https://zhantaoli.github.io/posts/Ai-Thinker环境搭建</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/Ai-Thinker环境搭建",
+            "title": "Ai-Thinker环境搭建",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/Linux记录",
+            "content_html": "<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/Linux记录\" target=\"_blank\">https://zhantaoli.github.io/posts/Linux记录</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/Linux记录",
+            "title": "Linux记录",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/STM32的PID算法",
+            "content_html": "<p>这篇文章将介绍 STM32 中的 PID（比例-积分-微分）控制算法的原理和实现方法。PID 控制器是一种常用的反馈控制系统，用于调节系统的输出以达到设定值。STM32 作为一款广泛使用的微控制器，提供了丰富的资源和功能，使得实现 PID 控制算法变得更加高效和灵活。</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/STM32的PID算法\" target=\"_blank\">https://zhantaoli.github.io/posts/STM32的PID算法</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/STM32的PID算法",
+            "title": "STM32的PID算法",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/alist记录",
+            "content_html": "<p>::: tip<br>\n随着 Alist 项目被出售并由新团队接手，原 Alist 的部分核心贡献者决定创建一个全新的分支项目 —— OpenList。这个项目旨在保持 Alist 的原有优势，同时去除商业化带来的限制，回归开源本质。<br>\n:::</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/alist记录\" target=\"_blank\">https://zhantaoli.github.io/posts/alist记录</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/alist记录",
+            "title": "Alist记录",
+            "date_modified": "2024-04-12T00:00:00.000Z",
+            "date_published": "2024-04-12T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/英语单词",
+            "content_html": "<blockquote>\n<p>这个换行根typora不太一样, 懒得打行尾的两个空格了😢</p>\n</blockquote>\n<blockquote>\n<p>更新: 还好有AI😎</p>\n</blockquote>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/英语单词\" target=\"_blank\">https://zhantaoli.github.io/posts/英语单词</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/英语单词",
+            "title": "英语单词",
+            "date_modified": "2024-03-07T00:00:00.000Z",
+            "date_published": "2024-03-07T00:00:00.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        },
+        {
+            "id": "https://zhantaoli.github.io/posts/HDLBits刷题",
+            "content_html": "<p>[[toc]]</p>\n<br/><p>访问 <a href=\"https://zhantaoli.github.io/posts/HDLBits刷题\" target=\"_blank\">https://zhantaoli.github.io/posts/HDLBits刷题</a> 阅读全文。</p>",
+            "url": "https://zhantaoli.github.io/posts/HDLBits刷题",
+            "title": "HDLBits刷题",
+            "date_modified": "2023-04-12T19:07:32.000Z",
+            "date_published": "2023-04-12T19:07:32.000Z",
+            "author": {
+                "name": "LMing",
+                "url": "https://valaxy.site"
+            }
+        }
+    ]
+}

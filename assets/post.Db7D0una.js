@@ -1,0 +1,1 @@
+import"./chunks/vue-router.fX0UCdQ5.js";import{o as t}from"./app.D8_-IYO0.js";import{y as e}from"./framework.53SfwQWC.js";function m(o){if(!o)return{color:"",icon:"",styles:void 0};const r=t();o in r.value.types||(o="link");const s=r.value.types[o].color,i=r.value.types[o].icon,n=e(()=>o?{"--card-c-primary":s}:void 0);return{color:s,icon:i,styles:n}}export{m as u};
