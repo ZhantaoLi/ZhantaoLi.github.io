@@ -32,10 +32,6 @@ See `http://localhost:4859/`, have fun!
 
 Modify `valaxy.config.ts` to custom your blog.
 
-English & Chinese Docs is coming!
-
-> Wait a minute.
-
 ### Docker
 
 ```bash

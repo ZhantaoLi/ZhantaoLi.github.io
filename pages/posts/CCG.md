@@ -34,7 +34,11 @@ Claude Code 是 Anthropic 推出的官方命令行工具，支持 Windows、macO
 
 **安装方法：**
 
+[Claude Code 概述](https://code.claude.com/docs/zh-CN/overview)
+
 ```bash
+curl -fsSL https://claude.ai/install.sh | bash
+
 # 使用 npm 安装
 npm install -g @anthropic-ai/claude-code
 
@@ -601,6 +605,10 @@ export GOOGLE_API_KEY="your-gemini-api-key"
 4. **代码审查** - AI 生成的代码需要人工审查
 5. **持续学习** - 关注工具更新和新功能
 
+## ClaudeCode 官方中文文档
+
+https://docs.anthropic.com/zh-CN/docs/claude-code/quickstart
+
 ## 总结
 
 三款工具各有特色，建议根据实际需求选择使用：
@@ -617,3 +625,180 @@ export GOOGLE_API_KEY="your-gemini-api-key"
 - [Anthropic API](https://docs.anthropic.com/)
 - [OpenAI Platform](https://platform.openai.com/)
 - [Google AI Studio](https://aistudio.google.com/)
+
+## 续: Claude Code 功能
+
+### 1）直接进行交互
+
+Claude Code 提供两种主要的交互方式：
+
+- 交互模式：运行 `claude` 启动 REPL 会话
+- 单次模式：使用 `claude -p "查询"` 进行快速命令
+
+示例：
+
+```bash
+# 启动交互模式
+claude
+
+# 以初始查询启动
+claude "解释这个项目"
+
+# 运行单个命令并退出
+claude -p "这个函数做什么？"
+
+# 处理管道内容
+cat logs.txt | claude -p "分析这些错误"
+```
+
+### 2）支持连接到主流 IDE
+
+- 现在支持 VSCode 与 JetBrains
+- Linux / macOS：在 IDE 内置终端唤起 Claude Code 时可自动安装插件（VSCode）
+- JetBrains：可从 Marketplace 安装 Claude Code 插件
+- 可在 Claude Code 里选择 IDE：
+
+```bash
+> /ide
+```
+
+### 3）支持连接到 Cursor
+
+- 方法一：直接安装插件
+- 方法二：基于 WSL（在 cursor 中本地连接 Ubuntu 终端使用 Claude Code）
+
+核心操作：在 Cursor 中选择连接到 WSL 的 Ubuntu 发行版；若选项不足，安装 WSL 扩展并重启。
+
+### 4）切换模型：Claude 4 Opus 与 Claude 4 Sonnet
+
+- 推荐使用 Claude 4 Sonnet（默认），体验接近 Opus，但计费倍率仅为 1/5
+- 更换方式请查阅官网指令
+
+### 5）压缩上下文以节省额度
+
+```bash
+/compact [instructions]  # 可添加说明
+```
+
+### 6）恢复以前的对话
+
+```bash
+claude --continue
+```
+
+显示时间并选择会话：
+
+```bash
+claude --resume
+```
+
+### 7）处理图像信息（本 Markdown 版本不包含图片）
+
+可用方式（示例保留）：
+
+```bash
+> 分析这个图像：/path/to/your/image.png
+```
+
+### 8）深入思考
+
+通过自然语言要求其进行深入思考，例如：
+
+```bash
+> 我需要使用 OAuth2 为我们的 API 实现一个新的身份验证系统。深入思考在我们的代码库中实现这一点的最佳方法。
+```
+
+### 9）通过 CLAUDE.md 存储重要记忆
+
+```bash
+> /init
+```
+
+### 10）自动化 CI 和基础设施工作流程（非交互模式）
+
+```bash
+claude -p "使用最新更改更新 README" --allowedTools "Bash(git diff:*)" "Bash(git log:*)" Write --disallowedTools ..
+```
+
+### 11）上下文通用协议（MCP）
+
+- MCP 是开放协议，使 LLM 能够访问外部工具和数据源
+- 参考：Introduction - Model Context Protocol
+- Claude Code 也支持作为 MCP 服务器等高级功能
+
+### 12）使用 Git 工作树运行并行 Claude Code 会话
+
+示例：
+
+```bash
+# 创建带有新分支的工作树
+git worktree add ../project-feature-a -b feature-a
+
+# 或使用现有分支创建工作树
+git worktree add ../project-bugfix bugfix-123
+```
+
+在每个工作树中运行：
+
+```bash
+cd ../project-feature-a
+claude
+```
+
+管理工作树：
+
+```bash
+git worktree list
+git worktree remove ../project-feature-a
+```
+
+### 13）其他自然语言功能（示例）
+
+```bash
+> 在 auth 模块中查找没有适当 JSDoc 注释的函数
+> 为 auth.js 中未文档化的函数添加 JSDoc 注释
+> 支付处理系统做什么？
+> 查找用户权限在哪里被检查
+> 为注册表单添加输入验证
+> 运行 auth 模块的测试并修复失败
+```
+
+### 14）常见的斜杠命令（节选）
+
+- `/bug` 报告错误（将对话发送给 Anthropic）
+- `/clear` 清除对话历史
+- `/compact [instructions]` 压缩对话
+- `/config` 查看/修改配置
+- `/cost` 显示余额使用统计
+- `/doctor` 检查 Claude Code 安装的健康状况
+- `/help` 获取使用帮助
+- `/init` 使用 CLAUDE.md 指南初始化项目
+- `/login` 切换 Anthropic 账户
+
+### 15）常用快捷键（节选）
+
+- 使用 `#` 快速记忆：以 `#` 开始输入来即时添加记忆
+- 终端换行输入多行：
+  - 快速转义：输入 `\` 后按 Enter
+  - 快捷键：Option+Enter（或配置后的 Shift+Enter）
+- Vim 模式：
+  - `/vim` 启用，或通过 `/config` 配置
+
+### 16）常见报错
+
+- `400 - invalid_request_error`：请求格式或内容问题
+- `401 - authentication_error`：API 密钥问题
+- `403 - permission_error`：无权限
+- `404 - not_found_error`：资源未找到
+- `413 - request_too_large`：请求过大（建议用 `/compact`）
+- `429 - rate_limit_error`：速率限制
+- `500 - api_error`：内部错误
+- `529 - overloaded_error`：API 过载
+
+### 17）其他高级功能
+
+- Claude Code 可作为类 Unix 工具使用
+- 支持自定义斜杠指令
+- 支持使用 `$ARGUMENTS` 添加命令参数
+- 支持高级设置（命令行参数/本地项目/共享项目/用户设置）
+- 安全设置参考：管理权限和安全 - Anthropic

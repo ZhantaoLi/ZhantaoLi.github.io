@@ -59,7 +59,7 @@ Reference:
 在终端执行：
 
 ```bash
-npm list -g --depth-0
+npm list -g --depth=0
 ```
 
 - 若提示"命令未找到"，需要先安装 [Node.js](https://nodejs.org/zh-cn/download)
