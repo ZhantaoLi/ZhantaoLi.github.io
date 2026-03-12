@@ -9,8 +9,6 @@ date: 2026-03-09
 updated: 2026-03-09
 ---
 
-# Claude & Codex 配置记录
-
 [[toc]]
 
 这里记录两份我最近保存下来的配置模板：一份偏 `Claude Code` 的工作流约束，一份偏 `Codex/AGENTS` 的协作规范。

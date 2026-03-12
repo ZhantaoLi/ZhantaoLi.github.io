@@ -7,8 +7,6 @@ date: 2026-02-02
 updated: 2026-02-02
 ---
 
-# GCMP - 国内大模型提供商的 GitHub Copilot 扩展
-
 [[toc]]
 
 ::: info

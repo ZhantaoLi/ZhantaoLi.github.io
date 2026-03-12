@@ -8,12 +8,10 @@ date: 2026-03-09
 updated: 2026-03-09
 ---
 
-# CPA（CLI Proxy API）搭建与使用
-
 [[toc]]
 
 CLIProxyAPI 是一款使用 Go 语言编写的开源 AI 代理工具。
-
+<!-- more -->
 如果你已经在本机或服务器上登录过 `Codex`、`Claude Code`、`Gemini CLI`、`Qwen Code` 之类的 CLI，接下来通常会遇到一个问题：这些能力各自可用，但很难统一给别的客户端或 SDK 复用。
 
 `CLIProxyAPI` 的价值就在这里。它把这些 CLI/OAuth 能力包装成统一的 API 服务，对外暴露 OpenAI / Gemini / Claude / Codex 兼容接口。这样你就可以把本地 CLI 账户，转换成一个稳定的代理入口，供 `Codex`、`Claude Code`、`Amp CLI`，或者你自己的脚本直接调用。
@@ -25,7 +23,6 @@ CLIProxyAPI 是一款使用 Go 语言编写的开源 AI 代理工具。
 3. 用统一 API 测通请求
 4. 让 `Codex` 或其他客户端接入它
 
-<!-- more -->
 
 ## 它到底解决什么问题
 
