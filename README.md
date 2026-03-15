@@ -20,10 +20,10 @@ npm run dev
 
 # build
 npm run build
-# or  pnpm build
+# or  pnpm run build
 
 # update
-pnpm update valaxy valaxy-theme-yun --latest
+pnpm up valaxy valaxy-theme-yun
 ```
 
 See `http://localhost:4859/`, have fun!

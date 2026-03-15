@@ -8,7 +8,6 @@ const { t } = useI18n()
 </script>
 
 <template>
-    <NoticeBar />
     <YunFooter style="display: flex;flex-direction: column;justify-content: center;align-items: center;">
         <div style="display: flex;">
             <a target="_blank" href="https://valaxy.site/" title="Valaxy"><img

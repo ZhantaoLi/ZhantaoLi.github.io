@@ -1,25 +1,32 @@
 {
-  "name": "valaxy-blog",
-  "type": "module",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "build": "npm run build:ssg",
-    "build:spa": "valaxy build",
-    "build:ssg": "valaxy build --ssg",
-    "dev": "valaxy",
-    "rss": "valaxy rss",
-    "serve": "vite preview"
-  },
-  "dependencies": {
-    "valaxy": "0.28.0-beta.1",
-    "valaxy-addon-components": "^0.1.0",
-    "valaxy-addon-meting": "^0.1.4",
-    "valaxy-addon-waline": "^0.2.1",
-    "valaxy-theme-yun": "0.28.0-beta.1",
-    "vue-i18n": "^11.1.12"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.2"
-  }
+    "name": "valaxy-blog",
+    "type": "module",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "build": "npm run build:ssg",
+        "build:spa": "valaxy build",
+        "build:ssg": "valaxy build --ssg",
+        "dev": "valaxy",
+        "rss": "valaxy rss",
+        "serve": "vite preview"
+    },
+    "dependencies": {
+        "valaxy": "0.27.0",
+        "valaxy-addon-components": "^0.1.0",
+        "valaxy-addon-meting": "^0.1.4",
+        "valaxy-addon-waline": "^0.2.1",
+        "valaxy-theme-yun": "0.27.0",
+        "vue-i18n": "^11.1.12"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.2",
+        "vite": "^5.4.21"
+    },
+    "pnpm": {
+        "overrides": {
+            "undici": "^7.24.0",
+            "unhead": "^2.1.11"
+        }
+    }
 }

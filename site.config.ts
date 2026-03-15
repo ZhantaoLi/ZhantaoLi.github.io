@@ -3,7 +3,7 @@ import { defineSiteConfig } from 'valaxy'
 export default defineSiteConfig({
   url: 'https://zhantaoli.github.io/',
   // GitHub Pages (project pages) base path
-  favicon: "/ZhantaoLi.github.io/favicon.svg",
+  favicon: "favicon.svg",
   lang: 'zh-CN',
   title: 'LMing',
   subtitle: 'Think Twice, Code Once',

@@ -781,10 +781,57 @@ cat ~/.openviking/ov.conf
 
 不然很容易掉进一种假象：你以为是“召回效果差”，其实根因只是 `embedding` 根本没成功初始化。
 
+
+## OpenClaw 的定时模型巡检 + 自动改主备链
+
+如果你想让 `OpenClaw` 的主模型和 `fallback` 模型都保持在一个健康状态，可以让 `Codex` 写一个小脚本 `model_autotune.py`，再定时执行。
+
+核心做两件事：健康探测与回退链重排，然后把结果以“模型巡检告警”的格式推送出去。
+
+对所有 API Provider 的模型做健康探测（含工具调用），然后重写 default_provider_id 和 fallback_chat_models.
+
+### 逻辑（openclaw-model-autotune 这类任务通常怎么做）
+
+1. 收集候选
+
+- 从配置里拿到所有可用的聊天模型（provider_id = source_id/model），以及每个source 的 api_base、api_key。
+- 过滤掉明显不可用的 source（没 key、没 base、key 不是 sk-... 这类）。
+
+2. 健康探测（逐个模型）
+
+- 至少做“工具调用探测”（让模型必须返回 tool_call），可选再做“纯文本探测”。
+- 记录：是否成功、HTTP 状态、耗时、错误原因（超时/401/500/no_tool_call 等）。
+
+3. 打分排序（在健康的模型里选“更好”的）
+
+- 常见偏好：更高版本的 gpt-* 更优；同级别下低延迟更优；某些后缀（如 spark）加权；codex/非 codex 可能有不同偏好。
+- 保留“粘性”：如果当前主模型仍健康，倾向不切，避免抖动。
+
+4. 生成新主备链
+
+- Primary：优先选你指定的偏好主模型（例如示例里的 custom-.../gpt-5.4），否则选健康榜第一。
+- Fallbacks：把固定钉住的几个（pinned）放前面；再补健康模型；再补“上次健康过”的；最后把“兜底中的兜底”（glm/kimi/qwen/minimax 这类）放到链尾。
+- 限制链长度（例如 normal fallback 上限 N，last-resort 上限 M）。
+
+5. 写回与告警
+
+- 如果链变化：更新配置文件（或通过 API 更新），并推送“fallback-chain-changed”告警。
+- 如果没变化：推送“health-check”摘要（可选）。
+
+### “告警内容”一般长什么样
+
+- 标题：模型巡检告警
+- 时间（ISO）
+- 类型：health-check 或 fallback-chain-changed
+- 主模型、回退链（用 -> 串起来）
+- 详情：原主/新主、原回退/新回退、移除/新增、失败模型及失败原因（比如超时、无auth）
+
+
 ## 还能顺手做什么
 
 这篇文章主线是“遇到错误就交给 `Codex` 修”，所以这里只顺手提一下扩展方向，不展开：
 
+- 让模型可以使用 `Tavily` 联网获取信息
 - 可以加一些定时任务，例如每日新闻摘要、`GitHub Trending` 抓取
 - 可以做 `OpenClaw` 模型巡检，确认主模型和 `fallback` 是否还可用
 - 这些自动化任务后续也很适合继续让 `Codex` 帮你写和调
