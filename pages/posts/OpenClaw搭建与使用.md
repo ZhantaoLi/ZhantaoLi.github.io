@@ -42,6 +42,8 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw onboard --install-daemon
 ```
 
+[接入QQ机器人 ](https://q.qq.com/qqbot/openclaw/index.html) 
+
 ### 3. 检查 Gateway
 
 ```bash
@@ -811,6 +813,41 @@ cat ~/.openviking/ov.conf
 - 一旦接入记忆、渠道、定时任务、fallback 模型，系统复杂度会迅速上升
 
 实际上，`OpenClaw` 的 BUG 巨多，真的只是半成品状态，我直接一个期待后续大厂的产品。
+
+## 卸载
+
+其实只需要执行一行命令，就能卸载 OpenClaw 了：
+
+```bash
+openclaw uninstall 
+# npm rm -g openclaw
+```
+
+完全卸载：
+
+Linux/Mac：
+
+```bash
+openclaw gateway stop
+openclaw gateway uninstall
+rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
+npm rm -g openclaw || pnpm remove -g openclaw
+rm -rf /Applications/OpenClaw.app
+```
+
+Windows：
+
+```powershell
+openclaw gateway stop
+openclaw gateway uninstall
+schtasks /Delete /F /TN "OpenClaw Gateway"
+Remove-Item -Recurse -Force "$env:USERPROFILE\.openclaw"
+Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd" -ErrorAction SilentlyContinue
+npm rm -g openclaw
+# 如果你是用 pnpm 安装的，改为执行：pnpm remove -g openclaw
+```
+
+
 
 ## 总结
 

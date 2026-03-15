@@ -17,6 +17,15 @@ const safelist = [
 export default defineValaxyConfig<UserThemeConfig>({
     // site config see site.config.ts
 
+    /**
+     * GitHub Pages (project pages) needs a base path.
+     * Repo: https://github.com/ZhantaoLi/ZhantaoLi.github.io
+     * Pages URL: https://zhantaoli.github.io/
+     */
+    vite: {
+        base: '/ZhantaoLi.github.io/',
+    },
+
     theme: 'yun',
 
     themeConfig: {

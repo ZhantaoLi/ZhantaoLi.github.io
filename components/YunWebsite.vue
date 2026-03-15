@@ -12,7 +12,14 @@ const websites = ref<WebsiteType[]>([])
 watchEffect(async () => {
   if (typeof props.Websites === 'string') {
     try {
-      const res = await fetch(props.Websites)
+      // Ensure the URL works during SSG (Node fetch requires absolute URL)
+      // and works on GitHub Pages with base path.
+      const raw = props.Websites
+      const url = raw.startsWith('http')
+        ? raw
+        : new URL(raw, typeof window !== 'undefined' ? window.location.origin : 'http://localhost').toString()
+
+      const res = await fetch(url)
       websites.value = await res.json()
     } catch (err) {
       console.error('❌ Failed to load JSON:', err)
