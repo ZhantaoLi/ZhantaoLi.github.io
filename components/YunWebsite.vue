@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, watchEffect } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import YunWebsiteItem from './YunWebsiteItem.vue'
 import type { WebsiteType } from './YunWebsiteItem.vue'
 
@@ -9,32 +9,53 @@ const props = defineProps<{
 
 const websites = ref<WebsiteType[]>([])
 
-watchEffect(async () => {
-  if (typeof props.Websites === 'string') {
-    try {
-      const res = await fetch(props.Websites)
-      websites.value = await res.json()
-    } catch (err) {
-      console.error('❌ Failed to load JSON:', err)
-    }
-  } else {
-    websites.value = props.Websites
+async function loadWebsites(source: WebsiteType[] | string) {
+  if (Array.isArray(source)) {
+    websites.value = source
+    return
   }
+
+  // SSG/SSR 阶段不请求相对路径 JSON，避免触发 Invalid URL。
+  if (import.meta.env.SSR) {
+    websites.value = []
+    return
+  }
+
+  try {
+    const res = await fetch(source)
+
+    if (!res.ok)
+      throw new Error(`HTTP ${res.status}`)
+
+    websites.value = await res.json()
+  } catch (err) {
+    websites.value = []
+    console.error('Failed to load websites JSON:', err)
+  }
+}
+
+watch(() => props.Websites, (value) => {
+  if (import.meta.env.SSR)
+    return
+
+  void loadWebsites(value)
 })
 
-// 🧩 获取所有独特的 type 列表
+onMounted(() => {
+  void loadWebsites(props.Websites)
+})
+
 const types = computed(() => Array.from(new Set(websites.value.map(w => w.type))))
 
-// 🧩 当前选中的 type（默认显示全部）
 const selectedType = ref<string | null>(null)
 
-// 🧩 根据选择过滤数据
 const filteredWebsites = computed(() => {
-  if (!selectedType.value) return websites.value
+  if (!selectedType.value)
+    return websites.value
+
   return websites.value.filter(w => w.type === selectedType.value)
 })
 
-// 🧩 切换分类按钮
 function selectType(type: string | null) {
   selectedType.value = type
 }
@@ -42,7 +63,6 @@ function selectType(type: string | null) {
 
 <template>
   <div class="Websites">
-    <!-- 🧭 顶部筛选按钮栏 -->
     <div class="Website-filter">
       <button
         :class="{ active: !selectedType }"
@@ -60,7 +80,6 @@ function selectType(type: string | null) {
       </button>
     </div>
 
-    <!-- 🧱 网站项目 -->
     <ul class="Website-items">
       <YunWebsiteItem
         v-for="(Website, i) in filteredWebsites"
@@ -102,7 +121,6 @@ function selectType(type: string | null) {
     }
   }
 
-  // 暗色模式覆盖
   .dark & {
     button {
       background-color: #eeeeee00;
