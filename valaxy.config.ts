@@ -4,6 +4,10 @@ import { addonWaline } from 'valaxy-addon-waline'
 import { addonMeting } from 'valaxy-addon-meting'
 import { addonComponents } from 'valaxy-addon-components'
 import { localIconLoader } from 'vitepress-plugin-group-icons'
+import { createRequire } from 'node:module'
+
+const require = createRequire(import.meta.url)
+const vueRouterEntry = require.resolve('vue-router')
 
 // add icons what you will need
 const safelist = [
@@ -18,6 +22,16 @@ export default defineValaxyConfig<UserThemeConfig>({
     // site config see site.config.ts
 
     theme: 'yun',
+
+    vite: {
+        resolve: {
+            alias: [
+                // Only rewrite bare `vue-router` imports.
+                // Keep `vue-router/auto-routes` and other subpaths intact.
+                { find: /^vue-router$/, replacement: vueRouterEntry },
+            ],
+        },
+    },
 
     themeConfig: {
         banner: {
