@@ -42,7 +42,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash
 openclaw onboard --install-daemon
 ```
 
-[接入QQ机器人 ](https://q.qq.com/qqbot/openclaw/index.html) 
+[接入QQ机器人 ](https://q.qq.com/qqbot/openclaw/index.html)
 
 ### 3. 检查 Gateway
 
@@ -866,7 +866,7 @@ cat ~/.openviking/ov.conf
 其实只需要执行一行命令，就能卸载 OpenClaw 了：
 
 ```bash
-openclaw uninstall 
+openclaw uninstall
 # npm rm -g openclaw
 ```
 

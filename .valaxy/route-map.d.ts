@@ -264,6 +264,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/posts/OpenClaw配置使用': RouteRecordInfo<
+      '/posts/OpenClaw配置使用',
+      '/posts/OpenClaw%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/posts/Prompt记录': RouteRecordInfo<
       '/posts/Prompt记录',
       '/posts/Prompt%E8%AE%B0%E5%BD%95',
@@ -541,6 +548,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/OpenClaw搭建与使用.md': {
       routes:
         | '/posts/OpenClaw搭建与使用'
+      views:
+        | never
+    }
+    'pages/posts/OpenClaw配置使用.md': {
+      routes:
+        | '/posts/OpenClaw配置使用'
       views:
         | never
     }
