@@ -147,6 +147,16 @@ chmod +x tcp.sh
 bash <(wget -qO- -o- https://github.com/233boy/v2ray/raw/master/install.sh)
 # qing long
 curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+
+# clash usage
+curl https://glados.one/tools/clash-linux.zip -o clash.zip
+unzip clash.zip
+cd clash
+curl https://<your subscription config>.yaml > glados.yaml
+chmod +x ./clash-linux-amd64-v1.10.0
+./clash-linux-amd64-v1.10.0 -f glados.yaml -d .
+# 注意：ping 命令不支持代理，请使用 curl 或 wget 测试连通性
+# 可以使用 [Web UI](http://127.0.0.1:9090/ui) 来管理 Clash, Port 默认端口是9090
 ```
 
 `neofetch` `screenfetch`
@@ -209,15 +219,7 @@ hwinfo
 
 ### 系统配置
 
-curl
-
-ssh
-
-vnc
-
-git	gcc g++ cmake	python3 pip 	iverilog gtkwave	pandoc
-
-zsh
+curl ssh ripgrep git gcc g++ cmake	python3 pip 	iverilog gtkwave	pandoc	zsh
 
 [LACT](https://github.com/ilya-zlobintsev/LACT)用于在 Linux 下管理 AMD 显卡
 

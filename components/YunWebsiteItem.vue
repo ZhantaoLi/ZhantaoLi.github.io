@@ -55,8 +55,19 @@ useMotion(itemRef, {
   display: inline-flex;
   text-align: center;
   justify-content: center;
-  width: 8rem;
-  margin: 1rem;
+  width: 9rem;
+  margin: 0.75rem;
+
+  .Website-item-link {
+    border-radius: 0.75rem;
+    padding: 0.4rem;
+    transition: background-color 0.2s, transform 0.2s;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+      transform: translateY(-3px);
+    }
+  }
 
   .Website {
     &-info {
@@ -90,7 +101,15 @@ useMotion(itemRef, {
       font-family: var(--va-font-serif);
       font-weight: bold;
       color: var(--va-c-text-light);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
+  }
+
+  .dark & .Website-item-link:hover {
+    background-color: rgba(255, 255, 255, 0.06);
   }
 }
 </style>

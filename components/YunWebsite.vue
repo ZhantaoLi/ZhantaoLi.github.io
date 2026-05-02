@@ -47,6 +47,13 @@ onMounted(() => {
 
 const types = computed(() => Array.from(new Set(websites.value.map(w => w.type))))
 
+const typeCounts = computed(() => {
+  const counts: Record<string, number> = {}
+  for (const w of websites.value)
+    counts[w.type] = (counts[w.type] || 0) + 1
+  return counts
+})
+
 const selectedType = ref<string | null>(null)
 
 const filteredWebsites = computed(() => {
@@ -68,7 +75,7 @@ function selectType(type: string | null) {
         :class="{ active: !selectedType }"
         @click="selectType(null)"
       >
-        All
+        All ({{ websites.length }})
       </button>
       <button
         v-for="type in types"
@@ -76,7 +83,7 @@ function selectType(type: string | null) {
         :class="{ active: selectedType === type }"
         @click="selectType(type)"
       >
-        {{ type }}
+        {{ type }} ({{ typeCounts[type] }})
       </button>
     </div>
 
@@ -101,6 +108,11 @@ function selectType(type: string | null) {
     padding: 0.5rem 1.2rem;
     cursor: pointer;
     transition: all 0.2s;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+
+    &:not(:last-child) {
+      border-right: none;
+    }
 
     &.active {
       background-color: #dcdcdc;
