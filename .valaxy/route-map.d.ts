@@ -278,6 +278,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/posts/ROS': RouteRecordInfo<
+      '/posts/ROS',
+      '/posts/ROS',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/posts/Skills记录': RouteRecordInfo<
       '/posts/Skills记录',
       '/posts/Skills%E8%AE%B0%E5%BD%95',
@@ -560,6 +567,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/Prompt记录.md': {
       routes:
         | '/posts/Prompt记录'
+      views:
+        | never
+    }
+    'pages/posts/ROS.md': {
+      routes:
+        | '/posts/ROS'
       views:
         | never
     }

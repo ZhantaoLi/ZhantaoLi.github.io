@@ -1,5 +1,10 @@
 ---
-title: ROS2 setup
+title: ROS2 Learning Notes
+tags:
+  - ROS2
+categories: ROS2
+date: 2026-04-29
+updated: 2026-05-02
 ---
 
 ## system setup
@@ -102,7 +107,7 @@ rosdep install -i --from-path src --rosdistro jazzy -y
 Each node in ROS should be responsible for a single, modular purpose. Each node can send and receive data from other nodes via topics, services, actions, or parameters.
 In ROS 2, a single executable (C++ program, Python program, etc.) can contain one or more nodes.
 A node is a fundamental ROS 2 element that serves a single, modular purpose in a robotics system.
-[Nodes](https://docs.ros.org/en/rolling/_images/Nodes-TopicandService.gif)
+![Nodes](https://docs.ros.org/en/rolling/_images/Nodes-TopicandService.gif)
 
 ```bash [run]
 ros2 run <package_name> <executable_name>
@@ -111,7 +116,7 @@ ros2 run <package_name> <executable_name>
 ### Topic
 Topics don’t have to only be one-to-one communication; they can be one-to-many, many-to-one, or many-to-many.
 Nodes publish information over topics, which allows any number of other nodes to subscribe to and access that information.
-[Topic](https://docs.ros.org/en/rolling/_images/Topic-MultiplePublisherandMultipleSubscriber.gif)
+![Topic](https://docs.ros.org/en/rolling/_images/Topic-MultiplePublisherandMultipleSubscriber.gif)
 
 ```bash [topic pub]
 ros2 topic pub <topic_name> <msg_type> '<args>'
@@ -124,7 +129,7 @@ ros2 topic echo <topic_name>
 ### Service
 Services are based on a call-and-response model versus the publisher-subscriber model of topics.
 Nodes can communicate using services in ROS 2. Unlike a topic - a one way communication pattern where a node publishes information that can be consumed by one or more subscribers - a service is a request/response pattern where a client makes a request to a node providing the service and the service processes the request and generates a response.
-[Service](https://docs.ros.org/en/rolling/_images/Service-MultipleServiceClient.gif)
+![Service](https://docs.ros.org/en/rolling/_images/Service-MultipleServiceClient.gif)
 
 ```bash [service call]
 ros2 service call <service_name> <service_type> <arguments>
@@ -152,7 +157,7 @@ ros2 param dump <node_name>
 Actions are one of the communication types in ROS 2 and are intended for long running tasks. They consist of three parts: a goal, feedback, and a result.
 Actions use a client-server model, similar to the publisher-subscriber model (described in the topics tutorial). An “action client” node sends a goal to an “action server” node that acknowledges the goal and returns a stream of feedback and a result.
 
-[Action](https://docs.ros.org/en/rolling/_images/Action-SingleActionClient.gif)
+![Action](https://docs.ros.org/en/rolling/_images/Action-SingleActionClient.gif)
 
 ```bash [action send_goal]
 ros2 action send_goal <action_name> <action_type> <values>
