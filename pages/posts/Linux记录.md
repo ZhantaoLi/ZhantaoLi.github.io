@@ -1,5 +1,6 @@
 ---
 title: Linux记录
+description: Linux 常用命令、WSL 使用与 VPS 安全配置记录
 date: 2024-04-12
 updated: 2025-09-09
 categories: Linux

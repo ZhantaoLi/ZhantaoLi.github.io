@@ -1,5 +1,6 @@
 ---
 title: CCG with CC-Switch
+description: 使用 CC-Switch 一键管理 Claude Code / Codex / Gemini CLI 的 API 配置
 tags:
   - AI
 categories: AI

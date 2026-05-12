@@ -1,5 +1,6 @@
 ---
 title: CPA（CLI Proxy API）搭建与使用
+description: CLIProxyAPI 部署教程
 tags:
   - AI
   - Codex

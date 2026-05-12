@@ -1,5 +1,6 @@
 ---
 title: CCG
+description: Claude Code + Codex + Gemini 完整配置指南，含 CLAUDE.md 模板与多模型工作流
 tags:
   - AI
 categories: AI

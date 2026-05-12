@@ -1,16 +1,17 @@
 ---
-title: GCMP
+title: GCMP Plugin Overview
 tags:
   - AI
 categories: AI
 date: 2026-02-02
+description: GCMP:A VS Code extension for using other LLM providers in Copilot Chat
 updated: 2026-02-02
 ---
 
 [[toc]]
 
 ::: info
-项目地址: [GCMP](https://github.com/VicBilibily/GCMP) by [VicBilibily](https://github.com/VicBilibily)  
+项目地址: [GCMP](https://github.com/VicBilibily/GCMP) by [VicBilibily](https://github.com/VicBilibily)
 扩展市场: [vicanent.gcmp](https://marketplace.visualstudio.com/items?itemName=vicanent.gcmp)
 :::
 
@@ -188,17 +189,17 @@ GCMP 支持通过 VS Code 设置来自定义 AI 模型的行为参数：
 {
   // 上下文窗口占用比例显示
   "gcmp.contextWindowDisplay": true,
-  
+
   // Token 统计功能
   "gcmp.tokenStatistics": true,
-  
+
   // 内联补全建议
   "gcmp.inlineCompletion": {
     "enabled": true,
     "provider": "zhipu",
     "model": "glm-4.7"
   },
-  
+
   // 提交消息生成
   "gcmp.commitMessage": {
     "enabled": true,
@@ -253,7 +254,7 @@ A: 访问对应提供商的官网，注册账号后在控制台或设置页面�
 
 ### Q: 编程套餐和按量计费如何选择？
 
-A: 
+A:
 - **编程套餐**: 固定月费，适合高频使用，通常包含额外功能（如联网搜索）
 - **按量计费**: 按实际使用付费，适合偶尔使用或测试
 
@@ -268,4 +269,3 @@ A: 在输出面板选择 `GitHub Copilot Inline Completion via GCMP` 输出通�
 ## 总结
 
 GCMP 是一个功能强大、配置灵活的 VS Code 扩展，它打破了 AI 编程助手的提供商限制，让开发者能够自由选择最适合自己的 AI 模型。无论你是想使用国内大模型以获得更好的中文支持和访问速度，还是想要更灵活的模型选择和成本控制，GCMP 都是一个值得尝试的优秀工具。
-

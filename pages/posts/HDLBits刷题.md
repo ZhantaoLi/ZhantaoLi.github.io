@@ -1,10 +1,11 @@
 ---
 title: HDLBits刷题
+description: HDLBits Verilog 刷题笔记，整理组合逻辑、时序逻辑与状态机核心知识点
 tags:
   - FPGA
 categories: FPGA
-date: 2023-4-12 19:07:32
-updated: 2023-12-21 14:08:45
+date: 2023-4-12
+updated: 2023-12-21
 codeHeightLimit: 400
 ---
 
@@ -17,7 +18,7 @@ codeHeightLimit: 400
 ### 知识点
 
 * 在`always`里**不能**有`assign`赋值，报错`Procedural Continuous Assignment to register is not supported`
-* `assign`赋值左侧为`wire`；`always`里赋值左侧为`reg`  
+* `assign`赋值左侧为`wire`；`always`里赋值左侧为`reg`
 * 连续赋值(`assign x = y;`**不在**always里)；阻塞赋值: (`x = y;`**组合**always)；非阻塞赋值: (`x <= y;`**时序**always)
 * `casez`标示`case`语句中可存在z(无关位)与?同义，`2'bz0==2'b?0`
 * `data[begin +: width]`指`data[(begin+width-1) : begin]`，`data[end -: width]`与`data[end : (end-width+1)]`
@@ -92,12 +93,12 @@ module top_module(//当给定输入位向量时，它输出向量中第一个1�
 );
 	always @ (*) begin
         case(1)//判断值在case中
-            in[0]:pos = 0; 
-            in[1]:pos = 1; 
-            in[2]:pos = 2; 
-            in[3]:pos = 3; 
+            in[0]:pos = 0;
+            in[1]:pos = 1;
+            in[2]:pos = 2;
+            in[3]:pos = 3;
             default:pos = 0;
-        endcase        
+        endcase
     end
 endmodule
 ```
@@ -109,7 +110,7 @@ Create a 100-bit binary ripple-carry adder by instantiating 100 [full adders](ht
 Module Declaration
 
 ```
-module top_module( 
+module top_module(
     input [99:0] a, b,
     input cin,
     output [99:0] cout,
@@ -121,7 +122,7 @@ Hint...
 There are many full adders to instantiate. An instance array or generate statement would help here.
 
 ```verilog [Answer]
-module top_module( 
+module top_module(
     input [99:0] a, b,         // 输入 a 和 b
     input cin,                // 输入进位
     output [99:0] cout,       // 输出进位
@@ -158,7 +159,7 @@ Instantiate 100 copies of `bcd_fadd` to create a 100-digit BCD ripple-carry adde
 Module Declaration
 
 ```
-module top_module( 
+module top_module(
     input [399:0] a, b,
     input cin,
     output cout,
@@ -169,7 +170,7 @@ Hint...
 An instance array or generate statement would be useful here.
 
 ```verilog  [Answer]
-module top_module( 
+module top_module(
     input [399:0] a, b,     // 输入 a 和 b，每个有400位
     input cin,              // 输入进位
     output cout,            // 输出进位
@@ -267,12 +268,12 @@ module top_module(
     input load,
     input [511:0] data,
     output [511:0] q
-); 
+);
     wire [511:0] q_left, q_right;
-    
+
     assign q_left = {1'b0,q[511:1]};//q_left = q<<1;
     assign q_right = {q[510:0],1'b0};//q_right = q>>1;
-    
+
     always@(posedge clk) begin
         if(load)
             q <= data;
@@ -314,8 +315,8 @@ module top_module(
     input clk,
     input load,
     input [255:0] data,
-    output [255:0] q ); 
-    
+    output [255:0] q );
+
     reg [15:0] q_2d [15:0]; //2-d q 当前值
     reg [15:0] q_next [15:0]; //2-d q_next 下一时刻值
     reg [3:0] sum;
@@ -365,12 +366,12 @@ end
         if(load)begin
             for(i=0;i<16;i++)begin
                 for(j=0;j<16;j++)begin
-                	q_2d[i][j] <=data[i*16+j]; 
-            end 
+                	q_2d[i][j] <=data[i*16+j];
+            end
         end
     end
-        else 
-            q_2d <= q_next;    
+        else
+            q_2d <= q_next;
     end
     //输出维度转换
     genvar m,n;
@@ -391,7 +392,7 @@ module top_module(
     input clk,
     input load,
     input [255:0] data,
-    output [255:0] q ); 
+    output [255:0] q );
 
     reg [15:0] q_2d [15:0]; //2-d q
     wire [2:0] nghbr_num [255:0];
@@ -456,8 +457,8 @@ module top_module(
     input clk,
     input load,
     input [255:0] data,
-    output [255:0] q ); 
-    
+    output [255:0] q );
+
     integer i,m,n;
     reg [17:0] g_2d [17:0];
     reg [2:0] sum;
@@ -496,4 +497,3 @@ endmodule
 ##### 思考
 
 联想到利用Vivado HLS进行卷积操作
-

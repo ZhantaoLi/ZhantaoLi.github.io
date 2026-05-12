@@ -1,5 +1,6 @@
 ﻿---
 title: Unify Chat Provider for Copilot
+description: Unify Chat Provider：在 VS Code Copilot Chat 中统一接入多个 LLM API 提供商
 tags:
   - AI
 categories: AI

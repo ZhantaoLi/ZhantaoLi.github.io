@@ -1,5 +1,6 @@
 ---
 title: ZYNQ记录
+description: ZYNQ FPGA 开发记录，含 EBAZ4205 矿板改造与 Vivado 工程配置
 tags:
   - ZYNQ
   - FPGA

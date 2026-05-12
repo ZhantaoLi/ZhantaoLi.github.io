@@ -1,5 +1,6 @@
 ---
 title: WSL 安装 OpenClaw 完整指南
+description: 在 Windows WSL 2 环境下安装和配置 OpenClaw 的完整流程
 tags:
   - AI
   - OpenClaw

@@ -1,5 +1,6 @@
 ---
 title: Claude & Codex 配置记录
+description: Claude Code 与 Codex 配置模板记录，含 CLAUDE.md 与 AGENTS.md 工作流规范
 tags:
   - AI
   - Claude

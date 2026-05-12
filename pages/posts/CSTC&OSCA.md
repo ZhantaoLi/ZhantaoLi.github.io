@@ -1,5 +1,6 @@
 ---
 title: CSTC & OSCA
+description: 利用中国科技云和 OSCA 的免费 S3 存储做 Obsidian 多端同步与网盘
 tags:
   - Storage
 categories: Storage

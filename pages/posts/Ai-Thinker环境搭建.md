@@ -1,5 +1,6 @@
 ---
 title: Ai-Thinker环境搭建
+description: 小安派 (Ai-Thinker) 嵌入式开发环境搭建，从克隆 SDK 到编译烧录
 tags:
   - 嵌入式
 categories: 嵌入式

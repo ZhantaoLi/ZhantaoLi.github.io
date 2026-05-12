@@ -1,5 +1,6 @@
 ---
 title: AI Vocabulary
+description: AI 概念与术语整理
 tags:
  - AI
 categories: AI

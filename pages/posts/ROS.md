@@ -1,5 +1,6 @@
 ---
 title: ROS2 Learning Notes
+description: ROS2 学习笔记
 tags:
   - ROS2
 categories: ROS2
@@ -19,7 +20,7 @@ bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 sudo apt upgrade -y
 sudo apt install open-vm-tools-desktop openssh-server -y
 sudo systemctl enable ssh
-sudo apt install tar bzip2 wget git -y
+sudo apt install tar bzip2 wget git ripgrep -y
 
 # folder name language
 export LANG=en_US
@@ -120,10 +121,18 @@ Nodes publish information over topics, which allows any number of other nodes to
 
 ```bash [topic pub]
 ros2 topic pub <topic_name> <msg_type> '<args>'
+# pub from yaml
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist --yaml-file cmd_vel.yaml
 ```
 
 ```bash [topic echo]
 ros2 topic echo <topic_name>
+```
+
+```cpp [topic statistics]
+// manually enable topic statistics via options
+auto options = rclcpp::SubscriptionOptions();
+options.topic_stats_options.state = rclcpp::TopicStatisticsState::Enable;
 ```
 
 ### Service
@@ -151,6 +160,51 @@ ros2 param load <node_name> <parameter_file(yaml)>
 ```bash [param get / dump]
 ros2 param get <node_name> <parameter_name>
 ros2 param dump <node_name>
+```
+
+#### Monitoring for Parameter Changes
+
+Use the `ParameterEventHandler` class to set a callback to monitor changes to that parameter.
+```python
+import rclpy.parameter
+from rclpy.parameter_event_handler import ParameterEventHandler
+
+class SampleNodeWithParameters(Node):
+    def __init__(self):
+        super().__init__('node_with_parameters')
+
+        self.declare_parameter('an_int_param', 0)
+
+        self.handler = ParameterEventHandler(self)
+
+        self.callback_handle = self.handler.add_parameter_callback(
+            parameter_name="an_int_param",
+            node_name="node_with_parameters",
+            callback=self.callback,
+        )
+
+        # monitor another node's parameter
+        self.callback_handle2 = self.handler.add_parameter_callback(
+            parameter_name="a_double_param",
+            node_name="parameter_blackboard",
+            callback=self.callback,
+        )
+
+        # monitor all parameters
+        self.event_calback_handle = self.handler.add_parameter_event_callback(
+            callback=self.event_callback,
+        )
+
+    def callback(self, p: rclpy.parameter.Parameter) -> None:
+        self.get_logger().info(f"Received an update to parameter: {p.name}: {rclpy.parameter.parameter_value_to_python(p.value)}")
+
+    def event_callback(self, parameter_event):
+        self.get_logger().info(f"Received parameter event from node {parameter_event.node}")
+
+    for p in parameter_event.changed_parameters:
+        self.get_logger().info(
+            f"Inside event: {p.name} changed to: {rclpy.parameter.parameter_value_to_python(p.value)}"
+        )
 ```
 
 ### Action
@@ -233,6 +287,124 @@ sudo apt install -y ros-jazzy-ament-cmake-clang-format
 clang-format -i ~/ros2_ws_t/src/pkg_cpp/src/*.cpp
 ```
 
+### plugin
+
+only C++ packages built with ament_cmake can be plugins, and they must export the plugin description in their CMakeLists.txt using `pluginlib_export_plugin_description_file()`. You can list all available plugins in your ROS 2 system using the `ros2 plugin list` command.
+
+```bash [plugin]
+ros2 plugin list
+```
+
+### rosdep
+rosdep is a dependency management utility. It is a command-line utility for identifying and installing dependencies to build or install a package. rosdep is not a package manager in its own right; it is a meta-package manager that uses its own knowledge of the system and the dependencies to find the appropriate package to install on a particular platform.
+The package.xml is the file in your software where rosdep finds the set of dependencies. It is important that the list of dependencies in the package.xml is complete and correct, which allows all of the tooling to determine the packages dependencies.
+`<depend>`
+`<build_depend>`  `<build_export_depend>`
+`<exec_depend>`
+`<test_depend>`
+
+```bash [rosdep]
+sudo apt-get install python3-rosdep
+sudo rosdep init
+rosdep update
+rosdep install --from-paths src -y --ignore-src
+```
+
+### msg & srv & action
+
+Note that it is, and can only be, a CMake package.
+::: note
+It is good practice to keep .msg, .srv, and .action files in separate packages from the nodes that use them. This makes it easier to reuse the interface definitions across different packages.
+:::
+
+```msg
+# Message definition
+```
+```srv
+# Request
+---
+# Response
+```
+```action
+# Request
+---
+# Result
+---
+# Feedback
+```
+
+### AsyncNode (asyncio, Python)
+
+`AsyncNode` is an asyncio-native node API (in `rclpy.experimental`) that lets you write `async def` callbacks and `await` other async operations directly inside ROS callbacks. It runs on the `asyncio` event loop, so it composes naturally with the Python async ecosystem (web clients, DB drivers, async HTTP libs).
+
+Note: `AsyncNode` requires Python 3.12+ and actions are not yet supported.
+
+#### Service — `async def` callback
+
+```python [async_service.py]
+import asyncio, rclpy
+from rclpy.experimental import AsyncNode
+
+class TriggerServer(AsyncNode):
+    def __init__(self):
+        super().__init__('trigger_server')
+        self.srv = self.create_service(
+            Trigger, 'trigger', self._cb, concurrent=True)
+
+    async def _cb(self, _req, resp):          # async callback
+        await self.get_clock().sleep(2.0)     # ROS-aware sleep
+        await asyncio.to_thread(blocking_fn)  # offload to thread
+        resp.success = True
+        return resp
+
+async def _main():
+    with rclpy.init():
+        await TriggerServer().run()           # = rclpy.spin()
+
+def main(): asyncio.run(_main())
+```
+
+#### Client — `await client.call()` directly (no Future)
+
+```python [async_client.py]
+import asyncio, rclpy
+from rclpy.experimental import AsyncNode
+
+async def _main():
+    with rclpy.init():
+        async with AsyncNode('client') as node:     # auto destroy
+            cli = node.create_client(Trigger, 'trigger')
+            await cli.wait_for_service()            # no busy-wait
+            resp = await cli.call(Trigger.Request()) # no Future
+
+def main(): asyncio.run(_main())
+```
+
+#### Key differences from regular `Node`
+
+| | regular `Node` | `AsyncNode` |
+|---|---|---|
+| run | `rclpy.spin(node)` | `await node.run()` |
+| callback | `def cb(req, resp)` sync | `async def cb(req, resp)` can await |
+| wait for service | `while not wait_for_service()` poll | `await client.wait_for_service()` suspend |
+| call service | `call_async()` → `Future` → `spin_until_future_complete()` | `await client.call()` direct |
+| blocking I/O in callback | blocks the executor | `await asyncio.to_thread(sync_func)` |
+
+### URDF
+
+URDF (Unified Robot Description Format) is a file following the XML format for specifying the geometry and organization of robots in ROS.
+
+```bash [URDF]
+# View the URDF model
+ros2 launch urdf_tutorial display.launch.py model:=my_robot.urdf
+# Check the URDF model
+check_urdf my_robot.urdf
+# graphiz
+urdf_to_graphviz my_robot.urdf
+```
+
+`xacro` is a macro language for XML. It allows you to define reusable components and macros for your URDF models.
+
 ## OpenCV
 
 ### Basic Operations
@@ -243,21 +415,21 @@ clang-format -i ~/ros2_ws_t/src/pkg_cpp/src/*.cpp
  img_hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
 ```
  - Erode & Dilate
-```cpp
+```python
  kernel = np.ones((5, 5), np.uint8)
  img_erode = cv2.erode(img, kernel, iterations=erode_iterations)
  img_dilate = cv2.dilate(img, kernel, iterations=dilate_iterations)
 ```
  - Mask Location
-```cpp
+```python
  contours, hierarchy = cv2.findContours(img_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 ```
  - Canny Edge Detection
-```cpp
+```python
  edges = cv2.Canny(img, 100, 200)
 ```
  - Hough Line Transform
-```cpp
+```python
  lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=100, minLineLength=50, maxLineGap=10)
 ```
 

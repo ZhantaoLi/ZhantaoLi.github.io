@@ -1,5 +1,6 @@
 ---
 title: ffmpeg常用教程
+description: ffmpeg 常用命令教程：安装、转码、剪辑与格式转换
 tags:
   - ffmpeg
 categories: ffmpeg

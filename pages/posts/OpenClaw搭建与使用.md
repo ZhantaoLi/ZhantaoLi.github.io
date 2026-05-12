@@ -1,5 +1,6 @@
 ---
 title: OpenClaw 搭建与使用
+description: OpenClaw AI 代理平台搭建教程，搭配 Codex 进行自动化排障
 tags:
   - AI
   - OpenClaw
@@ -877,7 +878,7 @@ Linux/Mac：
 ```bash
 openclaw gateway stop
 openclaw gateway uninstall
-rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
+rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 npm rm -g openclaw || pnpm remove -g openclaw
 rm -rf /Applications/OpenClaw.app
 ```

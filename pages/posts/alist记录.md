@@ -1,5 +1,6 @@
 ---
 title: Alist记录
+description: Alist 资源站收藏与 WebDAV/S3 挂载配置记录
 tags:
   - Storage
 categories: Storage

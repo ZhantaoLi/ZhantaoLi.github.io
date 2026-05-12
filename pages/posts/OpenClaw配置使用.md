@@ -1,5 +1,6 @@
 ---
 title: OpenClaw配置使用
+description: OpenClaw 进阶配置：工作模式切换、工具权限与长期运行优化
 tags:
   - AI
   - OpenClaw

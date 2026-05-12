@@ -3,7 +3,8 @@ title: GCMP
 tags:
   - AI
 categories: AI
-date: 2026-02-07
+date: 2026-02-02
+description: GCMP 扩展：在 GitHub Copilot Chat 中接入自定义大模型
 updated: 2026-02-07
 ---
 
@@ -16,7 +17,7 @@ Source: [GCMP](https://github.com/VicBilibily/GCMP) by [VicBilibily](https://git
 
 ## Overview
 
-GCMP is a Visual Studio Code extension that expands the model choices available in GitHub Copilot Chat.  
+GCMP is a Visual Studio Code extension that expands the model choices available in GitHub Copilot Chat.
 Like *Unify Chat Provider for Copilot*, it acts as a bridge between Copilot's chat experience and external LLM providers. The big difference is focus: GCMP is built around strong first-class support for Chinese-native model providers, while still supporting OpenAI/Anthropic-compatible endpoints.
 
 If you want Copilot Chat UX but broader model access, GCMP is one of the most practical options right now.
@@ -114,14 +115,14 @@ It may be overkill if you:
 
 ## Final Thoughts
 
-GCMP and Unify Chat Provider target a similar problem space: expanding Copilot's model ecosystem.  
+GCMP and Unify Chat Provider target a similar problem space: expanding Copilot's model ecosystem.
 GCMP stands out by combining broad provider support, practical regional coverage, and advanced configuration depth in a single extension.
 
 If your workflow depends on model optionality instead of vendor lock-in, GCMP is worth trying.
 
 ## What's Next
 
-There are also some other Vibe Coding extensions in VS Code, such as: 
+There are also some other Vibe Coding extensions in VS Code, such as:
  - `Cline`
  - `Roo Code`
  - `Kilo Code`
@@ -134,5 +135,3 @@ Simple Usage:
   "apiKey": "YOUR_API_KEY"
 }
 ```
-
-

@@ -1,5 +1,6 @@
 ---
 title: WSL 记录
+description: WSL 常用命令记录
 tags:
   - Linux
   - WSL

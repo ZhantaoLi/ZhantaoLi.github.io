@@ -1,5 +1,6 @@
 ---
 title: STM32的PID算法
+description: STM32 中 PID 控制算法的原理推导、离散化与 C 语言实现
 tags:
   - STM32
   - PID

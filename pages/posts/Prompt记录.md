@@ -1,5 +1,6 @@
 ---
 title: Prompt 记录
+description: 可复用的 Prompt 模板记录
 tags:
   - AI
   - Prompt
