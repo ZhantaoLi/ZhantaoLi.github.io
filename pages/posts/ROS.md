@@ -10,7 +10,7 @@ updated: 2026-05-02
 
 ## system setup
 
-VMware
+VMware / WSL2
 Ubuntu 24.04 LTS Desktop 64-bit
 
 ```bash
@@ -18,7 +18,7 @@ sudo apt update
 sudo apt-get install open-vm-tools open-vm-tools-desktop -y
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 sudo apt upgrade -y
-sudo apt install open-vm-tools-desktop openssh-server -y
+sudo apt install openssh-server -y
 sudo systemctl enable ssh
 sudo apt install tar bzip2 wget git ripgrep -y
 
@@ -39,6 +39,10 @@ codex
 ```
 
 ## ROS2 setup
+
+```bash [fishros install script]
+wget http://fishros.com/install -O fishros && . fishros
+```
 
 ```bash [ROS2 env setup]
 sudo apt install software-properties-common

@@ -14,10 +14,15 @@ import type {
   ParamValueZeroOrMore,
   ParamValueZeroOrOne,
 } from 'vue-router'
+import type {
+  _ExtractParamParserType,
+} from 'vue-router/experimental'
 
 declare module 'vue-router' {
   interface TypesConfig {
-    ParamParsers: never
+    ParamParsers:
+      | never
+    RouteNamedMap: import('vue-router/auto-routes').RouteNamedMap
   }
 }
 
@@ -211,6 +216,13 @@ declare module 'vue-router/auto-routes' {
     '/posts/ffmpeg常用教程': RouteRecordInfo<
       '/posts/ffmpeg常用教程',
       '/posts/ffmpeg%E5%B8%B8%E7%94%A8%E6%95%99%E7%A8%8B',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/Gazebo': RouteRecordInfo<
+      '/posts/Gazebo',
+      '/posts/Gazebo',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -513,6 +525,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/ffmpeg常用教程.md': {
       routes:
         | '/posts/ffmpeg常用教程'
+      views:
+        | never
+    }
+    'pages/posts/Gazebo.md': {
+      routes:
+        | '/posts/Gazebo'
       views:
         | never
     }
