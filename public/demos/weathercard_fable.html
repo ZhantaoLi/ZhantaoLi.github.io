@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天气 · Weather</title>
+<style>
+  :root {
+    --radius: 32px;
+    --spring: cubic-bezier(0.32, 0.72, 0.24, 1.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC",
+                 "Helvetica Neue", "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #0c1018;
+    color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- 背景氛围光斑 ---------- */
+  .ambient { position: fixed; inset: 0; z-index: 0; filter: blur(90px); opacity: .5; }
+  .ambient i { position: absolute; border-radius: 50%; }
+  .ambient i:nth-child(1) { width: 42vw; height: 42vw; left: -10vw; top: -18vh; background: #1f4d8f; animation: drift1 18s ease-in-out infinite alternate; }
+  .ambient i:nth-child(2) { width: 36vw; height: 36vw; right: -8vw; top: 30vh;  background: #6b3a8f; animation: drift2 22s ease-in-out infinite alternate; }
+  .ambient i:nth-child(3) { width: 30vw; height: 30vw; left: 30vw; bottom: -20vh; background: #0e5d5a; animation: drift1 26s ease-in-out infinite alternate-reverse; }
+  @keyframes drift1 { to { transform: translate(8vw, 6vh) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-6vw, -8vh) scale(0.9); } }
+
+  /* ---------- 标题 ---------- */
+  header {
+    position: relative; z-index: 2;
+    text-align: center;
+    margin-bottom: 34px;
+    animation: rise .9s var(--spring) both;
+  }
+  header h1 { font-size: 34px; font-weight: 700; letter-spacing: 1px; }
+  header p  { margin-top: 8px; font-size: 14px; color: rgba(255,255,255,.45); letter-spacing: 2px; }
+
+  /* ---------- 卡片容器 ---------- */
+  .deck {
+    position: relative; z-index: 2;
+    display: flex;
+    gap: 22px;
+    width: min(92vw, 1500px);
+    height: min(62vh, 560px);
+    min-height: 420px;
+  }
+
+  /* ---------- 卡片 ---------- */
+  .card {
+    position: relative;
+    flex: 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    isolation: isolate;
+    border: 1px solid rgba(255,255,255,.16);
+    box-shadow: 0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.25);
+    transition: flex-grow .75s var(--spring), transform .75s var(--spring), box-shadow .75s var(--spring);
+    transform: translateY(0);
+    animation: rise .9s var(--spring) both;
+    outline: none;
+  }
+  .card:nth-child(1) { animation-delay: .05s; }
+  .card:nth-child(2) { animation-delay: .12s; }
+  .card:nth-child(3) { animation-delay: .19s; }
+  .card:nth-child(4) { animation-delay: .26s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(46px); } }
+
+  .card:hover, .card.active {
+    flex-grow: 2.6;
+    transform: translateY(-10px);
+    box-shadow: 0 40px 90px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .card:focus-visible { border-color: rgba(255,255,255,.7); }
+
+  /* 卡片主题渐变 */
+  .card.sunny    { background: linear-gradient(168deg, #3f9bea 0%, #2a6fc0 55%, #1d5396 100%); }
+  .card.windy    { background: linear-gradient(168deg, #7d9aab 0%, #51707f 55%, #36505e 100%); }
+  .card.rain     { background: linear-gradient(168deg, #3a4d7e 0%, #232e54 55%, #141c38 100%); }
+  .card.blizzard { background: linear-gradient(168deg, #8fb3d6 0%, #5d82a8 55%, #3c5a7d 100%); }
+
+  /* 玻璃高光层 */
+  .card::after {
+    content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(115deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 32%);
+  }
+
+  /* ---------- 卡片内容 ---------- */
+  .content {
+    position: absolute; inset: 0; z-index: 2;
+    padding: 26px 26px 22px;
+    display: flex; flex-direction: column;
+  }
+  .city  { font-size: 20px; font-weight: 600; letter-spacing: .5px; }
+  .cond  { margin-top: 3px; font-size: 13px; color: rgba(255,255,255,.78); }
+  .temp  { margin-top: auto; font-size: 76px; font-weight: 200; line-height: 1; letter-spacing: -2px; }
+  .range { margin-top: 6px; font-size: 13px; color: rgba(255,255,255,.7); }
+
+  /* 详细数据 — 展开后显现 */
+  .stats {
+    display: flex; gap: 10px; margin-top: 16px;
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .5s ease .15s, transform .6s var(--spring) .15s;
+  }
+  .stat {
+    flex: 1; min-width: 0;
+    background: rgba(255,255,255,.13);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 16px;
+    padding: 10px 12px;
+    white-space: nowrap;
+  }
+  .stat .label { display: block; font-size: 11px; color: rgba(255,255,255,.6); letter-spacing: 1px; }
+  .stat .value { display: block; margin-top: 3px; font-size: 16px; font-weight: 600; }
+
+  .hourly {
+    display: flex; gap: 8px; margin-top: 12px;
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .5s ease .25s, transform .6s var(--spring) .25s;
+  }
+  .hour {
+    flex: 1;
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+    padding: 9px 4px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .hour .t { color: rgba(255,255,255,.6); }
+  .hour .dot {
+    width: 16px; height: 16px; border-radius: 50%;
+    margin: 7px auto;
+  }
+  .hour .v { font-weight: 600; font-size: 13px; }
+  .dot.d-sun   { background: radial-gradient(circle at 35% 35%, #ffe9a8, #ffb13d); box-shadow: 0 0 8px rgba(255,190,80,.8); }
+  .dot.d-cloud { background: radial-gradient(circle at 35% 35%, #f2f6fa, #aebfcc); }
+  .dot.d-rain  { background: radial-gradient(circle at 35% 35%, #9fc3ff, #3f6fd8); }
+  .dot.d-snow  { background: radial-gradient(circle at 35% 35%, #ffffff, #bcd8f2); box-shadow: 0 0 8px rgba(220,240,255,.7); }
+
+  .card:hover .stats, .card.active .stats,
+  .card:hover .hourly, .card.active .hourly {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* 收窄时隐藏溢出文字更优雅 */
+  .stats, .hourly { overflow: hidden; }
+
+  /* ---------- 天气场景层 ---------- */
+  .scene { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+
+  /* ===== 晴天 ===== */
+  .sun {
+    position: absolute; top: 24px; right: 26px;
+    width: 86px; height: 86px; border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #fff3c4, #ffd34d 55%, #ff9f1c);
+    box-shadow: 0 0 36px 10px rgba(255,196,70,.55), 0 0 90px 30px rgba(255,170,60,.25);
+    animation: sunPulse 4.5s ease-in-out infinite;
+  }
+  @keyframes sunPulse {
+    0%, 100% { transform: scale(1);    box-shadow: 0 0 36px 10px rgba(255,196,70,.55), 0 0 90px 30px rgba(255,170,60,.25); }
+    50%      { transform: scale(1.07); box-shadow: 0 0 48px 16px rgba(255,196,70,.7),  0 0 110px 40px rgba(255,170,60,.35); }
+  }
+  .rays {
+    position: absolute; top: -53px; right: -51px;
+    width: 240px; height: 240px; border-radius: 50%;
+    background: repeating-conic-gradient(rgba(255,220,130,.22) 0deg 6deg, transparent 6deg 30deg);
+    -webkit-mask: radial-gradient(circle, transparent 52px, #000 56px, #000 70%, transparent 75%);
+            mask: radial-gradient(circle, transparent 52px, #000 56px, #000 70%, transparent 75%);
+    animation: spin 26s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .fleck {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,235,180,.5);
+    animation: fleckFloat 7s ease-in-out infinite;
+  }
+  @keyframes fleckFloat {
+    0%, 100% { transform: translateY(0); opacity: .25; }
+    50%      { transform: translateY(-22px); opacity: .8; }
+  }
+
+  /* ===== 大风 ===== */
+  .cloud {
+    position: absolute;
+    width: 96px; height: 32px; border-radius: 20px;
+    background: linear-gradient(#ffffffee, #cfdde6cc);
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,.18));
+    animation: cloudSway 5.5s ease-in-out infinite;
+  }
+  .cloud::before, .cloud::after {
+    content: ''; position: absolute; border-radius: 50%;
+    background: inherit;
+  }
+  .cloud::before { width: 44px; height: 44px; left: 14px; top: -22px; }
+  .cloud::after  { width: 30px; height: 30px; left: 50px; top: -14px; }
+  .cloud.c1 { top: 56px;  right: 30px; }
+  .cloud.c2 { top: 130px; right: 90px; transform: scale(.62); opacity: .75; animation-delay: -2.4s; }
+  @keyframes cloudSway {
+    0%, 100% { transform: translateX(0)    scale(var(--s, 1)); }
+    50%      { transform: translateX(-26px) scale(var(--s, 1)); }
+  }
+  .cloud.c2 { --s: .62; }
+
+  .gust {
+    position: absolute; left: 0;
+    height: 3px; border-radius: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.85), transparent);
+    opacity: 0;
+    animation: gustMove linear infinite;
+  }
+  @keyframes gustMove {
+    0%   { transform: translateX(-40%); opacity: 0; }
+    15%  { opacity: .9; }
+    70%  { opacity: .5; }
+    100% { transform: translateX(420%); opacity: 0; }
+  }
+
+  /* ===== 暴雨 ===== */
+  .rain .scene { background: linear-gradient(rgba(10,14,30,.25), transparent 45%); }
+  .storm-cloud {
+    position: absolute; top: -26px; left: -10%;
+    width: 120%; height: 86px;
+    background: radial-gradient(60px 40px at 20% 80%, #39456b, transparent),
+                radial-gradient(80px 52px at 45% 60%, #2c3758, transparent),
+                radial-gradient(70px 46px at 72% 75%, #39456b, transparent),
+                radial-gradient(90px 50px at 95% 60%, #2c3758, transparent);
+    filter: blur(2px);
+    animation: stormDrift 9s ease-in-out infinite alternate;
+  }
+  @keyframes stormDrift { to { transform: translateX(-24px); } }
+
+  .drop {
+    position: absolute; top: -10%;
+    width: 2px;
+    background: linear-gradient(transparent, rgba(166,200,255,.85));
+    border-radius: 2px;
+    animation: dropFall linear infinite;
+  }
+  @keyframes dropFall {
+    to { transform: translateY(120vh); }
+  }
+
+  .flash {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 60% 0%, rgba(255,255,255,.95), rgba(220,230,255,.35) 45%, transparent 75%);
+    opacity: 0;
+  }
+  .flash.on { animation: lightning .8s ease-out; }
+  @keyframes lightning {
+    0%   { opacity: 0; }
+    6%   { opacity: .95; }
+    14%  { opacity: .1; }
+    22%  { opacity: .65; }
+    34%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  .bolt {
+    position: absolute; top: 18px; left: 56%;
+    width: 34px; height: 92px;
+    background: linear-gradient(#fffbe8, #ffd76a);
+    clip-path: polygon(58% 0, 100% 0, 62% 42%, 88% 42%, 26% 100%, 44% 54%, 18% 54%);
+    filter: drop-shadow(0 0 14px rgba(255,225,130,.9));
+    opacity: 0;
+  }
+  .flash.on + .bolt { animation: boltShow .8s ease-out; }
+  @keyframes boltShow {
+    0%   { opacity: 0; }
+    6%   { opacity: 1; }
+    18%  { opacity: .2; }
+    24%  { opacity: .9; }
+    40%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  /* ===== 暴雪 ===== */
+  .flake {
+    position: absolute; top: -8%;
+    animation: flakeFall linear infinite;
+  }
+  .flake::before {
+    content: ''; display: block;
+    width: var(--sz); height: var(--sz);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff, #d8ecff);
+    box-shadow: 0 0 6px rgba(255,255,255,.8);
+    animation: flakeSway var(--swayDur) ease-in-out infinite alternate;
+  }
+  @keyframes flakeFall { to { transform: translateY(115vh); } }
+  @keyframes flakeSway { from { transform: translateX(calc(var(--sway) * -1)); } to { transform: translateX(var(--sway)); } }
+
+  .frost {
+    position: absolute; inset: 0;
+    background: linear-gradient(transparent 70%, rgba(235,246,255,.22));
+  }
+
+  /* 降低动效偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01s !important; animation-iteration-count: 1 !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient"><i></i><i></i><i></i></div>
+
+<header>
+  <h1>我的天气</h1>
+  <p>2026 年 6 月 10 日 · 星期三</p>
+</header>
+
+<main class="deck">
+
+  <!-- 晴天 -->
+  <article class="card sunny" tabindex="0" aria-label="北京 晴朗 32 度">
+    <div class="scene">
+      <div class="rays"></div>
+      <div class="sun"></div>
+      <i class="fleck" style="width:6px;height:6px;left:18%;top:42%;animation-delay:0s"></i>
+      <i class="fleck" style="width:4px;height:4px;left:38%;top:30%;animation-delay:1.8s"></i>
+      <i class="fleck" style="width:5px;height:5px;left:60%;top:50%;animation-delay:3.2s"></i>
+      <i class="fleck" style="width:3px;height:3px;left:26%;top:62%;animation-delay:4.5s"></i>
+    </div>
+    <div class="content">
+      <div class="city">北京</div>
+      <div class="cond">晴朗 · 万里无云</div>
+      <div class="temp">32°</div>
+      <div class="range">最高 34° &nbsp;最低 26°</div>
+      <div class="stats">
+        <div class="stat"><span class="label">湿度</span><span class="value">38%</span></div>
+        <div class="stat"><span class="label">风速</span><span class="value">2 级</span></div>
+        <div class="stat"><span class="label">体感</span><span class="value">33°</span></div>
+        <div class="stat"><span class="label">紫外线</span><span class="value">很强</span></div>
+      </div>
+      <div class="hourly">
+        <div class="hour"><div class="t">现在</div><div class="dot d-sun"></div><div class="v">32°</div></div>
+        <div class="hour"><div class="t">15时</div><div class="dot d-sun"></div><div class="v">33°</div></div>
+        <div class="hour"><div class="t">16时</div><div class="dot d-sun"></div><div class="v">34°</div></div>
+        <div class="hour"><div class="t">17时</div><div class="dot d-sun"></div><div class="v">32°</div></div>
+        <div class="hour"><div class="t">18时</div><div class="dot d-cloud"></div><div class="v">30°</div></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 大风 -->
+  <article class="card windy" tabindex="0" aria-label="呼伦贝尔 大风 18 度">
+    <div class="scene">
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <span class="gust" style="top:34%;width:46%;animation-duration:2.2s;animation-delay:0s"></span>
+      <span class="gust" style="top:44%;width:62%;animation-duration:1.8s;animation-delay:.6s"></span>
+      <span class="gust" style="top:53%;width:38%;animation-duration:2.6s;animation-delay:1.2s"></span>
+      <span class="gust" style="top:62%;width:55%;animation-duration:2s;animation-delay:.3s"></span>
+      <span class="gust" style="top:72%;width:42%;animation-duration:2.4s;animation-delay:1.6s"></span>
+    </div>
+    <div class="content">
+      <div class="city">呼伦贝尔</div>
+      <div class="cond">大风 · 阵风 9 级</div>
+      <div class="temp">18°</div>
+      <div class="range">最高 21° &nbsp;最低 12°</div>
+      <div class="stats">
+        <div class="stat"><span class="label">湿度</span><span class="value">45%</span></div>
+        <div class="stat"><span class="label">风速</span><span class="value">9 级</span></div>
+        <div class="stat"><span class="label">体感</span><span class="value">14°</span></div>
+        <div class="stat"><span class="label">风向</span><span class="value">西北</span></div>
+      </div>
+      <div class="hourly">
+        <div class="hour"><div class="t">现在</div><div class="dot d-cloud"></div><div class="v">18°</div></div>
+        <div class="hour"><div class="t">15时</div><div class="dot d-cloud"></div><div class="v">19°</div></div>
+        <div class="hour"><div class="t">16时</div><div class="dot d-cloud"></div><div class="v">19°</div></div>
+        <div class="hour"><div class="t">17时</div><div class="dot d-cloud"></div><div class="v">17°</div></div>
+        <div class="hour"><div class="t">18时</div><div class="dot d-cloud"></div><div class="v">15°</div></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 暴雨 -->
+  <article class="card rain" tabindex="0" aria-label="广州 暴雨 24 度">
+    <div class="scene">
+      <div class="storm-cloud"></div>
+      <div class="rain-layer"></div>
+      <div class="flash"></div>
+      <div class="bolt"></div>
+    </div>
+    <div class="content">
+      <div class="city">广州</div>
+      <div class="cond">暴雨 · 伴有雷电</div>
+      <div class="temp">24°</div>
+      <div class="range">最高 26° &nbsp;最低 22°</div>
+      <div class="stats">
+        <div class="stat"><span class="label">湿度</span><span class="value">96%</span></div>
+        <div class="stat"><span class="label">风速</span><span class="value">5 级</span></div>
+        <div class="stat"><span class="label">体感</span><span class="value">27°</span></div>
+        <div class="stat"><span class="label">降水</span><span class="value">68mm</span></div>
+      </div>
+      <div class="hourly">
+        <div class="hour"><div class="t">现在</div><div class="dot d-rain"></div><div class="v">24°</div></div>
+        <div class="hour"><div class="t">15时</div><div class="dot d-rain"></div><div class="v">24°</div></div>
+        <div class="hour"><div class="t">16时</div><div class="dot d-rain"></div><div class="v">23°</div></div>
+        <div class="hour"><div class="t">17时</div><div class="dot d-rain"></div><div class="v">23°</div></div>
+        <div class="hour"><div class="t">18时</div><div class="dot d-cloud"></div><div class="v">23°</div></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 暴雪 -->
+  <article class="card blizzard" tabindex="0" aria-label="哈尔滨 暴雪 零下 12 度">
+    <div class="scene">
+      <div class="snow-layer"></div>
+      <div class="frost"></div>
+    </div>
+    <div class="content">
+      <div class="city">哈尔滨</div>
+      <div class="cond">暴雪 · 道路结冰预警</div>
+      <div class="temp">-12°</div>
+      <div class="range">最高 -8° &nbsp;最低 -19°</div>
+      <div class="stats">
+        <div class="stat"><span class="label">湿度</span><span class="value">82%</span></div>
+        <div class="stat"><span class="label">风速</span><span class="value">6 级</span></div>
+        <div class="stat"><span class="label">体感</span><span class="value">-20°</span></div>
+        <div class="stat"><span class="label">积雪</span><span class="value">22cm</span></div>
+      </div>
+      <div class="hourly">
+        <div class="hour"><div class="t">现在</div><div class="dot d-snow"></div><div class="v">-12°</div></div>
+        <div class="hour"><div class="t">15时</div><div class="dot d-snow"></div><div class="v">-11°</div></div>
+        <div class="hour"><div class="t">16时</div><div class="dot d-snow"></div><div class="v">-12°</div></div>
+        <div class="hour"><div class="t">17时</div><div class="dot d-snow"></div><div class="v">-14°</div></div>
+        <div class="hour"><div class="t">18时</div><div class="dot d-snow"></div><div class="v">-16°</div></div>
+      </div>
+    </div>
+  </article>
+
+</main>
+
+<script>
+  const rand = (min, max) => Math.random() * (max - min) + min;
+
+  // ---------- 雨滴 ----------
+  const rainLayer = document.querySelector('.rain-layer');
+  for (let i = 0; i < 70; i++) {
+    const d = document.createElement('i');
+    d.className = 'drop';
+    d.style.left = rand(0, 100) + '%';
+    d.style.height = rand(10, 22) + 'px';
+    d.style.opacity = rand(0.35, 0.9);
+    d.style.animationDuration = rand(0.45, 0.85) + 's';
+    d.style.animationDelay = -rand(0, 2) + 's';
+    rainLayer.appendChild(d);
+  }
+
+  // ---------- 雪花 ----------
+  const snowLayer = document.querySelector('.snow-layer');
+  for (let i = 0; i < 55; i++) {
+    const f = document.createElement('i');
+    f.className = 'flake';
+    f.style.left = rand(0, 100) + '%';
+    f.style.setProperty('--sz', rand(3, 8) + 'px');
+    f.style.setProperty('--sway', rand(8, 26) + 'px');
+    f.style.setProperty('--swayDur', rand(1.5, 3.5) + 's');
+    f.style.opacity = rand(0.5, 1);
+    f.style.animationDuration = rand(4, 9) + 's';
+    f.style.animationDelay = -rand(0, 9) + 's';
+    snowLayer.appendChild(f);
+  }
+
+  // ---------- 闪电 ----------
+  const flash = document.querySelector('.flash');
+  function strike() {
+    flash.classList.remove('on');
+    void flash.offsetWidth; // 重置动画
+    flash.classList.add('on');
+    setTimeout(strike, rand(2500, 7000));
+  }
+  setTimeout(strike, 1800);
+
+  // ---------- 点击固定展开 ----------
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    const toggle = () => {
+      const isActive = card.classList.contains('active');
+      cards.forEach(c => c.classList.remove('active'));
+      if (!isActive) card.classList.add('active');
+    };
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+</script>
+
+</body>
+</html>

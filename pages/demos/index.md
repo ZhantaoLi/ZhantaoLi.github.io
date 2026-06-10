@@ -16,3 +16,5 @@ aside: false
 | world_map | 地图 | [查看效果](/demos/world_map.html) |
 | latex_editor | LaTeX 在线编辑器 | [查看效果](/demos/latex_editor.html) |
 | liquid_class | 液体玻璃 | [查看效果](/demos/liquid_class.html) |
+| weather card | 天气卡片 | [查看效果](/demos/weathercard_fable.html) |
+| rubik's cube | 魔方 | [查看效果](/demos/rubiks_cube.html) |
