@@ -10,7 +10,7 @@ updated: 2026-05-02
 
 ## system setup
 
-VMware / WSL2
+VMware / WSL2 (推荐双系统)
 Ubuntu 24.04 LTS Desktop 64-bit
 
 ```bash

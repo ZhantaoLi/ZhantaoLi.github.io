@@ -30,6 +30,7 @@ Notes:
 ```bash
 sudo apt install -y ros-${ROS_DISTRO}-ros-gz
 sudo apt install -y ros-jazzy-ros2-control ros-jazzy-ros2-controllers ros-jazzy-gz-ros2-control
+sudo apt install -y ros-${ROS_DISTRO}-ros2-control ros-${ROS_DISTRO}-ros2-controllers ros-${ROS_DISTRO}-gz-ros2-control
 # VMWare "Accelerated 3D Graphics"
 echo "export SVGA_VGPU10=0" >> ~/.profile
 ```

@@ -12,7 +12,7 @@ tags:
 <!-- more -->
 ### 桌面操作系统
 
-1. Ubuntu    
+1. Ubuntu
 2. Deepin
 3. Kali Linux
 
@@ -56,7 +56,7 @@ vim /etc/apt/apt.conf.d/10periodic
 	APT::Periodic::AutocleanInterval "0";
 vim /etc/update-manager/release-upgrades
 	Prompt=never
-# enlarge swapfile 
+# enlarge swapfile
 swapon --show
 free -h
 dd if=/dev/zero of=/swapfile bs=1M count=2048
@@ -113,12 +113,300 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 # https://blog.csdn.net/Alan_615/article/details/123801163
 
 # 优化能效 平衡性能与功耗
-apt install s-tui cpufrequtils linux-cpupower	
+apt install s-tui cpufrequtils linux-cpupower
 s-tui
 cpupower -c all frequency-set -g powersave    #优化能效 平衡性能与功耗
 cpupower -c all frequency-set -g performance  #最大化 CPU 性能
 cpufreq-info -o
 ```
+
+镜像站测速脚本
+
+```shell
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+readonly SCRIPT_NAME="${0##*/}"
+readonly DEFAULT_CONNECT_TIMEOUT=3
+readonly DEFAULT_MAX_TIME=12
+
+CONNECT_TIMEOUT="${CONNECT_TIMEOUT:-$DEFAULT_CONNECT_TIMEOUT}"
+MAX_TIME="${MAX_TIME:-$DEFAULT_MAX_TIME}"
+
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  RED=$'\033[0;31m'
+  GREEN=$'\033[0;32m'
+  YELLOW=$'\033[0;33m'
+  BLUE=$'\033[0;36m'
+  PLAIN=$'\033[0m'
+else
+  RED=''
+  GREEN=''
+  YELLOW=''
+  BLUE=''
+  PLAIN=''
+fi
+
+declare -A MIRRORS=(
+  [aliyun]="https://mirrors.aliyun.com/"
+  [cmecloud]="https://mirrors.cmecloud.cn/"
+  [cstcloud]="https://mirrors.cstcloud.cn/"
+  [ctyun]="https://mirrors.ctyun.cn/"
+  [edu_hust]="https://mirrors.hust.edu.cn/"
+  [edu_lzu]="https://mirror.lzu.edu.cn/"
+  [edu_nju]="https://mirrors.nju.edu.cn/"
+  [edu_pku]="https://mirrors.pku.edu.cn/"
+  [edu_sjtu]="https://mirror.sjtu.edu.cn/"
+  [edu_tsinghua]="https://mirrors.tuna.tsinghua.edu.cn/"
+  [edu_ustc]="https://mirrors.ustc.edu.cn/"
+  [edu_zju]="https://mirrors.zju.edu.cn/"
+  [huawei]="https://mirrors.huaweicloud.com/"
+  [iscas]="https://mirror.iscas.ac.cn/"
+  [netease]="https://mirrors.163.com/"
+  [tencent]="https://mirrors.tencent.com/"
+  [volcengine]="https://mirrors.volces.com/"
+)
+
+RESULTS_FILE="$(mktemp)"
+
+usage() {
+  cat <<EOF
+Usage: $SCRIPT_NAME [options]
+
+Options:
+  -c, --connect-timeout SEC   curl connect timeout (default: ${DEFAULT_CONNECT_TIMEOUT})
+  -t, --max-time SEC          curl total timeout (default: ${DEFAULT_MAX_TIME})
+  -h, --help                  show this help
+
+Environment:
+  NO_COLOR=1                  disable ANSI colors
+EOF
+}
+
+cleanup() {
+  rm -f "$RESULTS_FILE"
+}
+
+die() {
+  printf '%sError:%s %s\n' "$RED" "$PLAIN" "$*" >&2
+  exit 1
+}
+
+need_cmd() {
+  command -v "$1" >/dev/null 2>&1 || die "$1 command not found"
+}
+
+human_bytes() {
+  awk -v n="${1:-0}" '
+    function fmt(value,   units, i) {
+      split("B KiB MiB GiB TiB PiB", units, " ")
+      i = 1
+      while (value >= 1024 && i < 6) {
+        value /= 1024
+        i++
+      }
+      if (i == 1) {
+        printf "%.0f %s", value, units[i]
+      } else {
+        printf "%.1f %s", value, units[i]
+      }
+    }
+    BEGIN {
+      if (n < 0) n = 0
+      fmt(n)
+    }
+  '
+}
+
+human_rate() {
+  awk -v n="${1:-0}" '
+    function fmt(value,   units, i) {
+      split("B/s KiB/s MiB/s GiB/s TiB/s PiB/s", units, " ")
+      i = 1
+      while (value >= 1024 && i < 6) {
+        value /= 1024
+        i++
+      }
+      if (i == 1) {
+        printf "%.0f %s", value, units[i]
+      } else {
+        printf "%.1f %s", value, units[i]
+      }
+    }
+    BEGIN {
+      if (n < 0) n = 0
+      fmt(n)
+    }
+  '
+}
+
+human_time() {
+  local value="${1:-}"
+  if [[ -z "$value" ]]; then
+    printf '-'
+  else
+    awk -v n="$value" 'BEGIN { printf "%.3f s", n + 0 }'
+  fi
+}
+
+detect_test_path() {
+  local os_id='' os_like=''
+
+  if [[ -r /etc/os-release ]]; then
+    # shellcheck disable=SC1091
+    . /etc/os-release
+    os_id="${ID:-}"
+    os_like="${ID_LIKE:-}"
+  fi
+
+  case " ${os_id} ${os_like} " in
+    *" debian "*|*" ubuntu "*)
+      printf '%s\n' 'debian/ls-lR.gz'
+      ;;
+    *" centos "*|*" rhel "*|*" fedora "*|*" rocky "*|*" almalinux "*|*" ol "*|*" opencloudos "*|*" anolis "*)
+      printf '%s\n' 'centos/filelist.gz'
+      ;;
+    *)
+      printf '%s\n' 'centos/filelist.gz'
+      ;;
+  esac
+}
+
+mirror_names() {
+  printf '%s\n' "${!MIRRORS[@]}" | sort
+}
+
+run_one() {
+  local name="$1"
+  local url="$2"
+  local stderr_file
+  local output http_code remote_ip size_download time_total speed_download status
+
+  stderr_file="$(mktemp)"
+  if output="$(
+    curl -4 -L \
+      --silent \
+      --show-error \
+      --output /dev/null \
+      --connect-timeout "$CONNECT_TIMEOUT" \
+      --max-time "$MAX_TIME" \
+      --write-out '%{http_code}|%{remote_ip}|%{size_download}|%{time_total}|%{speed_download}' \
+      "$url" 2>"$stderr_file"
+  )"; then
+    IFS='|' read -r http_code remote_ip size_download time_total speed_download <<<"$output"
+    status='OK'
+  else
+    http_code='000'
+    remote_ip='-'
+    size_download=0
+    time_total=''
+    speed_download=0
+    status='FAIL'
+    if [[ -s "$stderr_file" ]]; then
+      printf '%s[%s]%s %s -> %s\n' "$YELLOW" "$name" "$PLAIN" "$url" "$(tr '\n' ' ' <"$stderr_file")" >&2
+    fi
+  fi
+  rm -f "$stderr_file"
+
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$speed_download" \
+    "$name" \
+    "$remote_ip" \
+    "$size_download" \
+    "$time_total" \
+    "$http_code" \
+    "$status" >>"$RESULTS_FILE"
+}
+
+print_results() {
+  printf '%-14s %-20s %-14s %-14s %-14s %-6s\n' \
+    "Site Name" "IPv4 address" "File Size" "Download Time" "Download Speed" "Code"
+
+  while IFS=$'\t' read -r speed name ip size time http_code status; do
+    local size_text time_text speed_text
+    size_text="$(human_bytes "$size")"
+    time_text="$(human_time "$time")"
+    speed_text="$(human_rate "$speed")"
+    printf '%-14s %-20s %-14s %-14s %-14s %-6s\n' \
+      "$name" \
+      "$ip" \
+      "$size_text" \
+      "$time_text" \
+      "$speed_text" \
+      "$http_code"
+  done < <(sort -t$'\t' -k1,1gr "$RESULTS_FILE")
+}
+
+trap cleanup EXIT
+
+main() {
+  while (($#)); do
+    case "$1" in
+      -c|--connect-timeout)
+        [[ $# -ge 2 ]] || die "missing value for $1"
+        CONNECT_TIMEOUT="$2"
+        shift 2
+        ;;
+      -t|--max-time)
+        [[ $# -ge 2 ]] || die "missing value for $1"
+        MAX_TIME="$2"
+        shift 2
+        ;;
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        die "unknown option: $1"
+        ;;
+    esac
+  done
+
+  need_cmd curl
+  need_cmd sort
+  need_cmd mktemp
+
+  [[ "$CONNECT_TIMEOUT" =~ ^[0-9]+([.][0-9]+)?$ ]] || die "invalid connect timeout: $CONNECT_TIMEOUT"
+  [[ "$MAX_TIME" =~ ^[0-9]+([.][0-9]+)?$ ]] || die "invalid max time: $MAX_TIME"
+
+  local os_id=''
+  local test_path
+
+  if [[ -r /etc/os-release ]]; then
+    # shellcheck disable=SC1091
+    . /etc/os-release
+    os_id="${ID:-}"
+  fi
+
+  test_path="$(detect_test_path)"
+
+  printf '\n\n%sOs repo mirror site speed test%s\n\n' "$BLUE" "$PLAIN"
+  printf '%sTest OS%s       : %s%s%s\n' "$BLUE" "$PLAIN" "$YELLOW" "${os_id:-unknown}" "$PLAIN"
+  printf '%sDownload File%s : %s%s%s\n' "$BLUE" "$PLAIN" "$YELLOW" "$test_path" "$PLAIN"
+  printf '%sDownloads are discarded to /dev/null; no local cache file is kept.%s\n\n' "$BLUE" "$PLAIN"
+
+  printf '%s[Mirror Site]%s\n' "$BLUE" "$PLAIN"
+  while IFS= read -r mirror; do
+    printf '%-14s %s%s%s\n' "$mirror" "$GREEN" "${MIRRORS[$mirror]}" "$PLAIN"
+  done < <(mirror_names)
+
+  printf '\n%s[Test]%s\n' "$BLUE" "$PLAIN"
+  while IFS= read -r mirror; do
+    run_one "$mirror" "${MIRRORS[$mirror]}${test_path}"
+  done < <(mirror_names)
+
+  printf '\n'
+  print_results
+}
+
+main "$@"
+```
+
 
 ```bash
 # wireguard		注意Endpoints
@@ -160,7 +448,7 @@ chmod +x ./clash-linux-amd64-v1.10.0
 # 可以使用 [Web UI](http://127.0.0.1:9090/ui) 来管理 Clash, Port 默认端口是9090
 ```
 
-`neofetch` `screenfetch`
+`fastfetch` `screenfetch`
 
 `htop`
 
@@ -198,23 +486,23 @@ hwinfo
 
 ---
 
-> /bin	：存储一些二进制可执行命令文件， /usr/bin 也存放了一些基于用户的命令文件  
-> /sbin	： 存储了很多系统命令， /usr/sbin 也存储了许多系统命令  
-> /root	：超级用户 root 的根目录文件  
-> /home	：普通用户默认目录，在该目录下，每个用户都有一个以本用户名命名的文件夹  
-> /boot	：存放 Ubuntu 系统内核和系统启动文件  
-> /mnt	：通常包括系统引导后被挂载的文件系统的挂载点  
-> /dev	：存放设备文件，我们后面学习 Linux 驱动主要是跟这个文件夹打交道的   
-> /etc	：保存系统管理所需的配置文件和目录  
-> /lib	：保存系统程序运行所需的库文件， /usr/lib 下存放了一些用于普通用户的库文件  
-> /lost+found	：一般为空，当系统非正常关机以后，此文件夹会保存一些零散文件  
-> /var	：存储一些不断变化的文件，比如日志文件  
-> /usr	：包括与系统用户直接有关的文件和目录，比如应用程序和所需的库文件  
-> /media	：存放 Ubuntu 系统自动挂载的设备文件  
-> /proc	：虚拟目录，不实际存储在磁盘上，通常用来保存系统信息和进程信息  
-> /tmp	： 存储系统和用户的临时文件，该文件夹对所有的用户都提供读写权限  
-> /opt	：可选文件和程序的存放目录  
-> /sys	：系统设备和文件层次结构，并向用户程序提供详细的内核数据信息  
+> /bin	：存储一些二进制可执行命令文件， /usr/bin 也存放了一些基于用户的命令文件
+> /sbin	： 存储了很多系统命令， /usr/sbin 也存储了许多系统命令
+> /root	：超级用户 root 的根目录文件
+> /home	：普通用户默认目录，在该目录下，每个用户都有一个以本用户名命名的文件夹
+> /boot	：存放 Ubuntu 系统内核和系统启动文件
+> /mnt	：通常包括系统引导后被挂载的文件系统的挂载点
+> /dev	：存放设备文件，我们后面学习 Linux 驱动主要是跟这个文件夹打交道的
+> /etc	：保存系统管理所需的配置文件和目录
+> /lib	：保存系统程序运行所需的库文件， /usr/lib 下存放了一些用于普通用户的库文件
+> /lost+found	：一般为空，当系统非正常关机以后，此文件夹会保存一些零散文件
+> /var	：存储一些不断变化的文件，比如日志文件
+> /usr	：包括与系统用户直接有关的文件和目录，比如应用程序和所需的库文件
+> /media	：存放 Ubuntu 系统自动挂载的设备文件
+> /proc	：虚拟目录，不实际存储在磁盘上，通常用来保存系统信息和进程信息
+> /tmp	： 存储系统和用户的临时文件，该文件夹对所有的用户都提供读写权限
+> /opt	：可选文件和程序的存放目录
+> /sys	：系统设备和文件层次结构，并向用户程序提供详细的内核数据信息
 
 ---
 
@@ -224,7 +512,7 @@ curl ssh ripgrep git gcc g++ cmake	python3 pip 	iverilog gtkwave	pandoc	zsh
 
 [LACT](https://github.com/ilya-zlobintsev/LACT)用于在 Linux 下管理 AMD 显卡
 
-**Fail2ban**  
+**Fail2ban**
 
 `kex` for kali
 
@@ -232,25 +520,17 @@ curl ssh ripgrep git gcc g++ cmake	python3 pip 	iverilog gtkwave	pandoc	zsh
 
 https://flathub.org/
 
-AdGuard Home
+`sudo apt install ripgrep fd-find fzf bat jq shellcheck ncdu git-delta tealdeer -y`
 
-bpython3
+`sudo apt install python-is-python3`
+
+`Miniforge`
+
+`Docker`
+
+`Node.js`
 
 Chromium
-
-Code::Blocks IDE
-
-draw.io
-
-GVim
-
-LibreOffice
-
-QQ
-
-Spotify
-
-Steam
 
 Visual Studio Code
 
@@ -309,12 +589,12 @@ alist admin && alist server
 
 ```bash
 # 光标移动
-          ^							
-          k								
+          ^
+          k
     < h       l >
-          j						
+          j
           v
-空格>		CTRL-E下滑	
+空格>		CTRL-E下滑
 # 编辑	i
 # 删除	d	dd	dw
 # 撤销	u
@@ -399,11 +679,11 @@ tar [options] -f archive.tar [files...]
 	-x	#解压归档文件
 	-t	#列出归档文件的内容
 	-r	#向现有归档文件中追加文件
-	
+
 	-z	#使用 gzip 压缩归档文件
 	-a	#自动选择压缩方式(基于归档文件的扩展名，如 .tar.gz、.tar.bz2 等)
 	-v	#显示详细操作过程（verbose）
-	
+
   -f <file>	#指定归档文件的名称(必须放在选项列表的最后)
 ```
 
@@ -426,7 +706,7 @@ docker
 	pull		#拉取镜像
   images	#显示镜像
   rmi			#删除镜像
-  
+
 	run	#启动容器
 		-d			#后台运行
 		-p			#端口映射	80:80
@@ -440,7 +720,7 @@ docker
 	exec -it nginx_d /bin/bash	#进入容器内部	-it(交互模式)	/bin/bash(指定shell)
 	logs nginx_d	#日志
 	stats nginx_d	#资源占用
-	
+
 	volume
 	network
 	system
@@ -502,11 +782,11 @@ gcc [options] [filename...]
 	-O2	#增加优化程度进行编译
 ```
 
-> GCC 编译器的编译流程是：预处理、编译、汇编和链接  
-> 预处理就是展开所有的头文件、替换程序中的宏、解析条件编译并添加到文件中  
-> 编译是将经过预编译处理的代码编译成汇编代码，也就是我们常说的程序编译  
-> 汇编就是将汇编语言文件编译成二进制目标文件  
-> 链接就是将汇编出来的多个二进制目标文件链接在一起，形成最终的可执行文件，链接的时候还会涉及到静态库和动态库等问题  
+> GCC 编译器的编译流程是：预处理、编译、汇编和链接
+> 预处理就是展开所有的头文件、替换程序中的宏、解析条件编译并添加到文件中
+> 编译是将经过预编译处理的代码编译成汇编代码，也就是我们常说的程序编译
+> 汇编就是将汇编语言文件编译成二进制目标文件
+> 链接就是将汇编出来的多个二进制目标文件链接在一起，形成最终的可执行文件，链接的时候还会涉及到静态库和动态库等问题
 
 #### Makefile
 
