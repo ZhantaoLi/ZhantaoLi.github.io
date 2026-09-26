@@ -1,4 +1,4 @@
-﻿---
+---
 title: GCMP
 tags:
   - AI

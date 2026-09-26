@@ -192,9 +192,23 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/posts/Claude记录': RouteRecordInfo<
+      '/posts/Claude记录',
+      '/posts/Claude%E8%AE%B0%E5%BD%95',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/posts/CLIProxyAPI搭建与使用': RouteRecordInfo<
       '/posts/CLIProxyAPI搭建与使用',
       '/posts/CLIProxyAPI%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/Codex排障': RouteRecordInfo<
+      '/posts/Codex排障',
+      '/posts/Codex%E6%8E%92%E9%9A%9C',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -300,6 +314,13 @@ declare module 'vue-router/auto-routes' {
     '/posts/Skills记录': RouteRecordInfo<
       '/posts/Skills记录',
       '/posts/Skills%E8%AE%B0%E5%BD%95',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/so101record': RouteRecordInfo<
+      '/posts/so101record',
+      '/posts/so101record',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -504,9 +525,21 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/posts/Claude记录.md': {
+      routes:
+        | '/posts/Claude记录'
+      views:
+        | never
+    }
     'pages/posts/CLIProxyAPI搭建与使用.md': {
       routes:
         | '/posts/CLIProxyAPI搭建与使用'
+      views:
+        | never
+    }
+    'pages/posts/Codex排障.md': {
+      routes:
+        | '/posts/Codex排障'
       views:
         | never
     }
@@ -597,6 +630,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/Skills记录.md': {
       routes:
         | '/posts/Skills记录'
+      views:
+        | never
+    }
+    'pages/posts/so101record.md': {
+      routes:
+        | '/posts/so101record'
       views:
         | never
     }
