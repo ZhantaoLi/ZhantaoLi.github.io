@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>元素周期表 (Periodic Table)</title>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --text-color: #ffffff;
+            --accent-color: #0a84ff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 顶部控制栏 */
+        header {
+            width: 90%;
+            max-width: 1400px;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        h1 {
+            font-weight: 200;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        button.toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--glass-border);
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        button.toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* 周期表网格布局 */
+        .periodic-table {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 6px;
+            width: 95%;
+            max-width: 1600px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* 元素卡片样式 (Glassmorphism) */
+        .element {
+            position: relative;
+            aspect-ratio: 1; /* 正方形 */
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+
+        .element:hover {
+            transform: scale(1.2) translateY(-5px);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .at-num { font-size: 10px; opacity: 0.8; }
+        .symbol { 
+            font-size: 1.2vw; 
+            font-weight: bold; 
+            text-align: center; 
+            background: -webkit-linear-gradient(90deg, #fff, #ddd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .name { 
+            font-size: 9px; 
+            text-align: center; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+        }
+
+        /* 针对大屏优化字体 */
+        @media (min-width: 1200px) {
+            .symbol { font-size: 20px; }
+            .at-num { font-size: 12px; }
+            .name { font-size: 11px; }
+        }
+
+        /* 占位符和特殊区域 */
+        .empty { pointer-events: none; border: none; background: transparent; backdrop-filter: none; box-shadow: none;}
+        
+        /* 颜色分类标记 (微弱的背景色) */
+        .cat-alkali { background: rgba(255, 99, 71, 0.15); }
+        .cat-alkaline { background: rgba(255, 165, 0, 0.15); }
+        .cat-trans { background: rgba(255, 215, 0, 0.15); }
+        .cat-post { background: rgba(144, 238, 144, 0.15); }
+        .cat-meta { background: rgba(0, 206, 209, 0.15); }
+        .cat-non { background: rgba(135, 206, 250, 0.15); }
+        .cat-halo { background: rgba(238, 130, 238, 0.15); }
+        .cat-noble { background: rgba(255, 192, 203, 0.15); }
+        .cat-lan { background: rgba(255, 105, 180, 0.15); }
+        .cat-act { background: rgba(186, 85, 211, 0.15); }
+
+        /* 详情弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-card {
+            background: rgba(30, 30, 30, 0.85);
+            width: 400px;
+            max-width: 90%;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #fff;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 15px;
+        }
+
+        .big-symbol {
+            font-size: 60px;
+            font-weight: bold;
+            margin-right: 20px;
+            background: -webkit-linear-gradient(45deg, #0a84ff, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-info h2 { margin: 0; font-size: 28px; }
+        .modal-info p { margin: 5px 0; color: #aaa; }
+        
+        .modal-body p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .data-item span:first-child { color: #888; display: block; font-size: 12px; }
+        .data-item span:last-child { font-weight: bold; font-size: 16px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Periodic Table</h1>
+        <button class="toggle-btn" onclick="toggleLanguage()">CN / EN</button>
+    </header>
+
+    <div class="periodic-table" id="pt-grid">
+        </div>
+
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeModal(event)">×</span>
+            <div class="modal-header">
+                <div class="big-symbol" id="m-symbol">H</div>
+                <div class="modal-info">
+                    <h2 id="m-name">Hydrogen</h2>
+                    <p id="m-cat">Non-metal</p>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="m-desc">Description text goes here.</p>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <span class="label-atomic">Atomic Number</span>
+                        <span id="m-num">1</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label-mass">Atomic Mass</span>
+                        <span id="m-mass">1.008</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label-phase">Phase</span>
+                        <span id="m-phase">Gas</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label-config">Shells</span>
+                        <span id="m-shells">1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 全量118个元素数据
+    // 格式: [原子序数, 符号, 英文名, 中文名, 原子量, 类别key, 周期, 族, 状态(英文), 电子层]
+    // 类别Key: 1=Alkali Metal, 2=Alkaline Earth, 3=Transition, 4=Post-transition, 5=Metalloid, 6=Non-metal, 7=Halogen, 8=Noble Gas, 9=Lanthanide, 10=Actinide
+    const rawData = [
+        [1, "H", "Hydrogen", "氢", "1.008", 6, 1, 1, "Gas", "1"],
+        [2, "He", "Helium", "氦", "4.0026", 8, 1, 18, "Gas", "2"],
+        [3, "Li", "Lithium", "锂", "6.94", 1, 2, 1, "Solid", "2,1"],
+        [4, "Be", "Beryllium", "铍", "9.0122", 2, 2, 2, "Solid", "2,2"],
+        [5, "B", "Boron", "硼", "10.81", 5, 2, 13, "Solid", "2,3"],
+        [6, "C", "Carbon", "碳", "12.011", 6, 2, 14, "Solid", "2,4"],
+        [7, "N", "Nitrogen", "氮", "14.007", 6, 2, 15, "Gas", "2,5"],
+        [8, "O", "Oxygen", "氧", "15.999", 6, 2, 16, "Gas", "2,6"],
+        [9, "F", "Fluorine", "氟", "18.998", 7, 2, 17, "Gas", "2,7"],
+        [10, "Ne", "Neon", "氖", "20.180", 8, 2, 18, "Gas", "2,8"],
+        [11, "Na", "Sodium", "钠", "22.990", 1, 3, 1, "Solid", "2,8,1"],
+        [12, "Mg", "Magnesium", "镁", "24.305", 2, 3, 2, "Solid", "2,8,2"],
+        [13, "Al", "Aluminium", "铝", "26.982", 4, 3, 13, "Solid", "2,8,3"],
+        [14, "Si", "Silicon", "硅", "28.085", 5, 3, 14, "Solid", "2,8,4"],
+        [15, "P", "Phosphorus", "磷", "30.974", 6, 3, 15, "Solid", "2,8,5"],
+        [16, "S", "Sulfur", "硫", "32.06", 6, 3, 16, "Solid", "2,8,6"],
+        [17, "Cl", "Chlorine", "氯", "35.45", 7, 3, 17, "Gas", "2,8,7"],
+        [18, "Ar", "Argon", "氩", "39.948", 8, 3, 18, "Gas", "2,8,8"],
+        [19, "K", "Potassium", "钾", "39.098", 1, 4, 1, "Solid", "2,8,8,1"],
+        [20, "Ca", "Calcium", "钙", "40.078", 2, 4, 2, "Solid", "2,8,8,2"],
+        [21, "Sc", "Scandium", "钪", "44.956", 3, 4, 3, "Solid", "2,8,9,2"],
+        [22, "Ti", "Titanium", "钛", "47.867", 3, 4, 4, "Solid", "2,8,10,2"],
+        [23, "V", "Vanadium", "钒", "50.942", 3, 4, 5, "Solid", "2,8,11,2"],
+        [24, "Cr", "Chromium", "铬", "51.996", 3, 4, 6, "Solid", "2,8,13,1"],
+        [25, "Mn", "Manganese", "锰", "54.938", 3, 4, 7, "Solid", "2,8,13,2"],
+        [26, "Fe", "Iron", "铁", "55.845", 3, 4, 8, "Solid", "2,8,14,2"],
+        [27, "Co", "Cobalt", "钴", "58.933", 3, 4, 9, "Solid", "2,8,15,2"],
+        [28, "Ni", "Nickel", "镍", "58.693", 3, 4, 10, "Solid", "2,8,16,2"],
+        [29, "Cu", "Copper", "铜", "63.546", 3, 4, 11, "Solid", "2,8,18,1"],
+        [30, "Zn", "Zinc", "锌", "65.38", 3, 4, 12, "Solid", "2,8,18,2"],
+        [31, "Ga", "Gallium", "镓", "69.723", 4, 4, 13, "Solid", "2,8,18,3"],
+        [32, "Ge", "Germanium", "锗", "72.630", 5, 4, 14, "Solid", "2,8,18,4"],
+        [33, "As", "Arsenic", "砷", "74.922", 5, 4, 15, "Solid", "2,8,18,5"],
+        [34, "Se", "Selenium", "硒", "78.96", 6, 4, 16, "Solid", "2,8,18,6"],
+        [35, "Br", "Bromine", "溴", "79.904", 7, 4, 17, "Liquid", "2,8,18,7"],
+        [36, "Kr", "Krypton", "氪", "83.798", 8, 4, 18, "Gas", "2,8,18,8"],
+        [37, "Rb", "Rubidium", "铷", "85.468", 1, 5, 1, "Solid", "2,8,18,8,1"],
+        [38, "Sr", "Strontium", "锶", "87.62", 2, 5, 2, "Solid", "2,8,18,8,2"],
+        [39, "Y", "Yttrium", "钇", "88.906", 3, 5, 3, "Solid", "2,8,18,9,2"],
+        [40, "Zr", "Zirconium", "锆", "91.224", 3, 5, 4, "Solid", "2,8,18,10,2"],
+        [41, "Nb", "Niobium", "铌", "92.906", 3, 5, 5, "Solid", "2,8,18,12,1"],
+        [42, "Mo", "Molybdenum", "钼", "95.95", 3, 5, 6, "Solid", "2,8,18,13,1"],
+        [43, "Tc", "Technetium", "锝", "(98)", 3, 5, 7, "Solid", "2,8,18,13,2"],
+        [44, "Ru", "Ruthenium", "钌", "101.07", 3, 5, 8, "Solid", "2,8,18,15,1"],
+        [45, "Rh", "Rhodium", "铑", "102.91", 3, 5, 9, "Solid", "2,8,18,16,1"],
+        [46, "Pd", "Palladium", "钯", "106.42", 3, 5, 10, "Solid", "2,8,18,18"],
+        [47, "Ag", "Silver", "银", "107.87", 3, 5, 11, "Solid", "2,8,18,18,1"],
+        [48, "Cd", "Cadmium", "镉", "112.41", 3, 5, 12, "Solid", "2,8,18,18,2"],
+        [49, "In", "Indium", "铟", "114.82", 4, 5, 13, "Solid", "2,8,18,18,3"],
+        [50, "Sn", "Tin", "锡", "118.71", 4, 5, 14, "Solid", "2,8,18,18,4"],
+        [51, "Sb", "Antimony", "锑", "121.76", 5, 5, 15, "Solid", "2,8,18,18,5"],
+        [52, "Te", "Tellurium", "碲", "127.60", 5, 5, 16, "Solid", "2,8,18,18,6"],
+        [53, "I", "Iodine", "碘", "126.90", 7, 5, 17, "Solid", "2,8,18,18,7"],
+        [54, "Xe", "Xenon", "氙", "131.29", 8, 5, 18, "Gas", "2,8,18,18,8"],
+        [55, "Cs", "Cesium", "铯", "132.91", 1, 6, 1, "Solid", "2,8,18,18,8,1"],
+        [56, "Ba", "Barium", "钡", "137.33", 2, 6, 2, "Solid", "2,8,18,18,8,2"],
+        
+        // Lanthanides (57-71)
+        [57, "La", "Lanthanum", "镧", "138.91", 9, 6, "L1", "Solid", "2,8,18,18,9,2"],
+        [58, "Ce", "Cerium", "铈", "140.12", 9, 6, "L2", "Solid", "2,8,18,19,9,2"],
+        [59, "Pr", "Praseodymium", "镨", "140.91", 9, 6, "L3", "Solid", "2,8,18,21,8,2"],
+        [60, "Nd", "Neodymium", "钕", "144.24", 9, 6, "L4", "Solid", "2,8,18,22,8,2"],
+        [61, "Pm", "Promethium", "钷", "(145)", 9, 6, "L5", "Solid", "2,8,18,23,8,2"],
+        [62, "Sm", "Samarium", "钐", "150.36", 9, 6, "L6", "Solid", "2,8,18,24,8,2"],
+        [63, "Eu", "Europium", "铕", "151.96", 9, 6, "L7", "Solid", "2,8,18,25,8,2"],
+        [64, "Gd", "Gadolinium", "钆", "157.25", 9, 6, "L8", "Solid", "2,8,18,25,9,2"],
+        [65, "Tb", "Terbium", "铽", "158.93", 9, 6, "L9", "Solid", "2,8,18,27,8,2"],
+        [66, "Dy", "Dysprosium", "镝", "162.50", 9, 6, "L10", "Solid", "2,8,18,28,8,2"],
+        [67, "Ho", "Holmium", "钬", "164.93", 9, 6, "L11", "Solid", "2,8,18,29,8,2"],
+        [68, "Er", "Erbium", "铒", "167.26", 9, 6, "L12", "Solid", "2,8,18,30,8,2"],
+        [69, "Tm", "Thulium", "铥", "168.93", 9, 6, "L13", "Solid", "2,8,18,31,8,2"],
+        [70, "Yb", "Ytterbium", "镱", "173.05", 9, 6, "L14", "Solid", "2,8,18,32,8,2"],
+        [71, "Lu", "Lutetium", "镥", "174.97", 9, 6, "L15", "Solid", "2,8,18,32,9,2"],
+
+        [72, "Hf", "Hafnium", "铪", "178.49", 3, 6, 4, "Solid", "2,8,18,32,10,2"],
+        [73, "Ta", "Tantalum", "钽", "180.95", 3, 6, 5, "Solid", "2,8,18,32,11,2"],
+        [74, "W", "Tungsten", "钨", "183.84", 3, 6, 6, "Solid", "2,8,18,32,12,2"],
+        [75, "Re", "Rhenium", "铼", "186.21", 3, 6, 7, "Solid", "2,8,18,32,13,2"],
+        [76, "Os", "Osmium", "锇", "190.23", 3, 6, 8, "Solid", "2,8,18,32,14,2"],
+        [77, "Ir", "Iridium", "铱", "192.22", 3, 6, 9, "Solid", "2,8,18,32,15,2"],
+        [78, "Pt", "Platinum", "铂", "195.08", 3, 6, 10, "Solid", "2,8,18,32,17,1"],
+        [79, "Au", "Gold", "金", "196.97", 3, 6, 11, "Solid", "2,8,18,32,18,1"],
+        [80, "Hg", "Mercury", "汞", "200.59", 3, 6, 12, "Liquid", "2,8,18,32,18,2"],
+        [81, "Tl", "Thallium", "铊", "204.38", 4, 6, 13, "Solid", "2,8,18,32,18,3"],
+        [82, "Pb", "Lead", "铅", "207.2", 4, 6, 14, "Solid", "2,8,18,32,18,4"],
+        [83, "Bi", "Bismuth", "铋", "208.98", 4, 6, 15, "Solid", "2,8,18,32,18,5"],
+        [84, "Po", "Polonium", "钋", "(209)", 4, 6, 16, "Solid", "2,8,18,32,18,6"],
+        [85, "At", "Astatine", "砹", "(210)", 7, 6, 17, "Solid", "2,8,18,32,18,7"],
+        [86, "Rn", "Radon", "氡", "(222)", 8, 6, 18, "Gas", "2,8,18,32,18,8"],
+        [87, "Fr", "Francium", "钫", "(223)", 1, 7, 1, "Solid", "2,8,18,32,18,8,1"],
+        [88, "Ra", "Radium", "镭", "(226)", 2, 7, 2, "Solid", "2,8,18,32,18,8,2"],
+
+        // Actinides (89-103)
+        [89, "Ac", "Actinium", "锕", "(227)", 10, 7, "A1", "Solid", "2,8,18,32,18,9,2"],
+        [90, "Th", "Thorium", "钍", "232.04", 10, 7, "A2", "Solid", "2,8,18,32,18,10,2"],
+        [91, "Pa", "Protactinium", "镤", "231.04", 10, 7, "A3", "Solid", "2,8,18,32,20,9,2"],
+        [92, "U", "Uranium", "铀", "238.03", 10, 7, "A4", "Solid", "2,8,18,32,21,9,2"],
+        [93, "Np", "Neptunium", "镎", "(237)", 10, 7, "A5", "Solid", "2,8,18,32,22,9,2"],
+        [94, "Pu", "Plutonium", "钚", "(244)", 10, 7, "A6", "Solid", "2,8,18,32,24,8,2"],
+        [95, "Am", "Americium", "镅", "(243)", 10, 7, "A7", "Solid", "2,8,18,32,25,8,2"],
+        [96, "Cm", "Curium", "锔", "(247)", 10, 7, "A8", "Solid", "2,8,18,32,25,9,2"],
+        [97, "Bk", "Berkelium", "锫", "(247)", 10, 7, "A9", "Solid", "2,8,18,32,27,8,2"],
+        [98, "Cf", "Californium", "锎", "(251)", 10, 7, "A10", "Solid", "2,8,18,32,28,8,2"],
+        [99, "Es", "Einsteinium", "锿", "(252)", 10, 7, "A11", "Solid", "2,8,18,32,29,8,2"],
+        [100, "Fm", "Fermium", "镄", "(257)", 10, 7, "A12", "Solid", "2,8,18,32,30,8,2"],
+        [101, "Md", "Mendelevium", "钔", "(258)", 10, 7, "A13", "Solid", "2,8,18,32,31,8,2"],
+        [102, "No", "Nobelium", "锘", "(259)", 10, 7, "A14", "Solid", "2,8,18,32,32,8,2"],
+        [103, "Lr", "Lawrencium", "铹", "(266)", 10, 7, "A15", "Solid", "2,8,18,32,32,8,3"],
+
+        [104, "Rf", "Rutherfordium", "𬬻", "(267)", 3, 7, 4, "Unknown", "2,8,18,32,32,10,2"],
+        [105, "Db", "Dubnium", "𬭊", "(268)", 3, 7, 5, "Unknown", "2,8,18,32,32,11,2"],
+        [106, "Sg", "Seaborgium", "𬭳", "(269)", 3, 7, 6, "Unknown", "2,8,18,32,32,12,2"],
+        [107, "Bh", "Bohrium", "𬭛", "(270)", 3, 7, 7, "Unknown", "2,8,18,32,32,13,2"],
+        [108, "Hs", "Hassium", "𬭶", "(269)", 3, 7, 8, "Unknown", "2,8,18,32,32,14,2"],
+        [109, "Mt", "Meitnerium", "鿏", "(278)", 3, 7, 9, "Unknown", "2,8,18,32,32,15,2"],
+        [110, "Ds", "Darmstadtium", "𫟼", "(281)", 3, 7, 10, "Unknown", "2,8,18,32,32,17,1"],
+        [111, "Rg", "Roentgenium", "𬬭", "(282)", 3, 7, 11, "Unknown", "2,8,18,32,32,18,1"],
+        [112, "Cn", "Copernicium", "鿔", "(285)", 3, 7, 12, "Unknown", "2,8,18,32,32,18,2"],
+        [113, "Nh", "Nihonium", "鿭", "(286)", 4, 7, 13, "Unknown", "2,8,18,32,32,18,3"],
+        [114, "Fl", "Flerovium", "𫓧", "(289)", 4, 7, 14, "Unknown", "2,8,18,32,32,18,4"],
+        [115, "Mc", "Moscovium", "镆", "(290)", 4, 7, 15, "Unknown", "2,8,18,32,32,18,5"],
+        [116, "Lv", "Livermorium", "𫟷", "(293)", 4, 7, 16, "Unknown", "2,8,18,32,32,18,6"],
+        [117, "Ts", "Tennessine", "鿬", "(294)", 7, 7, 17, "Unknown", "2,8,18,32,32,18,7"],
+        [118, "Og", "Oganesson", "鿫", "(294)", 8, 7, 18, "Unknown", "2,8,18,32,32,18,8"]
+    ];
+
+    const categories = {
+        1: { en: "Alkali Metal", cn: "碱金属", class: "cat-alkali" },
+        2: { en: "Alkaline Earth Metal", cn: "碱土金属", class: "cat-alkaline" },
+        3: { en: "Transition Metal", cn: "过渡金属", class: "cat-trans" },
+        4: { en: "Post-transition Metal", cn: "后过渡金属", class: "cat-post" },
+        5: { en: "Metalloid", cn: "类金属", class: "cat-meta" },
+        6: { en: "Non-metal", cn: "非金属", class: "cat-non" },
+        7: { en: "Halogen", cn: "卤素", class: "cat-halo" },
+        8: { en: "Noble Gas", cn: "稀有气体", class: "cat-noble" },
+        9: { en: "Lanthanide", cn: "镧系元素", class: "cat-lan" },
+        10: { en: "Actinide", cn: "锕系元素", class: "cat-act" }
+    };
+
+    const uiText = {
+        en: { title: "Periodic Table", toggle: "Switch to CN", atomic: "Atomic Number", mass: "Atomic Mass", phase: "Phase", shells: "Electron Config" },
+        zh: { title: "元素周期表", toggle: "Switch to EN", atomic: "原子序数", mass: "原子量", phase: "状态", shells: "电子排布" }
+    };
+
+    let currentLang = 'zh'; // 默认中文
+
+    function renderTable() {
+        const grid = document.getElementById('pt-grid');
+        grid.innerHTML = '';
+        
+        // 布局映射: 18列. 
+        // 镧系锕系需要特殊处理:
+        // 常规元素按 grid-column: group, grid-row: period
+        // 镧系 (57-71): row 9, col (3 + offset)
+        // 锕系 (89-103): row 10, col (3 + offset)
+
+        rawData.forEach(el => {
+            const [z, s, enName, cnName, weight, catId, p, g] = el;
+            const div = document.createElement('div');
+            div.className = `element ${categories[catId].class}`;
+            
+            // 计算Grid位置
+            let col = g;
+            let row = p;
+
+            // 特殊排版逻辑
+            if (String(g).startsWith('L')) {
+                // 镧系：放在第9行 (7行主表 + 1空行 + 镧系)
+                row = 9; 
+                col = 3 + parseInt(g.substring(1)) - 1; 
+                // 在主表中增加一个占位符(如果还没加) - 视觉上通常不需要，因为我们把它们移出去了
+            } else if (String(g).startsWith('A')) {
+                // 锕系：放在第10行
+                row = 10;
+                col = 3 + parseInt(g.substring(1)) - 1;
+            }
+
+            div.style.gridColumn = col;
+            div.style.gridRow = row;
+
+            // 填充内容
+            div.innerHTML = `
+                <div class="at-num">${z}</div>
+                <div class="symbol">${s}</div>
+                <div class="name">${currentLang === 'zh' ? cnName : enName}</div>
+            `;
+
+            div.onclick = () => showModal(el);
+            grid.appendChild(div);
+        });
+
+        // 插入"空白"行 div (row 8) 制造主表和f区的间隔
+        const spacer = document.createElement('div');
+        spacer.style.gridRow = 8;
+        spacer.style.gridColumn = "1 / -1";
+        spacer.style.height = "20px";
+        grid.appendChild(spacer);
+        
+        // 插入 57-71 和 89-103 在主表位置的指示标记 (Lu 和 Lr 之前的空位)
+        // 为了简化，我们通常只展示下方分离的表格
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'zh' ? 'en' : 'zh';
+        document.querySelector('header h1').innerText = uiText[currentLang].title;
+        document.querySelector('.toggle-btn').innerText = uiText[currentLang].toggle;
+        
+        // 更新Modal标签
+        document.querySelector('.label-atomic').innerText = uiText[currentLang].atomic;
+        document.querySelector('.label-mass').innerText = uiText[currentLang].mass;
+        document.querySelector('.label-phase').innerText = uiText[currentLang].phase;
+        document.querySelector('.label-config').innerText = uiText[currentLang].shells;
+
+        renderTable();
+    }
+
+    function showModal(data) {
+        const [z, s, enName, cnName, weight, catId, p, g, phase, shells] = data;
+        const modal = document.getElementById('modal');
+        
+        document.getElementById('m-symbol').innerText = s;
+        document.getElementById('m-name').innerText = currentLang === 'zh' ? `${cnName} (${enName})` : `${enName} (${cnName})`;
+        document.getElementById('m-cat').innerText = categories[catId][currentLang];
+        document.getElementById('m-num').innerText = z;
+        document.getElementById('m-mass').innerText = weight;
+        document.getElementById('m-phase').innerText = phase; // 简单起见，Phase不翻译了，或者简单映射
+        document.getElementById('m-shells').innerText = shells;
+        
+        // 生成描述文本 (模拟)
+        const descEn = `${enName} is a chemical element with symbol ${s} and atomic number ${z}. It is a ${categories[catId].en.toLowerCase()}.`;
+        const descZh = `${cnName}（${enName}）是一种化学元素，符号为 ${s}，原子序数为 ${z}。它属于${categories[catId].cn}。`;
+        
+        document.getElementById('m-desc').innerText = currentLang === 'zh' ? descZh : descEn;
+
+        modal.classList.add('active');
+    }
+
+    function closeModal(e) {
+        if (e.target.id === 'modal' || e.target.classList.contains('close-btn')) {
+            document.getElementById('modal').classList.remove('active');
+        }
+    }
+
+    // 初始化
+    renderTable();
+
+</script>
+</body>
+</html>

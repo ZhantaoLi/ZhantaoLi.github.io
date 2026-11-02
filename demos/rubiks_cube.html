@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS CUBE - 物理高保真 3D 魔方</title>
+    
+    <!-- 引入高科技和现代字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- ES Modules Import Map -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+          "tween": "https://unpkg.com/@tweenjs/tween.js@20.0.0/dist/tween.esm.js"
+        }
+      }
+    </script>
+
+    <style>
+        :root {
+            --bg-color: #08080c;
+            --panel-bg: rgba(13, 13, 22, 0.65);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --accent-cyan: #00f2fe;
+            --accent-purple: #9b51e0;
+            --text-primary: #f8f9fa;
+            --text-secondary: #a0a5b5;
+            --shadow-glow: rgba(0, 242, 254, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+        }
+
+        /* 背景微粒与渐变 */
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(20, 20, 35, 0.8) 0%, var(--bg-color) 80%),
+                radial-gradient(rgba(0, 242, 254, 0.03) 1px, transparent 0);
+            background-size: 100% 100%, 24px 24px;
+            z-index: 0;
+        }
+
+        /* 3D 渲染画布容器 */
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* 统一的玻璃拟态面板 */
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        /* 左侧状态与控制面板 */
+        #hud-panel {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            width: 320px;
+            padding: 24px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* 标题设计 */
+        .app-title {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .app-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--shadow-glow);
+        }
+
+        .app-title p {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* 计时器和旋转计数 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        /* 按钮设计 */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), #00b8ff);
+            color: #040407;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent-purple), #b55fe6);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(155, 81, 224, 0.3);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(155, 81, 224, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* 主题选择器 */
+        .theme-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .theme-btn {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .theme-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+        }
+
+        /* 主题小图标背景颜色组合预览 */
+        .theme-classic { background: linear-gradient(135deg, #e61e1e 50%, #00a844 50%); }
+        .theme-cyber { background: linear-gradient(135deg, #ff007f 50%, #00ffff 50%); }
+        .theme-vintage { background: linear-gradient(135deg, #b33939 50%, #218c74 50%); }
+        .theme-metal { background: linear-gradient(135deg, #d4af37 50%, #e5e4e2 50%); }
+
+        .theme-btn.active {
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 12px var(--shadow-glow);
+            transform: scale(1.05);
+        }
+
+        /* 玩法指南 */
+        #guide-panel {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            width: 320px;
+            padding: 16px 20px;
+            z-index: 10;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        #guide-panel h3 {
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .guide-item {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .guide-key {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            white-space: nowrap;
+        }
+
+
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            #hud-panel {
+                top: 16px;
+                left: 16px;
+                right: 16px;
+                width: calc(100% - 32px);
+                padding: 16px;
+                gap: 12px;
+            }
+            #guide-panel {
+                display: none; /* 移动端隐藏玩法指南腾出空间 */
+            }
+            .app-title h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+    <div id="canvas-container"></div>
+
+    <!-- 左侧悬浮 HUD 控制面板 -->
+    <div id="hud-panel" class="glass-panel">
+        <div class="app-title">
+            <h1>NEXUS CUBE</h1>
+            <p>High Fidelity Simulator</p>
+        </div>
+
+        <!-- 统计指标 -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-label">时间</div>
+                <div id="timer" class="stat-value">00:00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">步数</div>
+                <div id="move-count" class="stat-value">0</div>
+            </div>
+        </div>
+
+        <!-- 主要控制按钮 -->
+        <button id="btn-scramble" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            随机打乱 (Scramble)
+        </button>
+
+        <button id="btn-solve" class="btn btn-accent">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            自动复原 (Solve)
+        </button>
+
+        <button id="btn-reset" class="btn btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            重置魔方 (Reset)
+        </button>
+
+        <button id="btn-camera" class="btn btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+            重置视角 (Camera)
+        </button>
+
+        <!-- 主题切换 -->
+        <div class="theme-selector">
+            <div class="stat-label" style="text-align: left; margin-bottom: 4px;">材质与主题</div>
+            <div class="theme-options">
+                <button class="theme-btn theme-classic active" data-theme="classic" title="经典塑料"></button>
+                <button class="theme-btn theme-cyber" data-theme="cyber" title="赛博霓虹"></button>
+                <button class="theme-btn theme-vintage" data-theme="vintage" title="复古优雅"></button>
+                <button class="theme-btn theme-metal" data-theme="metal" title="硬核金属"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 左下角玩法指南 -->
+    <div id="guide-panel" class="glass-panel">
+        <h3>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+            交互指南
+        </h3>
+        <div class="guide-item">
+            <span class="guide-key">鼠标左键拖拽</span>
+            <span>拖拽魔方小方块表面，可 1:1 自然手势旋转对应魔方层。</span>
+        </div>
+        <div class="guide-item">
+            <span class="guide-key">鼠标右键拖拽</span>
+            <span>旋转相机视角，多方位观察魔方。</span>
+        </div>
+        <div class="guide-item">
+            <span class="guide-key">滚轮滚动</span>
+            <span>放大 / 缩小魔方视野。</span>
+        </div>
+    </div>
+
+
+
+    <!-- JavaScript 逻辑 -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import * as TWEEN from 'tween';
+
+        // ==========================================
+        // 1. 初始化 Three.js 基础场景
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#08080c');
+        scene.fog = new THREE.FogExp2('#08080c', 0.045);
+
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 50);
+        camera.position.set(5.5, 5, 7.5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        container.appendChild(renderer.domElement);
+
+        // 视角控制器
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.minDistance = 3.5;
+        controls.maxDistance = 15;
+        // 绑定右键旋转视角，左键空置留给我们手写的手势系统（如果没有命中魔方，会在代码中动态激活左键旋转视角）
+        controls.mouseButtons = {
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.ROTATE
+        };
+
+        // ==========================================
+        // 2. 光影环境配置 (物理质感)
+        // ==========================================
+        const ambientLight = new THREE.AmbientLight('#ffffff', 0.5);
+        scene.add(ambientLight);
+
+        // 强主光源（投射阴影）
+        const dirLight1 = new THREE.DirectionalLight('#ffffff', 1.4);
+        dirLight1.position.set(6, 10, 8);
+        dirLight1.castShadow = true;
+        dirLight1.shadow.mapSize.width = 2048;
+        dirLight1.shadow.mapSize.height = 2048;
+        dirLight1.shadow.camera.near = 0.5;
+        dirLight1.shadow.camera.far = 25;
+        const d = 4.5;
+        dirLight1.shadow.camera.left = -d;
+        dirLight1.shadow.camera.right = d;
+        dirLight1.shadow.camera.top = d;
+        dirLight1.shadow.camera.bottom = -d;
+        dirLight1.shadow.bias = -0.0006;
+        scene.add(dirLight1);
+
+        // 弱蓝色辅助光，模拟反射的冷色调环境
+        const dirLight2 = new THREE.DirectionalLight('#4d6bfe', 0.7);
+        dirLight2.position.set(-6, -8, -8);
+        scene.add(dirLight2);
+
+        // 地面网格与阴影接收器
+        const floorGeo = new THREE.PlaneGeometry(60, 60);
+        const floorMat = new THREE.ShadowMaterial({ opacity: 0.25 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.position.y = -3.2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // 科技感地面格网
+        const gridHelper = new THREE.GridHelper(30, 30, '#00f2fe', '#1b1b2d');
+        gridHelper.position.y = -3.19;
+        gridHelper.material.opacity = 0.12;
+        gridHelper.material.transparent = true;
+        scene.add(gridHelper);
+
+        // ==========================================
+        // 3. Canvas 程序化动态纹理生成
+        // ==========================================
+        const textures = {};
+        const canvases = {};
+        const faces = ['px', 'nx', 'py', 'ny', 'pz', 'nz', 'base'];
+
+        // 颜色渐变辅助方法
+        function lightenColor(hex, percent) {
+            let num = parseInt(hex.replace('#',''), 16),
+            amt = Math.round(2.55 * percent * 100),
+            R = (num >> 16) + amt,
+            G = (num >> 8 & 0x00FF) + amt,
+            B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+        }
+
+        function darkenColor(hex, percent) {
+            let num = parseInt(hex.replace('#',''), 16),
+            amt = Math.round(2.55 * percent * 100),
+            R = (num >> 16) - amt,
+            G = (num >> 8 & 0x00FF) - amt,
+            B = (num & 0x0000FF) - amt;
+            return '#' + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+        }
+
+        // 高动态 Canvas 贴纸绘制
+        function drawStickerCanvas(canvas, colorHex, isBase = false) {
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            // 1. 底色：代表方块边缘的黑色塑料质感
+            ctx.fillStyle = '#101014';
+            ctx.fillRect(0, 0, w, h);
+
+            if (isBase) {
+                // 如果是魔方内部无贴纸的面，绘制深灰磨砂塑料纹理
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                grad.addColorStop(0, '#1c1d22');
+                grad.addColorStop(0.5, '#121317');
+                grad.addColorStop(1, '#08080b');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, w, h);
+                return;
+            }
+
+            // 2. 贴纸尺寸参数
+            const margin = 14;
+            const size = w - 2 * margin;
+            const radius = 30;
+
+            // 3. 绘制阴影（模拟贴纸物理厚度与微阴影）
+            ctx.shadowColor = 'rgba(0,0,0,0.5)';
+            ctx.shadowBlur = 6;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 4;
+
+            // 圆角矩形路径生成
+            function roundedRectPath(ctx, x, y, width, height, radius) {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            // 填充圆角贴纸
+            roundedRectPath(ctx, margin, margin, size, size, radius);
+            const mainColor = colorHex;
+            const lightColor = lightenColor(colorHex, 0.28);
+            const darkColor = darkenColor(colorHex, 0.16);
+
+            const grad = ctx.createLinearGradient(margin, margin, margin + size, margin + size);
+            grad.addColorStop(0, lightColor);
+            grad.addColorStop(0.35, mainColor);
+            grad.addColorStop(1, darkColor);
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // 关闭阴影，绘制细节
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // 4. 贴纸斜角高光（Bezel Inner Ring）
+            ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+            ctx.lineWidth = 3;
+            roundedRectPath(ctx, margin + 2.5, margin + 2.5, size - 5, size - 5, radius - 2.5);
+            ctx.stroke();
+
+            // 5. 表面高光反光（Glossy Arc Overlay）
+            ctx.save();
+            roundedRectPath(ctx, margin, margin, size, size, radius);
+            ctx.clip(); // 限制在高光区域内
+
+            const glossGrad = ctx.createLinearGradient(0, 0, w, h);
+            glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0.38)');
+            glossGrad.addColorStop(0.3, 'rgba(255, 255, 255, 0.04)');
+            glossGrad.addColorStop(0.6, 'rgba(255, 255, 255, 0)');
+            ctx.fillStyle = glossGrad;
+            
+            ctx.beginPath();
+            ctx.arc(margin + 20, margin + 20, 160, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // 初始化纹理映射
+        faces.forEach(face => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            canvases[face] = canvas;
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.colorSpace = THREE.SRGBColorSpace;
+            textures[face] = texture;
+        });
+
+        // 四种主题色配置
+        const themes = {
+            classic: {
+                px: '#e61e1e', // 右：红
+                nx: '#ff6c00', // 左：橙
+                py: '#ffd500', // 顶：黄
+                ny: '#ffffff', // 底：白
+                pz: '#00a844', // 前：绿
+                nz: '#0051ba', // 后：蓝
+                base: '#101014'
+            },
+            cyber: {
+                px: '#ff007f', // 霓虹粉
+                nx: '#ff5500', // 霓虹橙
+                py: '#ccff00', // 霓虹黄
+                ny: '#e0e6ed', // 冰蓝白
+                pz: '#00ff66', // 荧光绿
+                nz: '#00ffff', // 荧光青
+                base: '#14151e'
+            },
+            vintage: {
+                px: '#b33939', // 猩红
+                nx: '#cd6133', // 粘土橙
+                py: '#f7d794', // 暖麦黄
+                ny: '#f5cd79', // 象牙白
+                pz: '#218c74', // 松绿
+                nz: '#227093', // 普鲁士蓝
+                base: '#191920'
+            },
+            metal: {
+                px: '#d4af37', // 黄金
+                nx: '#b87333', // 紫铜
+                py: '#e5e4e2', // 白金
+                ny: '#2f3542', // 黑曜石
+                pz: '#50c878', // 祖母绿
+                nz: '#4682b4', // 钛钢蓝
+                base: '#1c1d22'
+            }
+        };
+
+        const materials = {};
+        faces.forEach(face => {
+            materials[face] = new THREE.MeshStandardMaterial({
+                map: textures[face],
+                roughness: face === 'base' ? 0.35 : 0.15,
+                metalness: 0.1
+            });
+        });
+
+        // 动态主题刷新逻辑
+        function applyTheme(themeName) {
+            const theme = themes[themeName] || themes.classic;
+            faces.forEach(face => {
+                drawStickerCanvas(canvases[face], theme[face], face === 'base');
+                textures[face].needsUpdate = true;
+            });
+
+            // 如果是金属材质主题，增强金属性和粗糙度调整
+            faces.forEach(face => {
+                if (themeName === 'metal') {
+                    materials[face].metalness = face === 'base' ? 0.75 : 0.85;
+                    materials[face].roughness = face === 'base' ? 0.25 : 0.18;
+                } else {
+                    materials[face].metalness = face === 'base' ? 0.05 : 0.1;
+                    materials[face].roughness = face === 'base' ? 0.35 : 0.15;
+                }
+                materials[face].needsUpdate = true;
+            });
+        }
+
+        // 初始化经典主题
+        applyTheme('classic');
+
+        // ==========================================
+        // 4. 魔方构建逻辑
+        // ==========================================
+        const cubies = [];
+        const CUBIE_SIZE = 0.94; // 单个方块尺寸
+        const SPACING = 1.0;     // 轴向中心跨度，形成 (1.0 - 0.94) = 0.06 的物理间隙
+        const cubeGroup = new THREE.Group();
+        scene.add(cubeGroup);
+
+        function buildRubiksCube() {
+            // 清理旧方块
+            while(cubies.length > 0) {
+                const c = cubies.pop();
+                cubeGroup.remove(c);
+            }
+
+            const geom = new THREE.BoxGeometry(CUBIE_SIZE, CUBIE_SIZE, CUBIE_SIZE);
+
+            // 循环生成 3x3x3 共 27 个小方块
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    for (let z = -1; z <= 1; z++) {
+                        
+                        // 为每个方块的面分配材质。注意 BoxGeometry 材质顺序：px, nx, py, ny, pz, nz
+                        const cubieMaterials = [
+                            x === 1  ? materials.px : materials.base, // px
+                            x === -1 ? materials.nx : materials.base, // nx
+                            y === 1  ? materials.py : materials.base, // py
+                            y === -1 ? materials.ny : materials.base, // ny
+                            z === 1  ? materials.pz : materials.base, // pz
+                            z === -1 ? materials.nz : materials.base  // nz
+                        ];
+
+                        const cubieMesh = new THREE.Mesh(geom, cubieMaterials);
+                        
+                        // 计算物理间隙坐标
+                        cubieMesh.position.set(x * SPACING, y * SPACING, z * SPACING);
+                        cubieMesh.castShadow = true;
+                        cubieMesh.receiveShadow = true;
+
+                        // 存储初始坐标和姿态，用于检测 solved 状态与重置复原
+                        cubieMesh.userData = {
+                            solvedPos: new THREE.Vector3(x * SPACING, y * SPACING, z * SPACING),
+                            solvedRot: new THREE.Quaternion().clone()
+                        };
+
+                        cubeGroup.add(cubieMesh);
+                        cubies.push(cubieMesh);
+                    }
+                }
+            }
+        }
+
+        buildRubiksCube();
+
+        // ==========================================
+        // 5. 交互系统与手势投影算法 (核心难点)
+        // ==========================================
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+
+        // 交互状态机
+        let isDragging = false;
+        let dragDetected = false;
+        let isAnimating = false;
+
+        const pointerStart = new THREE.Vector2();
+        let hitCubie = null;
+        let hitPoint = null;
+        let hitWorldNormal = null;
+
+        // 意图锁定的备选轴
+        let potentialAxes = [];     // 3D 旋转轴 (X / Y / Z)
+        let potentialTangents = []; // 在面上的切线平移方向
+        let projectedV2Ds = [];     // 投影到 2D 屏幕的归一化方向向量
+
+        // 被锁定的旋转状态
+        let activeAxis = null;
+        let activeAxisIndex = 0;
+        let activeTangent = null;
+        let activeV2D = null;
+        let activeLayerVal = 0;
+        let activeCubies = [];
+        let pivot = null;
+        let currentAngle = 0;
+
+        // 基础参数
+        const EPSILON = 0.1; // 浮点阈值
+
+        // 获取三维方向投影到二维屏幕像素空间的向量
+        function getScreenDirection(worldPoint, worldDir) {
+            const pScreen = worldPoint.clone().project(camera);
+            const offsetPoint = worldPoint.clone().add(worldDir.clone().multiplyScalar(0.1));
+            const offsetScreen = offsetPoint.project(camera);
+
+            const rect = renderer.domElement.getBoundingClientRect();
+            const s1 = new THREE.Vector2(
+                ((pScreen.x + 1) / 2) * rect.width,
+                (-(pScreen.y - 1) / 2) * rect.height
+            );
+            const s2 = new THREE.Vector2(
+                ((offsetScreen.x + 1) / 2) * rect.width,
+                (-(offsetScreen.y - 1) / 2) * rect.height
+            );
+
+            return s2.sub(s1).normalize();
+        }
+
+        // 监听指针按下
+        function onPointerDown(e) {
+            if (isAnimating) return;
+
+            // 只响应左键进行旋转操作，右键交由 OrbitControls 旋转视角
+            const isLeftClick = e.button === 0;
+            const isTouch = e.pointerType === 'touch';
+            if (!isLeftClick && !isTouch) return;
+
+            const rect = renderer.domElement.getBoundingClientRect();
+            pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(pointer, camera);
+            const intersects = raycaster.intersectObjects(cubies);
+
+            if (intersects.length > 0) {
+                // 点击到魔方：屏蔽 OrbitControls，开始进行手势解析
+                controls.enabled = false;
+                isDragging = true;
+                dragDetected = false;
+
+                const hit = intersects[0];
+                hitCubie = hit.object;
+                hitPoint = hit.point.clone();
+                hasInteracted = true;
+
+                // 获取点击面的世界法向量 N
+                const localNormal = hit.face.normal.clone();
+                // 使用世界矩阵方向转换 API，排除缩放影响并归一化
+                const worldNormal = localNormal.transformDirection(hitCubie.matrixWorld).normalize();
+                
+                // 清洗法向量，强制对齐到绝对世界坐标轴
+                hitWorldNormal = new THREE.Vector3(
+                    Math.round(worldNormal.x),
+                    Math.round(worldNormal.y),
+                    Math.round(worldNormal.z)
+                );
+
+                // 记录初始指针坐标
+                pointerStart.set(e.clientX, e.clientY);
+
+                // 根据法向量寻找垂直的两个旋转轴与切线矢量
+                potentialAxes = [];
+                if (Math.abs(hitWorldNormal.x) > 0.9) {
+                    potentialAxes.push(new THREE.Vector3(0, 1, 0)); // Y 轴
+                    potentialAxes.push(new THREE.Vector3(0, 0, 1)); // Z 轴
+                } else if (Math.abs(hitWorldNormal.y) > 0.9) {
+                    potentialAxes.push(new THREE.Vector3(1, 0, 0)); // X 轴
+                    potentialAxes.push(new THREE.Vector3(0, 0, 1)); // Z 轴
+                } else {
+                    potentialAxes.push(new THREE.Vector3(1, 0, 0)); // X 轴
+                    potentialAxes.push(new THREE.Vector3(0, 1, 0)); // Y 轴
+                }
+
+                // 计算两个切线向量：T_i = A_i x N
+                potentialTangents = [
+                    potentialAxes[0].clone().cross(hitWorldNormal).normalize(),
+                    potentialAxes[1].clone().cross(hitWorldNormal).normalize()
+                ];
+
+                // 投影这两个切线到 2D 屏幕空间
+                projectedV2Ds = [
+                    getScreenDirection(hitPoint, potentialTangents[0]),
+                    getScreenDirection(hitPoint, potentialTangents[1])
+                ];
+            } else {
+                // 点击在魔方外部：激活 OrbitControls 允许自由旋转视角
+                controls.enabled = true;
+            }
+        }
+
+        // 监听指针移动
+        function onPointerMove(e) {
+            if (!isDragging || isAnimating) return;
+
+            const currentPos = new THREE.Vector2(e.clientX, e.clientY);
+            const dragVec = currentPos.clone().sub(pointerStart);
+            const dragLen = dragVec.length();
+
+            // 1. 手势检测锁定（拖拽像素距离大于临界点 8px）
+            if (!dragDetected) {
+                if (dragLen > 8) {
+                    dragDetected = true;
+
+                    // 计算两个投影的切向点积，确定用户滑动匹配度最高的方向轴
+                    const dot0 = dragVec.dot(projectedV2Ds[0]);
+                    const dot1 = dragVec.dot(projectedV2Ds[1]);
+
+                    let chosenIndex = Math.abs(dot0) > Math.abs(dot1) ? 0 : 1;
+
+                    // 锁定旋转轴、面上切线和 2D 投影方向向量
+                    activeAxis = potentialAxes[chosenIndex];
+                    activeTangent = potentialTangents[chosenIndex];
+                    activeV2D = projectedV2Ds[chosenIndex];
+
+                    // 得到旋转轴索引 0=X, 1=Y, 2=Z
+                    if (Math.abs(activeAxis.x) > 0.9) activeAxisIndex = 0;
+                    else if (Math.abs(activeAxis.y) > 0.9) activeAxisIndex = 1;
+                    else activeAxisIndex = 2;
+
+                    // 计算被旋转层对应的世界坐标层坐标值 (-1 / 0 / 1)
+                    activeLayerVal = Math.round(hitCubie.position.getComponent(activeAxisIndex));
+
+                    // 动态层级筛选：筛选该轴向上与点击方块坐标一致的所有小方块
+                    activeCubies = [];
+                    cubies.forEach(cubie => {
+                        const val = Math.round(cubie.position.getComponent(activeAxisIndex));
+                        if (Math.abs(val - activeLayerVal) < EPSILON) {
+                            activeCubies.push(cubie);
+                        }
+                    });
+
+                    // 临时 Pivot 挂载机制：新建轴心挂载旋转块，避免复杂的 Quaternion 逐个变换
+                    pivot = new THREE.Group();
+                    cubeGroup.add(pivot);
+                    pivot.position.set(0, 0, 0);
+                    pivot.rotation.set(0, 0, 0);
+                    pivot.updateMatrixWorld();
+
+                    activeCubies.forEach(cubie => {
+                        pivot.attach(cubie); // 核心API: 自动换算世界坐标系矩阵到局部空间
+                    });
+
+                    // 开始记录游戏状态并开始计时
+                    if (!timerRunning && isSolvingScrambled) {
+                        startTimer();
+                    }
+                }
+            }
+
+            // 2. 1:1 跟手滑动旋转层
+            if (dragDetected) {
+                const projectionDistance = dragVec.dot(activeV2D);
+                
+                // 将鼠标平移的像素长度映射到 3D 的弧度上，以视口大小自适应映射
+                const rect = renderer.domElement.getBoundingClientRect();
+                const pixelsPer90 = Math.min(rect.width, rect.height) * 0.28;
+                currentAngle = (projectionDistance / pixelsPer90) * (Math.PI / 2);
+
+                // 旋转轴心
+                if (activeAxisIndex === 0) pivot.rotation.set(currentAngle, 0, 0);
+                else if (activeAxisIndex === 1) pivot.rotation.set(0, currentAngle, 0);
+                else if (activeAxisIndex === 2) pivot.rotation.set(0, 0, currentAngle);
+            }
+        }
+
+        // 监听指针抬起
+        function onPointerUp(e) {
+            if (!isDragging) return;
+            isDragging = false;
+
+            if (dragDetected && pivot) {
+                // 计算最近的 90 度倍数（磁吸回弹点）
+                const snappedAngle = Math.round(currentAngle / (Math.PI / 2)) * (Math.PI / 2);
+                
+                // 判断是否真正转动了一次（90度）
+                const hasMoved = Math.abs(snappedAngle) > 0.01;
+
+                isAnimating = true;
+
+                // Tween.js 磁吸回弹动画
+                new TWEEN.Tween({ angle: currentAngle })
+                    .to({ angle: snappedAngle }, 260)
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .onUpdate((obj) => {
+                        if (activeAxisIndex === 0) pivot.rotation.x = obj.angle;
+                        else if (activeAxisIndex === 1) pivot.rotation.y = obj.angle;
+                        else if (activeAxisIndex === 2) pivot.rotation.z = obj.angle;
+                    })
+                    .onComplete(() => {
+                        // 动画结束后的卸载还原逻辑：将方块重挂载回场景中，并销毁临时 Pivot
+                        const tempArray = [...activeCubies];
+                        tempArray.forEach(cubie => {
+                            cubeGroup.attach(cubie); // 核心API: 重挂载场景，自动算回 scene 局部空间矩阵
+                        });
+                        cubeGroup.remove(pivot);
+                        pivot = null;
+
+                        // 坐标清洗与四舍五入防散架算法
+                        tempArray.forEach(cubie => {
+                            cleanCubie(cubie);
+                        });
+
+                        isAnimating = false;
+
+                        // 计步并更新 HUD
+                        if (hasMoved) {
+                            pushMove(activeAxisIndex, activeLayerVal, snappedAngle);
+                            moveCount++;
+                            updateMoveCount();
+                        }
+
+                        // 检测是否解开
+                        checkSolved();
+                    })
+                    .start();
+            }
+
+            // 重新开启相机视角操控
+            controls.enabled = true;
+            dragDetected = false;
+        }
+
+        // 坐标与旋转取整清洗算法
+        function cleanCubie(cubie) {
+            // 1. 轴向绝对坐标取整
+            cubie.position.x = Math.round(cubie.position.x);
+            cubie.position.y = Math.round(cubie.position.y);
+            cubie.position.z = Math.round(cubie.position.z);
+
+            // 2. 旋转矩阵清洗（直接规避四元数误差累积及欧拉角万向锁）
+            const matrix = new THREE.Matrix4();
+            matrix.makeRotationFromQuaternion(cubie.quaternion);
+            const e = matrix.elements;
+
+            // 只对 3x3 旋转子矩阵部分取整
+            for (let i = 0; i < 16; i++) {
+                if (i === 3 || i === 7 || i === 11 || i >= 12) continue; // 排除位移与尾行
+                e[i] = Math.round(e[i]);
+            }
+
+            // 将干净的矩阵赋值回旋转姿态
+            cubie.quaternion.setFromRotationMatrix(matrix);
+            cubie.updateMatrix();
+        }
+
+        // 注册全局事件
+        window.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp); // 防止移出窗口失联
+
+        // ==========================================
+        // 6. 控制中心：Scramble, Reset 与 CheckSolved
+        // ==========================================
+        let moveCount = 0;
+        let timerInterval = null;
+        let timerRunning = false;
+        let startTime = 0;
+        let elapsedSeconds = 0;
+        let isSolvingScrambled = false; // 表示当前是否正处于乱序状态（Scrambled）
+        let hasInteracted = false; // 记录是否开始第一次交互以停止自转
+        let moveHistory = []; // 存储魔方旋转的历史记录
+
+        function pushMove(axisIndex, layerVal, angle) {
+            // 归一化 angle 到 [-Math.PI, Math.PI]
+            angle = ((angle + Math.PI) % (Math.PI * 2));
+            if (angle < 0) angle += Math.PI * 2;
+            angle -= Math.PI;
+
+            // 忽略极小的无意义角度
+            if (Math.abs(angle) < 0.01) return;
+
+            if (moveHistory.length > 0) {
+                const top = moveHistory[moveHistory.length - 1];
+                if (top.axisIndex === axisIndex && top.layerVal === layerVal) {
+                    // 同轴同层旋转，进行角度合并优化
+                    let combined = top.angle + angle;
+                    combined = ((combined + Math.PI) % (Math.PI * 2));
+                    if (combined < 0) combined += Math.PI * 2;
+                    combined -= Math.PI;
+
+                    if (Math.abs(combined) < 0.01) {
+                        moveHistory.pop(); // 相互抵消
+                    } else {
+                        top.angle = combined; // 合并为新角度
+                    }
+                    return;
+                }
+            }
+            moveHistory.push({ axisIndex, layerVal, angle });
+        }
+
+        function updateMoveCount() {
+            document.getElementById('move-count').textContent = moveCount;
+            // 动态设置“自动复原”按钮的交互状态
+            const btnSolve = document.getElementById('btn-solve');
+            if (btnSolve) {
+                if (moveHistory.length === 0 || isAnimating) {
+                    btnSolve.style.opacity = '0.4';
+                    btnSolve.style.cursor = 'not-allowed';
+                    btnSolve.setAttribute('disabled', 'true');
+                } else {
+                    btnSolve.style.opacity = '1';
+                    btnSolve.style.cursor = 'pointer';
+                    btnSolve.removeAttribute('disabled');
+                }
+            }
+        }
+
+        function startTimer() {
+            if (timerRunning) return;
+            timerRunning = true;
+            startTime = Date.now() - elapsedSeconds * 1000;
+            timerInterval = setInterval(() => {
+                elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                const mm = String(Math.floor(elapsedSeconds / 60)).padStart(2, '0');
+                const ss = String(elapsedSeconds % 60).padStart(2, '0');
+                document.getElementById('timer').textContent = `${mm}:${ss}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (!timerRunning) return;
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimerAndMoves() {
+            stopTimer();
+            elapsedSeconds = 0;
+            moveCount = 0;
+            moveHistory = [];
+            document.getElementById('timer').textContent = '00:00';
+            updateMoveCount();
+            isSolvingScrambled = false;
+        }
+
+        // 执行单步自动旋转（用于打乱或复原过渡动画）
+        function animateMove(axisIndex, layerVal, angle, duration) {
+            return new Promise((resolve) => {
+                const targetCubies = [];
+                cubies.forEach(cubie => {
+                    const val = Math.round(cubie.position.getComponent(axisIndex));
+                    if (Math.abs(val - layerVal) < EPSILON) {
+                        targetCubies.push(cubie);
+                    }
+                });
+
+                const movePivot = new THREE.Group();
+                cubeGroup.add(movePivot);
+                movePivot.position.set(0, 0, 0);
+                movePivot.rotation.set(0, 0, 0);
+                movePivot.updateMatrixWorld();
+
+                targetCubies.forEach(cubie => {
+                    movePivot.attach(cubie);
+                });
+
+                new TWEEN.Tween({ angle: 0 })
+                    .to({ angle: angle }, duration)
+                    .easing(TWEEN.Easing.Quadratic.Out)
+                    .onUpdate((obj) => {
+                        if (axisIndex === 0) movePivot.rotation.x = obj.angle;
+                        else if (axisIndex === 1) movePivot.rotation.y = obj.angle;
+                        else if (axisIndex === 2) movePivot.rotation.z = obj.angle;
+                    })
+                    .onComplete(() => {
+                        const tempArray = [...targetCubies];
+                        tempArray.forEach(cubie => {
+                            cubeGroup.attach(cubie);
+                        });
+                        cubeGroup.remove(movePivot);
+
+                        tempArray.forEach(cubie => {
+                            cleanCubie(cubie);
+                        });
+
+                        resolve();
+                    })
+                    .start();
+            });
+        }
+
+        // Scramble (打乱) 逻辑
+        async function scrambleCube() {
+            if (isAnimating) return;
+            hasInteracted = true;
+            resetTimerAndMoves();
+            isAnimating = true;
+
+            const moves = 20; // 打乱步数
+            const axes = [0, 1, 2];
+            const layers = [-1, 0, 1];
+            const angles = [-Math.PI / 2, Math.PI / 2];
+
+            for (let i = 0; i < moves; i++) {
+                const randomAxis = axes[Math.floor(Math.random() * axes.length)];
+                const randomLayer = layers[Math.floor(Math.random() * layers.length)];
+                const randomAngle = angles[Math.floor(Math.random() * angles.length)];
+                
+                pushMove(randomAxis, randomLayer, randomAngle);
+                // 采用较快速的打乱步骤（110ms 单步）
+                await animateMove(randomAxis, randomLayer, randomAngle, 115);
+            }
+
+            isAnimating = false;
+            isSolvingScrambled = true; // 开启还原检测
+            updateMoveCount(); // 更新按钮及状态
+        }
+
+        // 自动复原逻辑：每一步按倒序反向播放，动画渐进过渡
+        async function autoSolve() {
+            if (isAnimating || moveHistory.length === 0) return;
+            hasInteracted = true;
+            isAnimating = true;
+
+            // 暂停用户常规计时，将步数重设为待执行的步骤数
+            stopTimer();
+            moveCount = moveHistory.length;
+            updateMoveCount();
+
+            while (moveHistory.length > 0) {
+                const move = moveHistory.pop();
+                // 动画执行反向旋转：角度取反。每步 250ms 以便看清旋转轨迹
+                await animateMove(move.axisIndex, move.layerVal, -move.angle, 250);
+                
+                moveCount--;
+                updateMoveCount();
+            }
+
+            isAnimating = false;
+            
+            // 自动复原完成后，重置计时与状态，不弹出成功提示框
+            resetTimerAndMoves();
+        }
+
+        // Reset (重置) 逻辑，包含精美酷炫的“粒子爆破/反重力还原”动画
+        function resetCube() {
+            if (isAnimating) return;
+            hasInteracted = true;
+            resetTimerAndMoves();
+            isAnimating = true;
+
+            const duration = 1200;
+            let completedCount = 0;
+
+            cubies.forEach(cubie => {
+                // 撤销可能在 Pivot 下的分组
+                if (cubie.parent !== cubeGroup) {
+                    cubeGroup.attach(cubie);
+                }
+
+                const startPos = cubie.position.clone();
+                const startQuat = cubie.quaternion.clone();
+                const endPos = cubie.userData.solvedPos.clone();
+                const endQuat = cubie.userData.solvedRot.clone();
+
+                // 生成飞出爆炸特效的径向膨胀方向
+                const dispersion = cubie.userData.solvedPos.clone().normalize().multiplyScalar(Math.random() * 4.5 + 2.0);
+                // 混合少量随机方向偏斜
+                dispersion.x += (Math.random() - 0.5) * 3;
+                dispersion.y += (Math.random() - 0.5) * 3;
+                dispersion.z += (Math.random() - 0.5) * 3;
+
+                const midPos = cubie.userData.solvedPos.clone().add(dispersion);
+
+                // 嵌套过渡曲线：先向外爆炸分散，再收缩弹回原位，同时球形姿态插值
+                new TWEEN.Tween({ t: 0 })
+                    .to({ t: 1 }, duration)
+                    .easing(TWEEN.Easing.Cubic.Out)
+                    .onUpdate((obj) => {
+                        // 缩放控制：飞散时缩小，落地时恢复
+                        let scale = 1.0;
+                        if (obj.t < 0.35) {
+                            scale = 1.0 - (obj.t / 0.35) * 0.45;
+                        } else {
+                            scale = 0.55 + ((obj.t - 0.35) / 0.65) * 0.45;
+                        }
+                        cubie.scale.setScalar(scale);
+
+                        // 位移动画插值：先飞离到 midPos，再弹性还原到 endPos
+                        if (obj.t < 0.3) {
+                            const factor = obj.t / 0.3;
+                            cubie.position.lerpVectors(startPos, midPos, factor);
+                        } else {
+                            const factor = (obj.t - 0.3) / 0.7;
+                            // 使用 Back.Out 弹回
+                            const easedFactor = TWEEN.Easing.Back.Out(factor);
+                            cubie.position.lerpVectors(midPos, endPos, easedFactor);
+                        }
+
+                        // 四元数球面线性插值 Slerp
+                        cubie.quaternion.copy(startQuat).slerp(endQuat, obj.t);
+                    })
+                    .onComplete(() => {
+                        cubie.position.copy(endPos);
+                        cubie.quaternion.copy(endQuat);
+                        cubie.scale.setScalar(1);
+                        cleanCubie(cubie);
+
+                        completedCount++;
+                        if (completedCount === cubies.length) {
+                            isAnimating = false;
+                        }
+                    })
+                    .start();
+            });
+        }
+
+        // 判定魔方是否完成还原
+        function checkSolved() {
+            if (!isSolvingScrambled) return; // 只有在 Scramble 后才执行解开判定
+
+            let solved = true;
+            for (let i = 0; i < cubies.length; i++) {
+                const cubie = cubies[i];
+                // 1. 检查物理坐标是否对应原始坐标
+                const solvedPos = cubie.userData.solvedPos;
+                const dx = Math.abs(Math.round(cubie.position.x) - solvedPos.x);
+                const dy = Math.abs(Math.round(cubie.position.y) - solvedPos.y);
+                const dz = Math.abs(Math.round(cubie.position.z) - solvedPos.z);
+
+                if (dx > EPSILON || dy > EPSILON || dz > EPSILON) {
+                    solved = false;
+                    break;
+                }
+
+                // 2. 检查旋转状态是否恢复为恒等变换（Quat w 的绝对值应接近 1）
+                if (Math.abs(cubie.quaternion.w) < 0.99) {
+                    solved = false;
+                    break;
+                }
+            }
+
+            if (solved) {
+                stopTimer();
+                isSolvingScrambled = false;
+            }
+        }
+
+        // ==========================================
+        // 7. HUD 与事件绑定
+        // ==========================================
+        document.getElementById('btn-scramble').addEventListener('click', scrambleCube);
+        document.getElementById('btn-solve').addEventListener('click', autoSolve);
+        document.getElementById('btn-reset').addEventListener('click', resetCube);
+
+        document.getElementById('btn-camera').addEventListener('click', () => {
+            // 重置视角过渡动画
+            new TWEEN.Tween(camera.position)
+                .to({ x: 5.5, y: 5, z: 7.5 }, 800)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .start();
+            
+            new TWEEN.Tween(controls.target)
+                .to({ x: 0, y: 0, z: 0 }, 800)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .start();
+        });
+
+        // 主题点击切换绑定
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                themeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const theme = btn.getAttribute('data-theme');
+                applyTheme(theme);
+            });
+        });
+
+        // ==========================================
+        // 8. 窗口自适应与帧循环
+        // ==========================================
+        window.addEventListener('resize', () => {
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+        });
+
+        // 帧刷新逻辑
+        function animate(time) {
+            requestAnimationFrame(animate);
+
+            TWEEN.update(time);
+            controls.update();
+
+            // 为魔方整体添加极其轻微的缓动浮沉动画，增加悬浮空间感（仅在第一次交互前）
+            if (!hasInteracted && !isDragging && !isAnimating) {
+                const wave = Math.sin(time * 0.001) * 0.08;
+                cubeGroup.position.y = wave;
+                cubeGroup.rotation.y = time * 0.0001; // 极缓的自转
+            } else {
+                cubeGroup.position.set(0, 0, 0);
+                cubeGroup.rotation.set(0, 0, 0);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        requestAnimationFrame(animate);
+
+        // 收集错误以供调试
+        window.jsErrors = [];
+        window.onerror = function(message, source, lineno, colno, error) {
+            window.jsErrors.push({message, source, lineno, colno, error: error ? error.stack : null});
+            return false;
+        };
+
+        // 暴露全局状态供测试
+        window.cubeState = {
+            get moveCount() { return moveCount; },
+            get isAnimating() { return isAnimating; },
+            get isSolvingScrambled() { return isSolvingScrambled; },
+            get timerRunning() { return timerRunning; },
+            get elapsedSeconds() { return elapsedSeconds; },
+            get cubies() { return cubies; },
+            get moveHistory() { return moveHistory; },
+            scramble: scrambleCube,
+            reset: resetCube,
+            solve: autoSolve
+        };
+    </script>
+</body>
+</html>

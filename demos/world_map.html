@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GeoVis Explorer</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0ea5e9;
+            --primary-hover: #0284c7;
+            --primary-light: rgba(14, 165, 233, 0.1);
+            --primary-glow: rgba(14, 165, 233, 0.4);
+            --accent: #06b6d4;
+            --accent-light: rgba(6, 182, 212, 0.1);
+            --bg-body: #f0f9ff;
+            --bg-glass: rgba(255, 255, 255, 0.9);
+            --bg-glass-dark: rgba(8, 47, 73, 0.95);
+            --text-main: #0c4a6e;
+            --text-secondary: #0369a1;
+            --text-muted: #7dd3fc;
+            --border: #bae6fd;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 15px rgba(14, 165, 233, 0.15);
+            --shadow-lg: 0 12px 40px rgba(14, 165, 233, 0.2);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #38bdf8;
+            --primary-hover: #7dd3fc;
+            --primary-light: rgba(56, 189, 248, 0.15);
+            --primary-glow: rgba(56, 189, 248, 0.3);
+            --accent: #22d3ee;
+            --accent-light: rgba(34, 211, 238, 0.15);
+            --bg-body: #082f49;
+            --bg-glass: rgba(8, 47, 73, 0.95);
+            --text-main: #f0f9ff;
+            --text-secondary: #bae6fd;
+            --text-muted: #0369a1;
+            --border: #0c4a6e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            color: var(--text-main);
+            background: var(--bg-body);
+        }
+
+        /* 地图容器 */
+        #map {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(180deg, #87ceeb 0%, #e0f4ff 100%);
+            z-index: 1;
+        }
+
+        /* 数据来源标注 */
+        .attribution {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .attribution a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .attribution a:hover {
+            text-decoration: underline;
+        }
+
+        /* 政治免责声明 */
+        .disclaimer {
+            position: absolute;
+            bottom: 8px;
+            right: 80px;
+            z-index: 1000;
+            background: rgba(245, 158, 11, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            max-width: 320px;
+        }
+
+        [data-theme="dark"] .disclaimer {
+            background: rgba(245, 158, 11, 0.1);
+            color: #b45309;
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .disclaimer i {
+            margin-right: 4px;
+        }
+
+        /* 主题切换和工具栏 */
+        .toolbar {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tool-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 16px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tool-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .tool-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* UI 浮层容器 */
+        .ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .ui-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            pointer-events: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        /* 标题与搜索 */
+        .header-panel {
+            width: 340px;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+        }
+
+        .app-title .icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .app-title span {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 视图切换器 */
+        .view-switcher {
+            display: flex;
+            background: var(--border);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            margin-bottom: 14px;
+        }
+
+        .view-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .view-btn:hover {
+            color: var(--text-main);
+        }
+
+        .view-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        [data-theme="dark"] .view-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 搜索框 */
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            font-size: 14px;
+            font-family: inherit;
+            background: white;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        [data-theme="dark"] .search-input {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .search-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-md);
+            max-height: 240px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .search-results.active {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .search-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .search-item i {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* 统计信息卡片 */
+        .stats-card {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 12px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* 详情侧边栏 */
+        .sidebar {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 400px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .country-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .sidebar-content {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .flag-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .data-section {
+            margin-bottom: 20px;
+        }
+
+        .data-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .data-row:hover {
+            transform: translateX(4px);
+        }
+
+        .data-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .data-label i {
+            color: var(--primary);
+            width: 16px;
+        }
+
+        .data-value {
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: right;
+            font-size: 14px;
+        }
+
+        .loader {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px 20px;
+        }
+
+        .loader i {
+            font-size: 32px;
+            margin-bottom: 16px;
+            animation: spin 1s linear infinite;
+            color: var(--primary);
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Toast 通知 */
+        #toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 9999;
+            box-shadow: 0 8px 30px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Leaflet 自定义样式 */
+        .leaflet-control-zoom {
+            border: none !important;
+            box-shadow: var(--shadow-md) !important;
+            border-radius: var(--radius-md) !important;
+            overflow: hidden;
+        }
+
+        .leaflet-control-zoom a {
+            background: var(--bg-glass) !important;
+            color: var(--text-main) !important;
+            width: 36px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+            transition: var(--transition);
+        }
+
+        .leaflet-control-zoom a:hover {
+            background: var(--primary) !important;
+            color: white !important;
+        }
+
+        .leaflet-tooltip {
+            background: var(--bg-glass) !important;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border) !important;
+            border-radius: var(--radius-sm) !important;
+            padding: 8px 14px !important;
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            color: var(--text-main) !important;
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        .leaflet-tooltip::before {
+            display: none;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .header-panel {
+                width: calc(100vw - 40px);
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 70vh;
+                top: auto;
+                bottom: 0;
+                transform: translateY(100%);
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+                border-left: none;
+                border-top: 1px solid var(--border);
+            }
+
+            .sidebar.open {
+                transform: translateY(0);
+            }
+
+            .attribution {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+
+            .toolbar {
+                bottom: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+
+    <!-- 数据来源 -->
+    <div class="attribution">
+        地图数据: <a href="https://www.esri.com" target="_blank">Esri</a> |
+        国家数据: <a href="https://restcountries.com" target="_blank">REST Countries</a> |
+        边界: <a href="https://github.com/johan/world.geo.json" target="_blank">GeoJSON</a>
+    </div>
+
+    <!-- 政治免责声明 -->
+    <div class="disclaimer">
+        <i class="fa-solid fa-circle-info"></i>
+        本地图仅供AI技术展示与学习用途，边界数据来自第三方开源项目，不代表任何政治立场。
+    </div>
+
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <button class="tool-btn" onclick="toggleTheme()" title="切换主题" id="theme-btn">
+            <i class="fa-solid fa-sun"></i>
+        </button>
+        <button class="tool-btn" onclick="resetMap()" title="重置视图">
+            <i class="fa-solid fa-house"></i>
+        </button>
+        <button class="tool-btn" onclick="locateUser()" title="定位">
+            <i class="fa-solid fa-location-crosshairs"></i>
+        </button>
+    </div>
+
+    <div class="ui-layer">
+        <div class="ui-card header-panel">
+            <div class="app-title">
+                <div class="icon">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                GeoVis <span>Explorer</span>
+            </div>
+
+            <div class="view-switcher">
+                <button class="view-btn active" onclick="switchView('physical')">
+                    <i class="fa-solid fa-mountain"></i> 地理
+                </button>
+                <button class="view-btn" onclick="switchView('political')">
+                    <i class="fa-solid fa-flag"></i> 行政
+                </button>
+                <button class="view-btn" onclick="switchView('satellite')">
+                    <i class="fa-solid fa-satellite"></i> 卫星
+                </button>
+            </div>
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" class="search-input" placeholder="搜索国家或地区..." id="searchInput"
+                    autocomplete="off">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+
+        <div class="ui-card stats-card">
+            <div class="stat-item">
+                <div class="stat-value" id="countryCount">--</div>
+                <div class="stat-label">国家</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">7</div>
+                <div class="stat-label">大洲</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">195</div>
+                <div class="stat-label">独立国</div>
+            </div>
+        </div>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="country-name" id="detailName">Country</h2>
+            <button class="close-btn" onclick="closeSidebar()">×</button>
+        </div>
+        <div class="sidebar-content" id="detailContent">
+        </div>
+    </aside>
+
+    <div id="toast"><i class="fa-solid fa-check"></i> <span>Ready</span></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <script>
+        // --- 主题控制 ---
+        let isDark = localStorage.getItem('geovis-theme') === 'dark';
+        function toggleTheme() {
+            isDark = !isDark;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-btn').innerHTML = isDark
+                ? '<i class="fa-solid fa-moon"></i>'
+                : '<i class="fa-solid fa-sun"></i>';
+            localStorage.setItem('geovis-theme', isDark ? 'dark' : 'light');
+            showToast(isDark ? '已切换到深色模式' : '已切换到浅色模式');
+        }
+        if (isDark) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-btn').innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+
+        // --- Toast 通知 ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('span').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // --- 配置与初始化 ---
+        const config = {
+            initialCenter: [20, 0],
+            initialZoom: 2,
+            colors: ['#22d3ee', '#34d399', '#a3e635', '#fbbf24', '#fb923c', '#f87171', '#c084fc', '#60a5fa', '#2dd4bf', '#14b8a6'],
+        };
+
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false,
+            minZoom: 2,
+            maxZoom: 18,
+            worldCopyJump: true,
+            // 限制上下滑动范围（纬度 -85 到 85），允许无限左右拖动
+            maxBounds: [[-85, -Infinity], [85, Infinity]],
+            maxBoundsViscosity: 1.0 // 完全限制不能拖出边界
+        }).setView(config.initialCenter, config.initialZoom);
+
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // --- 图层管理 ---
+        const physicalTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 8
+        }).addTo(map);
+
+        const satelliteTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri',
+            maxZoom: 18
+        });
+
+        let geoJsonLayer;
+        let countriesData = [];
+        let currentMode = 'physical';
+
+        // --- 样式逻辑 ---
+        function getColor(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return config.colors[Math.abs(hash) % config.colors.length];
+        }
+
+        function getStyle(feature) {
+            if (currentMode === 'physical' || currentMode === 'satellite') {
+                return {
+                    fillColor: 'transparent',
+                    weight: 1.5,
+                    opacity: 0.6,
+                    color: currentMode === 'satellite' ? '#fff' : '#64748b',
+                    fillOpacity: 0
+                };
+            } else {
+                return {
+                    fillColor: getColor(feature.properties.ADMIN || feature.properties.name),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    fillOpacity: 0.75
+                };
+            }
+        }
+
+        function highlightFeature(e) {
+            const layer = e.target;
+            layer.setStyle({
+                weight: 3,
+                color: '#6366f1',
+                dashArray: '',
+                fillOpacity: 0.85,
+                fillColor: currentMode === 'political' ? layer.options.fillColor : 'rgba(99, 102, 241, 0.3)'
+            });
+            layer.bringToFront();
+        }
+
+        function resetHighlight(e) {
+            geoJsonLayer.resetStyle(e.target);
+        }
+
+        // --- 加载数据 ---
+        fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+            .then(res => res.json())
+            .then(data => {
+                countriesData = data.features;
+                document.getElementById('countryCount').textContent = countriesData.length;
+
+                geoJsonLayer = L.geoJson(data, {
+                    style: getStyle,
+                    onEachFeature: onEachFeature
+                }).addTo(map);
+
+                setupSearch();
+                showToast('地图数据加载完成');
+            })
+            .catch(err => {
+                console.error("数据加载失败", err);
+                showToast('数据加载失败，请检查网络');
+            });
+
+        function onEachFeature(feature, layer) {
+            layer.bindTooltip(feature.properties.name, {
+                permanent: false,
+                direction: "center",
+                className: "country-label"
+            });
+
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: (e) => {
+                    zoomToFeature(e);
+                    showDetails(feature.properties);
+                }
+            });
+        }
+
+        function zoomToFeature(e) {
+            map.flyToBounds(e.target.getBounds(), { padding: [50, 50], duration: 1.2, easeLinearity: 0.25 });
+        }
+
+        // --- 视图切换 ---
+        window.switchView = function (mode) {
+            currentMode = mode;
+
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+
+            // 移除所有瓦片层
+            map.removeLayer(physicalTileLayer);
+            map.removeLayer(satelliteTileLayer);
+
+            if (mode === 'physical') {
+                physicalTileLayer.addTo(map);
+                map.getContainer().style.background = 'linear-gradient(180deg, #87ceeb 0%, #e0f4ff 100%)';
+            } else if (mode === 'satellite') {
+                satelliteTileLayer.addTo(map);
+                map.getContainer().style.background = '#1a1a2e';
+            } else {
+                map.getContainer().style.background = isDark ? '#1a1625' : '#f0f4ff';
+            }
+
+            if (geoJsonLayer) geoJsonLayer.setStyle(getStyle);
+            showToast(`已切换到${mode === 'physical' ? '地理' : mode === 'satellite' ? '卫星' : '政治'}视图`);
+        }
+
+        window.resetMap = function () {
+            map.flyTo(config.initialCenter, config.initialZoom, { duration: 1.2 });
+            closeSidebar();
+        }
+
+        window.locateUser = function () {
+            if (navigator.geolocation) {
+                showToast('正在获取位置...');
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        map.flyTo([pos.coords.latitude, pos.coords.longitude], 6, { duration: 1.5 });
+                        showToast('已定位到您的位置');
+                    },
+                    () => showToast('无法获取位置')
+                );
+            } else {
+                showToast('浏览器不支持定位');
+            }
+        }
+
+        // --- 详情侧边栏 ---
+        async function showDetails(props) {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('detailContent');
+            const nameEl = document.getElementById('detailName');
+
+            sidebar.classList.add('open');
+            nameEl.innerText = props.name;
+            content.innerHTML = '<div class="loader"><i class="fa-solid fa-spinner"></i><br>正在获取数据...</div>';
+
+            try {
+                const res = await fetch(`https://restcountries.com/v3.1/name/${props.name}?fullText=true`);
+                if (!res.ok) throw new Error('Not found');
+                const [data] = await res.json();
+
+                const formatNum = (n) => n.toLocaleString();
+
+                content.innerHTML = `
+                    <img src="${data.flags.svg}" class="flag-img" alt="Flag">
+                    
+                    <div class="data-section">
+                        <div class="data-section-title">基本信息</div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-landmark"></i> 官方名称</span>
+                            <span class="data-value">${data.name.official}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-building-columns"></i> 首都</span>
+                            <span class="data-value">${data.capital ? data.capital[0] : 'N/A'}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-globe"></i> 地区</span>
+                            <span class="data-value">${data.subregion || data.region}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-section">
+                        <div class="data-section-title">统计数据</div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-users"></i> 人口</span>
+                            <span class="data-value">${formatNum(data.population)}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-expand"></i> 面积</span>
+                            <span class="data-value">${formatNum(data.area)} km²</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-section">
+                        <div class="data-section-title">文化经济</div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-coins"></i> 货币</span>
+                            <span class="data-value">${Object.values(data.currencies || {}).map(c => c.name).join(', ') || 'N/A'}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-language"></i> 语言</span>
+                            <span class="data-value">${Object.values(data.languages || {}).slice(0, 3).join(', ') || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+
+            } catch (error) {
+                content.innerHTML = `
+                    <div class="data-section">
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-tag"></i> 名称</span>
+                            <span class="data-value">${props.name}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label"><i class="fa-solid fa-hashtag"></i> ISO 代码</span>
+                            <span class="data-value">${props.id || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <p style="margin-top:20px; color:var(--text-muted); font-size:14px; text-align:center;">
+                        <i class="fa-solid fa-circle-info"></i> 暂无详细数据
+                    </p>
+                `;
+            }
+        }
+
+        window.closeSidebar = function () {
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        // --- 搜索功能 ---
+        function setupSearch() {
+            const input = document.getElementById('searchInput');
+            const results = document.getElementById('searchResults');
+
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase();
+                if (val.length < 2) {
+                    results.classList.remove('active');
+                    return;
+                }
+
+                const filtered = countriesData.filter(f =>
+                    f.properties.name.toLowerCase().includes(val)
+                ).slice(0, 8);
+
+                if (filtered.length > 0) {
+                    results.innerHTML = filtered.map(f =>
+                        `<div class="search-item" onclick="selectCountry('${f.properties.name}')">
+                            <i class="fa-solid fa-location-dot"></i>
+                            ${f.properties.name}
+                        </div>`
+                    ).join('');
+                    results.classList.add('active');
+                } else {
+                    results.innerHTML = '<div class="search-item"><i class="fa-solid fa-circle-xmark"></i> 未找到结果</div>';
+                    results.classList.add('active');
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-box')) {
+                    results.classList.remove('active');
+                }
+            });
+        }
+
+        window.selectCountry = function (name) {
+            const target = geoJsonLayer.getLayers().find(l => l.feature.properties.name === name);
+            if (target) {
+                map.flyToBounds(target.getBounds(), { padding: [50, 50], duration: 1.2 });
+                showDetails(target.feature.properties);
+                document.getElementById('searchInput').value = '';
+                document.getElementById('searchResults').classList.remove('active');
+            }
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSidebar();
+        });
+    </script>
+</body>
+
+</html>

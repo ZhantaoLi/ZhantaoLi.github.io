@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX Editor</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.13/lib/codemirror.css">
+    <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.13/addon/hint/show-hint.css">
+    <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.13/addon/fold/foldgutter.css">
+    <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.13/addon/search/matchesonscrollbar.css">
+    <link rel="stylesheet" href="https://unpkg.com/codemirror@5.65.13/addon/dialog/dialog.css">
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.16.8/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: rgba(99, 102, 241, 0.1);
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --accent: #8b5cf6;
+            --accent-light: rgba(139, 92, 246, 0.1);
+            --bg-body: #f8fafc;
+            --bg-panel: #ffffff;
+            --bg-editor: #ffffff;
+            --bg-preview: #fefefe;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --sidebar-w: 260px;
+            --sidebar-bg: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+            --sidebar-text: #e0e7ff;
+            --sidebar-active: rgba(255, 255, 255, 0.15);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --header-blur: blur(12px);
+            --sym-btn-bg: #ffffff;
+            --modal-bg: #ffffff;
+            --status-bg: #f1f5f9;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --primary-hover: #a5b4fc;
+            --primary-light: rgba(129, 140, 248, 0.15);
+            --primary-glow: rgba(129, 140, 248, 0.3);
+            --accent: #a78bfa;
+            --accent-light: rgba(167, 139, 250, 0.15);
+            --bg-body: #0f0a1a;
+            --bg-panel: #1a1625;
+            --bg-editor: #110d1a;
+            --bg-preview: #13101c;
+            --text-main: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #2d2640;
+            --border-light: #231e30;
+            --sidebar-bg: linear-gradient(180deg, #0c0612 0%, #1a1230 100%);
+            --sidebar-text: #c7d2fe;
+            --sidebar-active: rgba(255, 255, 255, 0.1);
+            --header-bg: rgba(17, 13, 26, 0.9);
+            --sym-btn-bg: #1a1625;
+            --modal-bg: #1a1625;
+            --status-bg: #110d1a;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            font-family: 'Inter', "Segoe UI", -apple-system, sans-serif;
+            overflow: hidden;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background 0.4s ease, color 0.3s ease;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        #app {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 侧边栏 */
+        #sidebar {
+            width: var(--sidebar-w);
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        #sidebar.collapsed {
+            margin-left: calc(var(--sidebar-w) * -1);
+        }
+
+        .sb-title {
+            padding: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .sb-title i {
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.2s;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+        }
+
+        .sb-title i:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #file-list {
+            list-style: none;
+            padding: 8px 0;
+            margin: 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .file-item:hover {
+            background: var(--sidebar-active);
+        }
+
+        .file-item.active {
+            background: var(--sidebar-active);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .del-btn {
+            opacity: 0;
+            color: var(--danger);
+            transition: 0.2s;
+            font-size: 11px;
+            padding: 4px;
+        }
+
+        .file-item:hover .del-btn {
+            opacity: 0.7;
+        }
+
+        .del-btn:hover {
+            opacity: 1 !important;
+        }
+
+        /* 右侧主区域 */
+        #main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            position: relative;
+            background: var(--bg-body);
+        }
+
+        /* 顶部 Header */
+        header {
+            height: 56px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: var(--header-bg);
+            backdrop-filter: var(--header-blur);
+            -webkit-backdrop-filter: var(--header-blur);
+            z-index: 10;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-btn {
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 15px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .header-right button {
+            background: var(--sym-btn-bg);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-right button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-right button.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .header-right .divider {
+            border-left: 1px solid var(--border);
+            height: 24px;
+            margin: 0 10px;
+        }
+
+        /* 符号面板 */
+        #symbol-area {
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 150px;
+            flex-shrink: 0;
+            transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #symbol-area.collapsed {
+            height: 0;
+            overflow: hidden;
+            border-bottom: none;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+            overflow-x: auto;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            user-select: none;
+            white-space: nowrap;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: var(--primary-light);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+            background: var(--primary-light);
+        }
+
+        .panel-container {
+            padding: 12px 16px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .symbol-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            gap: 8px;
+        }
+
+        .symbol-grid.active {
+            display: grid;
+        }
+
+        .sym-btn {
+            height: 40px;
+            background: var(--sym-btn-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            position: relative;
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sym-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            background: var(--primary-light);
+        }
+
+        .sym-btn.text-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* 工作区 */
+        #workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        #editor-box {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            min-width: 300px;
+            background: var(--bg-editor);
+        }
+
+        #preview-box {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-preview);
+            position: relative;
+            min-width: 300px;
+        }
+
+        /* 可拖动分隔条 */
+        .resizer {
+            width: 8px;
+            background: transparent;
+            cursor: col-resize;
+            position: relative;
+            transition: all 0.2s;
+            z-index: 5;
+        }
+
+        .resizer:hover,
+        .resizer.active {
+            background: var(--primary-light);
+        }
+
+        .resizer::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 40px;
+            background: var(--border);
+            border-radius: 2px;
+            transition: background 0.2s;
+        }
+
+        .resizer:hover::after {
+            background: var(--primary);
+        }
+
+        .bar-title {
+            padding: 10px 20px;
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 36px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .zoom-ctrl {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .zoom-ctrl span {
+            cursor: pointer;
+            padding: 4px 10px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            user-select: none;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .zoom-ctrl span:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .CodeMirror {
+            flex: 1;
+            font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            background: var(--bg-editor);
+            color: var(--text-main);
+        }
+
+        .CodeMirror-gutters {
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+        }
+
+        .CodeMirror-linenumber {
+            color: var(--text-secondary);
+        }
+
+        .CodeMirror-matchingbracket {
+            background: rgba(0, 123, 255, 0.2);
+            color: inherit !important;
+        }
+
+        .CodeMirror-selected {
+            background: rgba(0, 123, 255, 0.15) !important;
+        }
+
+        .CodeMirror-cursor {
+            border-left-color: var(--text-main);
+        }
+
+        .cm-error {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        /* 当前行高亮 */
+        .CodeMirror-activeline-background {
+            background: var(--primary-light);
+        }
+
+        /* 深色模式下的语法高亮 */
+        [data-theme="dark"] .cm-keyword {
+            color: #c678dd;
+        }
+
+        [data-theme="dark"] .cm-atom {
+            color: #d19a66;
+        }
+
+        [data-theme="dark"] .cm-number {
+            color: #d19a66;
+        }
+
+        [data-theme="dark"] .cm-def {
+            color: #61afef;
+        }
+
+        [data-theme="dark"] .cm-variable {
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] .cm-property {
+            color: #56b6c2;
+        }
+
+        [data-theme="dark"] .cm-operator {
+            color: #56b6c2;
+        }
+
+        [data-theme="dark"] .cm-comment {
+            color: #5c6370;
+            font-style: italic;
+        }
+
+        [data-theme="dark"] .cm-string {
+            color: #98c379;
+        }
+
+        [data-theme="dark"] .cm-tag {
+            color: #e06c75;
+        }
+
+        [data-theme="dark"] .cm-bracket {
+            color: #abb2bf;
+        }
+
+        [data-theme="dark"] .CodeMirror-matchingbracket {
+            background: rgba(77, 171, 247, 0.3);
+        }
+
+        #preview-content {
+            flex: 1;
+            padding: 40px 50px;
+            overflow-y: auto;
+            color: var(--text-main);
+            overflow-wrap: break-word;
+            transition: font-size 0.2s;
+            scroll-behavior: smooth;
+            background: var(--bg-preview);
+        }
+
+        .latex-block {
+            margin-bottom: 1.5em;
+            padding: 16px 20px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            transition: all 0.25s ease;
+            background: var(--bg-panel);
+        }
+
+        .latex-block:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .latex-block::before {
+            content: "📋 点击复制";
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0;
+            transition: all 0.2s;
+            background: var(--bg-body);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            font-weight: 500;
+        }
+
+        .latex-block:hover::before {
+            opacity: 1;
+        }
+
+        /* 错误块样式 */
+        .latex-block.error {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.08);
+        }
+
+        .latex-block.error::before {
+            content: "⚠️ 语法错误";
+            color: var(--danger);
+        }
+
+        /* 禅模式 */
+        body.zen-mode #sidebar,
+        body.zen-mode header,
+        body.zen-mode #symbol-area {
+            display: none !important;
+        }
+
+        body.zen-mode #editor-box {
+            border-right: none;
+        }
+
+        body.zen-mode .CodeMirror {
+            font-size: 16px;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            box-shadow: 0 8px 25px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(20px);
+        }
+
+        #toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* 快捷键帮助弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            max-width: 520px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-content h3 {
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-content h3 span {
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-muted);
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .modal-content h3 span:hover {
+            color: var(--danger);
+        }
+
+        .shortcut-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .shortcut-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .shortcut-list li:last-child {
+            border-bottom: none;
+        }
+
+        .shortcut-list kbd {
+            background: var(--primary-light);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-family: 'Inter', monospace;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* 状态栏 */
+        #status-bar {
+            height: 28px;
+            background: var(--status-bg);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .status-item span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* 搜索高亮 */
+        .cm-searching {
+            background: rgba(245, 158, 11, 0.3);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <div id="sidebar">
+            <div class="sb-title">
+                <span><i class="fa-solid fa-book"></i> 文档</span>
+                <div>
+                    <i class="fa-solid fa-download" onclick="exportFile()" title="导出文件"></i>
+                    <i class="fa-solid fa-plus" onclick="createNewFile()" title="新建"></i>
+                </div>
+            </div>
+            <ul id="file-list"></ul>
+        </div>
+
+        <div id="main-area">
+            <header>
+                <div class="header-left">
+                    <div class="toggle-btn" onclick="toggleSidebar()" title="切换侧边栏 (Ctrl+B)"><i
+                            class="fa-solid fa-bars"></i></div>
+                    <input type="text" id="doc-title" value="无标题"
+                        style="border:none; font-weight:600; font-size:14px; color:#333; background:transparent; width:150px; outline:none;"
+                        onchange="renameCurrentFile(this.value)">
+                </div>
+                <div class="header-right">
+                    <button onclick="undo()" title="撤销 (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button onclick="redo()" title="重做 (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+                    <span class="divider"></span>
+                    <button onclick="toggleSymbolPanel()" id="symbol-toggle-btn" title="符号面板"><i
+                            class="fa-solid fa-keyboard"></i></button>
+                    <button onclick="toggleVim()" id="vim-btn" title="Vim 模式"><i
+                            class="fa-solid fa-terminal"></i></button>
+                    <button onclick="toggleZen()" title="专注模式 (F11)"><i class="fa-solid fa-expand"></i></button>
+                    <button onclick="toggleTheme()" id="theme-btn" title="切换主题"><i class="fa-solid fa-sun"></i></button>
+                    <span class="divider"></span>
+                    <button onclick="showHelp()" title="快捷键帮助"><i class="fa-solid fa-keyboard"></i> 帮助</button>
+                    <button onclick="exportImage()" title="导出图片"><i class="fa-regular fa-image"></i> 图片</button>
+                </div>
+            </header>
+
+            <div id="symbol-area">
+                <nav class="tabs" id="tab-nav"></nav>
+                <div class="panel-container" id="panel-container"></div>
+            </div>
+
+            <div id="workspace">
+                <div id="editor-box">
+                    <div class="bar-title">
+                        <span>源代码</span>
+                        <span id="char-count">0 字符</span>
+                    </div>
+                    <textarea id="code"></textarea>
+                </div>
+                <div class="resizer" id="resizer"></div>
+                <div id="preview-box">
+                    <div class="bar-title">
+                        <span>实时预览</span>
+                        <div class="zoom-ctrl">
+                            <span onclick="zoomPreview(-0.1)"><i class="fa-solid fa-minus"></i></span>
+                            <span id="zoom-val">100%</span>
+                            <span onclick="zoomPreview(0.1)"><i class="fa-solid fa-plus"></i></span>
+                            <span onclick="zoomPreview(0)" title="重置">↺</span>
+                        </div>
+                    </div>
+                    <div id="preview-content"></div>
+                </div>
+            </div>
+
+            <div id="status-bar">
+                <div class="status-item">
+                    <span id="cursor-pos">行 1, 列 1</span>
+                    <span id="selection-info"></span>
+                </div>
+                <div class="status-item">
+                    <span id="save-status">✓ 已保存</span>
+                    <span id="mode-indicator">Normal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"><i class="fa-solid fa-check"></i> <span>Ready</span></div>
+
+    <!-- 快捷键帮助弹窗 -->
+    <div class="modal-overlay" id="help-modal" onclick="if(event.target===this)closeHelp()">
+        <div class="modal-content">
+            <h3>快捷键帮助 <span onclick="closeHelp()">×</span></h3>
+            <ul class="shortcut-list">
+                <li><span>保存</span><kbd>Ctrl + S</kbd></li>
+                <li><span>撤销</span><kbd>Ctrl + Z</kbd></li>
+                <li><span>重做</span><kbd>Ctrl + Y</kbd></li>
+                <li><span>查找</span><kbd>Ctrl + F</kbd></li>
+                <li><span>替换</span><kbd>Ctrl + H</kbd></li>
+                <li><span>全选</span><kbd>Ctrl + A</kbd></li>
+                <li><span>切换侧边栏</span><kbd>Ctrl + B</kbd></li>
+                <li><span>专注模式</span><kbd>F11 / Esc</kbd></li>
+                <li><span>自动补全</span><kbd>Ctrl + Space</kbd></li>
+                <li><span>跳转到行</span><kbd>Ctrl + G</kbd></li>
+                <li><span>插入分数</span><kbd>Ctrl + /</kbd></li>
+                <li><span>插入上标</span><kbd>Ctrl + ↑</kbd></li>
+                <li><span>插入下标</span><kbd>Ctrl + ↓</kbd></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/codemirror@5.65.13/lib/codemirror.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/hint/show-hint.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/mode/stex/stex.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/keymap/vim.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/edit/matchbrackets.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/edit/closebrackets.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/selection/active-line.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/search/search.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/search/searchcursor.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/search/jump-to-line.js"></script>
+    <script src="https://unpkg.com/codemirror@5.65.13/addon/dialog/dialog.js"></script>
+    <script src="https://unpkg.com/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <script>
+        // ========== 符号数据 ==========
+        const symbolData = {
+            "常用": [
+                { label: "\\frac{a}{b}", insert: "\\frac{}{}", cursor: -3 },
+                { label: "\\sqrt{ }", insert: "\\sqrt{}", cursor: -1 },
+                { label: "\\sqrt[n]{ }", insert: "\\sqrt[]{}", cursor: -3 },
+                { label: "x^n", insert: "^{}", cursor: -1 },
+                { label: "x_n", insert: "_{}", cursor: -1 },
+                { label: "x_n^m", insert: "_{}^{}", cursor: -4 },
+                { label: "\\sum", insert: "\\sum_{i=1}^{n}" },
+                { label: "\\prod", insert: "\\prod_{i=1}^{n}" },
+                { label: "\\int", insert: "\\int_{a}^{b}" },
+                { label: "\\iint", insert: "\\iint" },
+                { label: "\\iiint", insert: "\\iiint" },
+                { label: "\\oint", insert: "\\oint" },
+                { label: "\\lim", insert: "\\lim_{x \\to }" },
+                { label: "\\infty", insert: "\\infty" },
+                { label: "\\partial", insert: "\\partial" },
+                { label: "\\nabla", insert: "\\nabla" },
+                { label: "\\cdot", insert: "\\cdot" },
+                { label: "\\times", insert: "\\times" },
+                { label: "\\div", insert: "\\div" },
+                { label: "\\pm", insert: "\\pm" },
+                { label: "\\mp", insert: "\\mp" },
+                { label: "\\circ", insert: "\\circ" }
+            ],
+            "希腊字母": [
+                { label: "\\alpha", insert: "\\alpha" }, { label: "\\beta", insert: "\\beta" },
+                { label: "\\gamma", insert: "\\gamma" }, { label: "\\delta", insert: "\\delta" },
+                { label: "\\epsilon", insert: "\\epsilon" }, { label: "\\varepsilon", insert: "\\varepsilon" },
+                { label: "\\zeta", insert: "\\zeta" }, { label: "\\eta", insert: "\\eta" },
+                { label: "\\theta", insert: "\\theta" }, { label: "\\vartheta", insert: "\\vartheta" },
+                { label: "\\iota", insert: "\\iota" }, { label: "\\kappa", insert: "\\kappa" },
+                { label: "\\lambda", insert: "\\lambda" }, { label: "\\mu", insert: "\\mu" },
+                { label: "\\nu", insert: "\\nu" }, { label: "\\xi", insert: "\\xi" },
+                { label: "\\pi", insert: "\\pi" }, { label: "\\rho", insert: "\\rho" },
+                { label: "\\sigma", insert: "\\sigma" }, { label: "\\tau", insert: "\\tau" },
+                { label: "\\upsilon", insert: "\\upsilon" }, { label: "\\phi", insert: "\\phi" },
+                { label: "\\varphi", insert: "\\varphi" }, { label: "\\chi", insert: "\\chi" },
+                { label: "\\psi", insert: "\\psi" }, { label: "\\omega", insert: "\\omega" },
+                { label: "\\Gamma", insert: "\\Gamma" }, { label: "\\Delta", insert: "\\Delta" },
+                { label: "\\Theta", insert: "\\Theta" }, { label: "\\Lambda", insert: "\\Lambda" },
+                { label: "\\Xi", insert: "\\Xi" }, { label: "\\Pi", insert: "\\Pi" },
+                { label: "\\Sigma", insert: "\\Sigma" }, { label: "\\Phi", insert: "\\Phi" },
+                { label: "\\Psi", insert: "\\Psi" }, { label: "\\Omega", insert: "\\Omega" }
+            ],
+            "函数": [
+                { label: "\\sin", insert: "\\sin" }, { label: "\\cos", insert: "\\cos" },
+                { label: "\\tan", insert: "\\tan" }, { label: "\\cot", insert: "\\cot" },
+                { label: "\\sec", insert: "\\sec" }, { label: "\\csc", insert: "\\csc" },
+                { label: "\\arcsin", insert: "\\arcsin" }, { label: "\\arccos", insert: "\\arccos" },
+                { label: "\\arctan", insert: "\\arctan" }, { label: "\\sinh", insert: "\\sinh" },
+                { label: "\\cosh", insert: "\\cosh" }, { label: "\\tanh", insert: "\\tanh" },
+                { label: "\\log", insert: "\\log" }, { label: "\\ln", insert: "\\ln" },
+                { label: "\\lg", insert: "\\lg" }, { label: "\\exp", insert: "\\exp" },
+                { label: "\\max", insert: "\\max" }, { label: "\\min", insert: "\\min" },
+                { label: "\\sup", insert: "\\sup" }, { label: "\\inf", insert: "\\inf" },
+                { label: "\\det", insert: "\\det" }, { label: "\\dim", insert: "\\dim" },
+                { label: "\\gcd", insert: "\\gcd" }, { label: "\\bmod", insert: "\\bmod" }
+            ],
+            "关系": [
+                { label: "=", insert: "=" }, { label: "\\ne", insert: "\\ne" },
+                { label: "<", insert: "<" }, { label: ">", insert: ">" },
+                { label: "\\le", insert: "\\le" }, { label: "\\ge", insert: "\\ge" },
+                { label: "\\ll", insert: "\\ll" }, { label: "\\gg", insert: "\\gg" },
+                { label: "\\approx", insert: "\\approx" }, { label: "\\sim", insert: "\\sim" },
+                { label: "\\simeq", insert: "\\simeq" }, { label: "\\cong", insert: "\\cong" },
+                { label: "\\equiv", insert: "\\equiv" }, { label: "\\propto", insert: "\\propto" },
+                { label: "\\prec", insert: "\\prec" }, { label: "\\succ", insert: "\\succ" },
+                { label: "\\perp", insert: "\\perp" }, { label: "\\parallel", insert: "\\parallel" },
+                { label: "\\mid", insert: "\\mid" }, { label: "\\nmid", insert: "\\nmid" }
+            ],
+            "箭头": [
+                { label: "\\to", insert: "\\to" }, { label: "\\gets", insert: "\\gets" },
+                { label: "\\rightarrow", insert: "\\rightarrow" }, { label: "\\leftarrow", insert: "\\leftarrow" },
+                { label: "\\leftrightarrow", insert: "\\leftrightarrow" },
+                { label: "\\Rightarrow", insert: "\\Rightarrow" }, { label: "\\Leftarrow", insert: "\\Leftarrow" },
+                { label: "\\Leftrightarrow", insert: "\\Leftrightarrow" },
+                { label: "\\longrightarrow", insert: "\\longrightarrow" }, { label: "\\longleftarrow", insert: "\\longleftarrow" },
+                { label: "\\Longrightarrow", insert: "\\Longrightarrow" }, { label: "\\Longleftarrow", insert: "\\Longleftarrow" },
+                { label: "\\uparrow", insert: "\\uparrow" }, { label: "\\downarrow", insert: "\\downarrow" },
+                { label: "\\Uparrow", insert: "\\Uparrow" }, { label: "\\Downarrow", insert: "\\Downarrow" },
+                { label: "\\updownarrow", insert: "\\updownarrow" }, { label: "\\mapsto", insert: "\\mapsto" },
+                { label: "\\nearrow", insert: "\\nearrow" }, { label: "\\searrow", insert: "\\searrow" },
+                { label: "\\nwarrow", insert: "\\nwarrow" }, { label: "\\swarrow", insert: "\\swarrow" }
+            ],
+            "集合": [
+                { label: "\\in", insert: "\\in" }, { label: "\\notin", insert: "\\notin" },
+                { label: "\\ni", insert: "\\ni" }, { label: "\\subset", insert: "\\subset" },
+                { label: "\\supset", insert: "\\supset" }, { label: "\\subseteq", insert: "\\subseteq" },
+                { label: "\\supseteq", insert: "\\supseteq" }, { label: "\\nsubseteq", insert: "\\nsubseteq" },
+                { label: "\\cup", insert: "\\cup" }, { label: "\\cap", insert: "\\cap" },
+                { label: "\\bigcup", insert: "\\bigcup" }, { label: "\\bigcap", insert: "\\bigcap" },
+                { label: "\\setminus", insert: "\\setminus" }, { label: "\\emptyset", insert: "\\emptyset" },
+                { label: "\\varnothing", insert: "\\varnothing" },
+                { label: "\\forall", insert: "\\forall" }, { label: "\\exists", insert: "\\exists" },
+                { label: "\\nexists", insert: "\\nexists" },
+                { label: "\\mathbb{N}", insert: "\\mathbb{N}" }, { label: "\\mathbb{Z}", insert: "\\mathbb{Z}" },
+                { label: "\\mathbb{Q}", insert: "\\mathbb{Q}" }, { label: "\\mathbb{R}", insert: "\\mathbb{R}" },
+                { label: "\\mathbb{C}", insert: "\\mathbb{C}" }
+            ],
+            "括号": [
+                { label: "\\left( \\right)", insert: "\\left(  \\right)", cursor: -8 },
+                { label: "\\left[ \\right]", insert: "\\left[  \\right]", cursor: -8 },
+                { label: "\\left\\{ \\right\\}", insert: "\\left\\{  \\right\\}", cursor: -9 },
+                { label: "\\left| \\right|", insert: "\\left|  \\right|", cursor: -8 },
+                { label: "\\left\\| \\right\\|", insert: "\\left\\|  \\right\\|", cursor: -9 },
+                { label: "\\langle \\rangle", insert: "\\langle  \\rangle", cursor: -8 },
+                { label: "\\lfloor \\rfloor", insert: "\\lfloor  \\rfloor", cursor: -8 },
+                { label: "\\lceil \\rceil", insert: "\\lceil  \\rceil", cursor: -7 },
+                { label: "\\binom{n}{k}", insert: "\\binom{}{}", cursor: -3 }
+            ],
+            "环境": [
+                { label: "矩阵", insert: "\\begin{bmatrix}\n  a & b \\\\\n  c & d\n\\end{bmatrix}", isText: true },
+                { label: "圆括矩阵", insert: "\\begin{pmatrix}\n  a & b \\\\\n  c & d\n\\end{pmatrix}", isText: true },
+                { label: "行列式", insert: "\\begin{vmatrix}\n  a & b \\\\\n  c & d\n\\end{vmatrix}", isText: true },
+                { label: "范数矩阵", insert: "\\begin{Vmatrix}\n  a & b \\\\\n  c & d\n\\end{Vmatrix}", isText: true },
+                { label: "分段函数", insert: "\\begin{cases}\n  x & x > 0 \\\\\n  -x & x \\le 0\n\\end{cases}", isText: true },
+                { label: "方程对齐", insert: "\\begin{aligned}\n  y &= mx + c \\\\\n    &= 2x + 1\n\\end{aligned}", isText: true },
+                { label: "无框矩阵", insert: "\\begin{matrix}\n  a & b \\\\\n  c & d\n\\end{matrix}", isText: true },
+                { label: "3x3矩阵", insert: "\\begin{bmatrix}\n  a & b & c \\\\\n  d & e & f \\\\\n  g & h & i\n\\end{bmatrix}", isText: true }
+            ],
+            "装饰": [
+                { label: "\\hat{x}", insert: "\\hat{}", cursor: -1 },
+                { label: "\\widehat{xy}", insert: "\\widehat{}", cursor: -1 },
+                { label: "\\bar{x}", insert: "\\bar{}", cursor: -1 },
+                { label: "\\overline{xy}", insert: "\\overline{}", cursor: -1 },
+                { label: "\\underline{x}", insert: "\\underline{}", cursor: -1 },
+                { label: "\\vec{x}", insert: "\\vec{}", cursor: -1 },
+                { label: "\\overrightarrow{AB}", insert: "\\overrightarrow{}", cursor: -1 },
+                { label: "\\dot{x}", insert: "\\dot{}", cursor: -1 },
+                { label: "\\ddot{x}", insert: "\\ddot{}", cursor: -1 },
+                { label: "\\tilde{x}", insert: "\\tilde{}", cursor: -1 },
+                { label: "\\widetilde{xy}", insert: "\\widetilde{}", cursor: -1 },
+                { label: "\\acute{x}", insert: "\\acute{}", cursor: -1 },
+                { label: "\\grave{x}", insert: "\\grave{}", cursor: -1 },
+                { label: "\\breve{x}", insert: "\\breve{}", cursor: -1 },
+                { label: "\\check{x}", insert: "\\check{}", cursor: -1 },
+                { label: "\\overbrace{x}", insert: "\\overbrace{}", cursor: -1 },
+                { label: "\\underbrace{x}", insert: "\\underbrace{}", cursor: -1 },
+                { label: "\\boxed{x}", insert: "\\boxed{}", cursor: -1 }
+            ],
+            "其他": [
+                { label: "\\ldots", insert: "\\ldots" }, { label: "\\cdots", insert: "\\cdots" },
+                { label: "\\vdots", insert: "\\vdots" }, { label: "\\ddots", insert: "\\ddots" },
+                { label: "\\because", insert: "\\because" }, { label: "\\therefore", insert: "\\therefore" },
+                { label: "\\angle", insert: "\\angle" }, { label: "\\triangle", insert: "\\triangle" },
+                { label: "\\square", insert: "\\square" }, { label: "\\diamond", insert: "\\diamond" },
+                { label: "\\star", insert: "\\star" }, { label: "\\bullet", insert: "\\bullet" },
+                { label: "\\dagger", insert: "\\dagger" }, { label: "\\ddagger", insert: "\\ddagger" },
+                { label: "\\prime", insert: "\\prime" }, { label: "\\hbar", insert: "\\hbar" },
+                { label: "\\ell", insert: "\\ell" }, { label: "\\Re", insert: "\\Re" },
+                { label: "\\Im", insert: "\\Im" }, { label: "\\aleph", insert: "\\aleph" },
+                { label: "\\neg", insert: "\\neg" }, { label: "\\land", insert: "\\land" },
+                { label: "\\lor", insert: "\\lor" }, { label: "\\oplus", insert: "\\oplus" },
+                { label: "\\otimes", insert: "\\otimes" }
+            ],
+            "字体": [
+                { label: "\\mathbf{A}", insert: "\\mathbf{}", cursor: -1 },
+                { label: "\\mathit{A}", insert: "\\mathit{}", cursor: -1 },
+                { label: "\\mathrm{A}", insert: "\\mathrm{}", cursor: -1 },
+                { label: "\\mathsf{A}", insert: "\\mathsf{}", cursor: -1 },
+                { label: "\\mathtt{A}", insert: "\\mathtt{}", cursor: -1 },
+                { label: "\\mathbb{A}", insert: "\\mathbb{}", cursor: -1 },
+                { label: "\\mathcal{A}", insert: "\\mathcal{}", cursor: -1 },
+                { label: "\\mathfrak{A}", insert: "\\mathfrak{}", cursor: -1 },
+                { label: "\\text{文字}", insert: "\\text{}", cursor: -1 },
+                { label: "\\textbf{粗}", insert: "\\textbf{}", cursor: -1 },
+                { label: "\\textit{斜}", insert: "\\textit{}", cursor: -1 }
+            ]
+        };
+
+        // ========== 初始化符号面板（懒加载） ==========
+        const tabNav = document.getElementById("tab-nav");
+        const panelContainer = document.getElementById("panel-container");
+        let isFirst = true;
+        const loadedTabs = new Set(); // 记录已加载的标签页
+
+        // 只创建标签和容器，不立即渲染符号按钮
+        for (const [cat, items] of Object.entries(symbolData)) {
+            const tab = document.createElement("div");
+            tab.className = `tab-btn ${isFirst ? 'active' : ''}`;
+            tab.innerText = cat;
+            tab.dataset.cat = cat;
+            tab.onclick = () => {
+                document.querySelectorAll(".tab-btn").forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+                document.querySelectorAll(".symbol-grid").forEach(g => g.classList.remove("active"));
+                const targetGrid = document.getElementById(`grid-${cat}`);
+                targetGrid.classList.add("active");
+                // 懒加载：首次点击时才渲染符号按钮
+                if (!loadedTabs.has(cat)) {
+                    renderSymbolGrid(cat, items, targetGrid);
+                    loadedTabs.add(cat);
+                }
+            };
+            tabNav.appendChild(tab);
+
+            const grid = document.createElement("div");
+            grid.className = `symbol-grid ${isFirst ? 'active' : ''}`;
+            grid.id = `grid-${cat}`;
+            panelContainer.appendChild(grid);
+
+            // 首个标签页立即加载
+            if (isFirst) {
+                renderSymbolGrid(cat, items, grid);
+                loadedTabs.add(cat);
+            }
+            isFirst = false;
+        }
+
+        // 渲染符号网格的函数
+        function renderSymbolGrid(cat, items, grid) {
+            items.forEach(item => {
+                const btn = document.createElement("div");
+                btn.className = "sym-btn";
+                btn.dataset.cmd = item.insert;
+                if (item.isText) {
+                    btn.classList.add("text-label"); btn.innerText = item.label;
+                } else {
+                    try { katex.render(item.label, btn, { throwOnError: false }); } catch (e) { btn.innerText = item.label; }
+                }
+                btn.onclick = () => insertSymbol(item);
+                grid.appendChild(btn);
+            });
+        }
+
+        function insertSymbol(item) {
+            const cursor = editor.getCursor();
+            editor.replaceSelection(item.insert);
+            if (item.cursor) {
+                const newCursor = editor.getCursor();
+                editor.setCursor({ line: newCursor.line, ch: newCursor.ch + item.cursor });
+            }
+            editor.focus();
+        }
+
+        // ========== 数据持久化 ==========
+        const STORAGE_KEY = "latex_editor_pro";
+        let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+            files: [{ id: 'default', name: '示例公式', content: '% LaTeX 在线编辑器\n\ne^{i\pi} + 1 = 0\n\nE = mc^2\n\n\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}\n\n\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}' }],
+            activeId: 'default'
+        };
+
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            document.getElementById("save-status").textContent = "✓ 已保存";
+        }
+
+        function renderFileList() {
+            const listEl = document.getElementById("file-list");
+            listEl.innerHTML = "";
+            appData.files.forEach(f => {
+                const li = document.createElement("li");
+                li.className = `file-item ${f.id === appData.activeId ? 'active' : ''}`;
+                li.innerHTML = `
+                <span onclick="switchFile('${f.id}')" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    <i class="fa-regular fa-file-lines"></i> ${f.name}
+                </span>
+                ${appData.files.length > 1 ? `<i class="fa-solid fa-trash del-btn" onclick="event.stopPropagation();delFile('${f.id}')"></i>` : ''}
+            `;
+                listEl.appendChild(li);
+            });
+            const cur = appData.files.find(f => f.id === appData.activeId) || appData.files[0];
+            document.getElementById("doc-title").value = cur.name;
+            if (editor && editor.getValue() !== cur.content) editor.setValue(cur.content);
+        }
+
+        function switchFile(id) {
+            appData.activeId = id;
+            saveData();
+            renderFileList();
+            updatePreview();
+        }
+
+        function createNewFile() {
+            const name = prompt("文档名称:", "新文档 " + (appData.files.length + 1));
+            if (name) {
+                const id = 'doc_' + Date.now();
+                appData.files.push({ id, name, content: "% " + name + "\n\n" });
+                switchFile(id);
+            }
+        }
+
+        function delFile(id) {
+            if (confirm("确定删除此文档？")) {
+                appData.files = appData.files.filter(f => f.id !== id);
+                if (appData.activeId === id) appData.activeId = appData.files[0].id;
+                saveData();
+                renderFileList();
+            }
+        }
+
+        function renameCurrentFile(newName) {
+            const cur = appData.files.find(f => f.id === appData.activeId);
+            if (cur && newName.trim()) {
+                cur.name = newName.trim();
+                saveData();
+                renderFileList();
+            }
+        }
+
+        function exportFile() {
+            const cur = appData.files.find(f => f.id === appData.activeId);
+            if (cur) {
+                const blob = new Blob([cur.content], { type: 'text/plain' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = cur.name + '.tex';
+                a.click();
+                showToast("success", "已导出 " + cur.name + ".tex");
+            }
+        }
+
+        // ========== 编辑器核心 ==========
+        const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            mode: "stex",
+            lineNumbers: true,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            styleActiveLine: true,
+            extraKeys: {
+                "Ctrl-Space": "autocomplete",
+                "Ctrl-S": (cm) => { saveData(); showToast("success", "已保存"); },
+                "Ctrl-B": () => toggleSidebar(),
+                "Ctrl-/": () => insertSymbol({ insert: "\\frac{}{}", cursor: -3 }),
+                "Ctrl-Up": () => insertSymbol({ insert: "^{}", cursor: -1 }),
+                "Ctrl-Down": () => insertSymbol({ insert: "_{}", cursor: -1 }),
+                "F11": () => toggleZen(),
+                "Ctrl-G": "jumpToLine"
+            }
+        });
+
+        // 自动补全
+        const allHints = [];
+        Object.values(symbolData).forEach(arr => arr.forEach(i => {
+            if (!allHints.includes(i.insert)) allHints.push(i.insert);
+        }));
+        const extraHints = [
+            "\\\\",
+            "\\,", "\\;", "\\:", "\\!", "\\quad", "\\qquad",
+            "\\text{}", "\\mathbf{}", "\\mathbb{}", "\\mathrm{}", "\\mathcal{}", "\\mathfrak{}",
+            "\\sin", "\\cos", "\\tan", "\\cot", "\\sec", "\\csc",
+            "\\arcsin", "\\arccos", "\\arctan",
+            "\\sinh", "\\cosh", "\\tanh",
+            "\\log", "\\ln", "\\lg", "\\exp",
+            "\\max", "\\min", "\\sup", "\\inf", "\\lim",
+            "\\sum", "\\prod", "\\int", "\\oint", "\\iint", "\\iiint",
+            "\\frac{}{}", "\\sqrt{}", "\\sqrt[]{}",
+            "\\left(", "\\right)", "\\left[", "\\right]", "\\left\\{", "\\right\\}",
+            "\\begin{}", "\\end{}",
+            "\\hline", "\\cline{}", "\\multicolumn{}{}{}"
+        ];
+        allHints.push(...extraHints);
+
+        editor.on("inputRead", (cm, change) => {
+            if (change.text[0] === "\\") {
+                const cur = cm.getCursor();
+                const line = cm.getLine(cur.line);
+                
+                // 检查前一个字符是否也是反斜杠（即输入的是 \\ 换行符）
+                if (cur.ch >= 2 && line.charAt(cur.ch - 2) === "\\") {
+                    return; // 不触发自动补全
+                }
+                
+                CodeMirror.commands.autocomplete(cm, (cm) => {
+                    const curPos = cm.getCursor();
+                    const curLine = cm.getLine(curPos.line);
+                    const start = curLine.lastIndexOf("\\", curPos.ch - 1);
+                    const word = curLine.slice(start, curPos.ch);
+                    
+                    // 只匹配以反斜杠+字母开头的命令
+                    if (word.length < 2 || !/^\\[a-zA-Z]/.test(word)) {
+                        return { list: [], from: curPos, to: curPos };
+                    }
+                    
+                    const list = allHints.filter(h => h.toLowerCase().startsWith(word.toLowerCase()));
+                    return { list, from: CodeMirror.Pos(curPos.line, start), to: curPos };
+                }, { completeSingle: false });
+            }
+        });
+
+        // 状态栏更新
+        editor.on("cursorActivity", () => {
+            const cur = editor.getCursor();
+            document.getElementById("cursor-pos").textContent = `行 ${cur.line + 1}, 列 ${cur.ch + 1}`;
+            const sel = editor.getSelection();
+            document.getElementById("selection-info").textContent = sel ? `选中 ${sel.length} 字符` : "";
+        });
+
+        // 内容变化 - 优化防抖渲染
+        let debounceTimer;
+        let lastRenderTime = 0;
+        const DEBOUNCE_DELAY = 150; // 优化：缩短到150ms提高响应速度
+        const MIN_RENDER_INTERVAL = 100; // 最小渲染间隔
+
+        editor.on("change", () => {
+            const cur = appData.files.find(f => f.id === appData.activeId);
+            if (cur) {
+                cur.content = editor.getValue();
+                document.getElementById("save-status").textContent = "● 未保存";
+            }
+            document.getElementById("char-count").textContent = editor.getValue().length + " 字符";
+
+            clearTimeout(debounceTimer);
+            const now = Date.now();
+            // 如果距离上次渲染时间已超过最小间隔，立即渲染
+            if (now - lastRenderTime > MIN_RENDER_INTERVAL) {
+                debounceTimer = setTimeout(() => {
+                    lastRenderTime = Date.now();
+                    updatePreview();
+                    saveData();
+                }, DEBOUNCE_DELAY);
+            } else {
+                // 否则等待更长时间
+                debounceTimer = setTimeout(() => {
+                    lastRenderTime = Date.now();
+                    updatePreview();
+                    saveData();
+                }, DEBOUNCE_DELAY + (MIN_RENDER_INTERVAL - (now - lastRenderTime)));
+            }
+        });
+
+        // 同步滚动
+        const previewEl = document.getElementById("preview-content");
+        editor.on("scroll", () => {
+            const info = editor.getScrollInfo();
+            if (info.height <= info.clientHeight) return;
+            const ratio = info.top / (info.height - info.clientHeight);
+            previewEl.scrollTop = ratio * (previewEl.scrollHeight - previewEl.clientHeight);
+        });
+
+        // ========== 预览渲染（带性能监控） ==========
+        function updatePreview() {
+            const startTime = performance.now();
+            const raw = editor.getValue();
+            previewEl.innerHTML = "";
+
+            // 过滤注释行，按空行分割
+            const lines = raw.split('\n');
+            const blocks = [];
+            let currentBlock = [];
+
+            lines.forEach(line => {
+                if (line.trim().startsWith('%')) return; // 跳过注释
+                if (line.trim() === '') {
+                    if (currentBlock.length > 0) {
+                        blocks.push(currentBlock.join('\n'));
+                        currentBlock = [];
+                    }
+                } else {
+                    currentBlock.push(line);
+                }
+            });
+            if (currentBlock.length > 0) blocks.push(currentBlock.join('\n'));
+
+            blocks.forEach(block => {
+                if (!block.trim()) return;
+                const div = document.createElement("div");
+                div.className = "latex-block";
+                div.onclick = () => {
+                    navigator.clipboard.writeText(block).then(() => showToast("success", "已复制公式代码"));
+                };
+                try {
+                    katex.render(block, div, { displayMode: true, throwOnError: false, trust: true });
+                } catch (e) {
+                    div.classList.add("error");
+                    div.innerHTML = `<span style="color:#dc3545;font-size:12px;">${e.message}</span>`;
+                }
+                previewEl.appendChild(div);
+            });
+
+            // 性能监控：记录渲染耗时
+            const renderTime = (performance.now() - startTime).toFixed(1);
+            console.log(`[LaTeX] 渲染完成: ${blocks.length} 个公式块, 耗时 ${renderTime}ms`);
+        }
+
+        // ========== 缩放 ==========
+        let zoomLevel = 1.0;
+        function zoomPreview(delta) {
+            if (delta === 0) zoomLevel = 1.0;
+            else zoomLevel = Math.max(0.5, Math.min(2.5, zoomLevel + delta));
+            previewEl.style.fontSize = (1.1 * zoomLevel) + "em";
+            document.getElementById("zoom-val").innerText = Math.round(zoomLevel * 100) + "%";
+        }
+
+        // ========== 可拖动分隔条 ==========
+        const resizer = document.getElementById('resizer');
+        const editorBox = document.getElementById('editor-box');
+        const previewBox = document.getElementById('preview-box');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            resizer.classList.add('active');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const container = document.getElementById('workspace');
+            const containerRect = container.getBoundingClientRect();
+            const newWidth = e.clientX - containerRect.left;
+            const percentage = (newWidth / containerRect.width) * 100;
+            if (percentage > 20 && percentage < 80) {
+                editorBox.style.width = percentage + '%';
+                previewBox.style.width = (100 - percentage) + '%';
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+            resizer.classList.remove('active');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            editor.refresh();
+        });
+
+        // ========== 功能函数 ==========
+        function toggleSidebar() { document.getElementById("sidebar").classList.toggle("collapsed"); }
+        function toggleSymbolPanel() {
+            document.getElementById("symbol-area").classList.toggle("collapsed");
+            document.getElementById("symbol-toggle-btn").classList.toggle("active");
+        }
+
+        let isVim = false;
+        function toggleVim() {
+            isVim = !isVim;
+            editor.setOption("keyMap", isVim ? "vim" : "default");
+            document.getElementById("vim-btn").classList.toggle("active");
+            document.getElementById("mode-indicator").textContent = isVim ? "Vim" : "Normal";
+            showToast("info", isVim ? "Vim 模式已开启" : "Vim 模式已关闭");
+        }
+
+        function toggleZen() {
+            document.body.classList.toggle("zen-mode");
+            editor.refresh();
+        }
+
+        let isDark = localStorage.getItem('latex-editor-theme') === 'dark';
+        function toggleTheme() {
+            isDark = !isDark;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-btn').innerHTML = isDark
+                ? '<i class="fa-solid fa-moon"></i>'
+                : '<i class="fa-solid fa-sun"></i>';
+            localStorage.setItem('latex-editor-theme', isDark ? 'dark' : 'light');
+            // 更新编辑器主题
+            editor.setOption('theme', isDark ? 'default' : 'default');
+            showToast("info", isDark ? "已切换到深色模式" : "已切换到浅色模式");
+        }
+        // 初始化主题
+        if (isDark) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('theme-btn').innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+
+        function undo() { editor.undo(); }
+        function redo() { editor.redo(); }
+
+        function showHelp() { document.getElementById("help-modal").classList.add("active"); }
+        function closeHelp() { document.getElementById("help-modal").classList.remove("active"); }
+
+        function exportImage() {
+            showToast("info", "正在生成图片...");
+            html2canvas(previewEl, { scale: 2, backgroundColor: "#fff" }).then(canvas => {
+                const a = document.createElement('a');
+                a.download = "latex_formula.png";
+                a.href = canvas.toDataURL();
+                a.click();
+                showToast("success", "图片已保存");
+            });
+        }
+
+        function showToast(type, msg) {
+            const toast = document.getElementById("toast");
+            const gradients = {
+                success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                info: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)',
+                warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+            };
+            toast.style.background = gradients[type] || gradients.info;
+            toast.querySelector("span").textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2800);
+        }
+
+        // 键盘快捷键
+        document.addEventListener("keydown", e => {
+            if (e.key === "Escape" && document.body.classList.contains("zen-mode")) toggleZen();
+            if (e.key === "Escape") closeHelp();
+        });
+
+        // ========== 启动 ==========
+        renderFileList();
+        updatePreview();
+        document.getElementById("char-count").textContent = editor.getValue().length + " 字符";
+    </script>
+</body>
+
+</html>

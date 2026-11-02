@@ -1,0 +1,1 @@
+import"./chunks/vue-i18n.C5VVJsrT.js";import"./chunks/vue-router.B49w5yAz.js";import{D as s}from"./app.CkadgR7N.js";import"./chunks/dayjs.CyNGG8ZO.js";import"./animation.DOXJY2za.js";const m="/assets/none.DLM1AMsD.jpg";function c(t,o=m){const r=t.target;r.setAttribute("data-src",r.src),r.src=o}function f(t){return s(t,{template:"YYYY-MM-DD HH:mm:ss"})}export{f,c as o};
