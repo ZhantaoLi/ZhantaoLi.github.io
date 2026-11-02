@@ -18,3 +18,4 @@ aside: false
 | liquid_class | 液体玻璃 | [查看效果](/demos/liquid_class.html) |
 | weather card | 天气卡片 | [查看效果](/demos/weathercard_fable.html) |
 | rubik's cube | 魔方 | [查看效果](/demos/rubiks_cube.html) |
+| pelican_bicycle | 鹈鹕骑车 | [查看效果](/demos/pelican_bicycle.html) |

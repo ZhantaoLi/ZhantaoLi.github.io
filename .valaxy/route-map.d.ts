@@ -115,6 +115,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/posts/大模型PPO优化算法': RouteRecordInfo<
+      '/posts/大模型PPO优化算法',
+      '/posts/%E5%A4%A7%E6%A8%A1%E5%9E%8BPPO%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/posts/学术规范与论文写作': RouteRecordInfo<
       '/posts/学术规范与论文写作',
       '/posts/%E5%AD%A6%E6%9C%AF%E8%A7%84%E8%8C%83%E4%B8%8E%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C',
@@ -216,6 +223,13 @@ declare module 'vue-router/auto-routes' {
     '/posts/CSTC&OSCA': RouteRecordInfo<
       '/posts/CSTC&OSCA',
       '/posts/CSTC&OSCA',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/posts/DoH+ECH': RouteRecordInfo<
+      '/posts/DoH+ECH',
+      '/posts/DoH+ECH',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -459,6 +473,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'pages/posts/大模型PPO优化算法.md': {
+      routes:
+        | '/posts/大模型PPO优化算法'
+      views:
+        | never
+    }
     'pages/posts/学术规范与论文写作.md': {
       routes:
         | '/posts/学术规范与论文写作'
@@ -546,6 +566,12 @@ declare module 'vue-router/auto-routes' {
     'pages/posts/CSTC&OSCA.md': {
       routes:
         | '/posts/CSTC&OSCA'
+      views:
+        | never
+    }
+    'pages/posts/DoH+ECH.md': {
+      routes:
+        | '/posts/DoH+ECH'
       views:
         | never
     }

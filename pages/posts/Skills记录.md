@@ -53,13 +53,17 @@ npx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audi
 
 号称收录了8w多个 Skill，数量最多，但重复度和质量比较宽松，可以作为一个补充。 进到详情后，点击可以跳转到 GitHub 原网页查看详细说明，再使用。 看情况是主动收集的 GitHub 上所有的 Skill 整理而成的。
 
-## 04. Superpowers
+## 04. Superpowers && grill-me
 
-**地址**：https://github.com/obra/superpowers
+**Superpowers 地址**：https://github.com/obra/superpowers
 
 一位资深开发者创建的用于开发的最佳实践 Skill 合集。 **值得学习的是他的开发工作流——头脑风暴，先问清楚再开工。**
 
 与 Claude Code 适配比较深，在 OpenCode 也可以用。 OpenCode 里我推荐新建一个 Agent，专门允许使用它的 Skill 们，和 `oh-my-opencode` 的 Sisyphus 隔离开，因为功能有重叠。
+
+**grill-me 地址**：https://github.com/mattpocock/skills
+
+`grill-me` 是 Matt Pocock 提供的独立 Skill，专注于需求澄清。围绕一个想法或计划，它会逐步追问，每次只问一个问题，并给出推荐答案；能从代码库查明的信息，则先自行查证。适合在开工前对齐目标、边界和关键取舍，减少需求理解偏差。代码开发场景还可以看同一仓库里的 `grill-with-docs`，它会把术语和关键决策整理成文档。
 
 ## 05. Coze 技能商店
 
@@ -79,10 +83,6 @@ Claude Code 的深度玩家，夺得了在纽约举办的 Anthropic x Forum Vent
 
 Skill 里面的 `continuous-learning` 值得注意，可以实现 Skill 的个性化进化。 **这才是 Skill 的正确用法：公开的 Skill 只是参考，属于你自己的才真有用。**
 
-
-推荐：
-npx skills add https://github.com/vercel-labs/skills --skill find-skills
-[Superpowers](https://github.com/obra/superpowers)
 ---
 
 学用 Skill 第一阶段，从这些出发就够了。 熟练使用后，下一阶段就是制作自己专属的 Skill。

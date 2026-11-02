@@ -2,9 +2,9 @@
 title: SO-ARM101 记录
 description: SO-ARM101 机械臂使用记录:环境准备、遥操作、数据采集、ACT/SmolVLA 训练与推理
 tags:
-  - 机器人
+  - EAI
   - SO-ARM101
-categories: 机器人
+categories: EAI
 date: 2026-07-29
 updated: 2026-09-26
 ---
